@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <meta name="description"
+  content="Comprehensive Interview Prep Portal for Data Engineer role at NBFC Housing Finance — AWS Redshift, ETL, SQL, and Domain Knowledge.">
+ <title>NBFC Data Engineer Interview Mastery | Prep Portal</title>
+ <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+
+<body>
+
+ <!-- ===== NAVIGATION ===== -->
+ <nav class="navbar" id="navbar">
+  <div class="nav-content">
+   <a href="index.html" class="nav-brand">
+    <span class="brand-icon">🎯</span>
+    <span>InterviewPrep</span>
+   </a>
+
+   <ul class="nav-links" id="navLinks">
+    <li><a href="modules/aws.html">AWS</a></li>
+    <li><a href="modules/domain.html">NBFC</a></li>
+    <li><a href="modules/sql.html">SQL</a></li>
+    <li><a href="modules/airflow.html">Airflow</a></li>
+    <li><a href="modules/tableau.html">Tableau</a></li>
+    <li><a href="modules/behavioral.html">Behaviour</a></li>
+    <li><a href="modules/interview.html">Q&amp;A</a></li>
+   </ul>
+
+   <div class="nav-actions">
+    <div class="progress-badge">
+     <svg class="progress-ring" viewBox="0 0 20 20">
+      <circle cx="10" cy="10" r="8" fill="none" stroke="rgba(99,102,241,0.2)" stroke-width="2.5" />
+      <circle id="progressRing" cx="10" cy="10" r="8" fill="none" stroke="#6366f1" stroke-width="2.5"
+       stroke-dasharray="50.26" stroke-dashoffset="50.26" stroke-linecap="round" transform="rotate(-90 10 10)"
+       style="transition: stroke-dashoffset 0.5s ease;" />
+     </svg>
+     <span id="progressText">0% Mastered</span>
+    </div>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">🌙</button>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">☰</button>
+   </div>
+  </div>
+ </nav>
+
+ <!-- ===== HERO SECTION ===== -->
+ <section class="hero" id="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+   <div class="hero-badge">
+    <span class="pulse"></span>
+    Interview Preparation Active
+   </div>
+
+   <h1>NBFC Data Engineer<br>Interview Mastery</h1>
+   <p class="hero-subtitle">AWS · Redshift · ETL · Housing Finance Domain · SQL Optimization</p>
+
+   <div class="hero-tech-tags">
+    <span class="tech-tag">AWS Redshift</span>
+    <span class="tech-tag">ETL/ELT</span>
+    <span class="tech-tag">MySQL</span>
+    <span class="tech-tag">Dimensional Modeling</span>
+    <span class="tech-tag">CDC (DMS)</span>
+    <span class="tech-tag">Tableau</span>
+    <span class="tech-tag">Housing Finance</span>
+    <span class="tech-tag">NPA/DPD</span>
+    <span class="tech-tag">Glue & Step Functions</span>
+   </div>
+
+   <div class="hero-countdown">
+    <div class="countdown-item">
+     <span class="countdown-value" id="cd-days">-</span>
+     <span class="countdown-label">Days</span>
+    </div>
+    <div class="countdown-item">
+     <span class="countdown-value" id="cd-hours">-</span>
+     <span class="countdown-label">Hours</span>
+    </div>
+    <div class="countdown-item">
+     <span class="countdown-value" id="cd-mins">-</span>
+     <span class="countdown-label">Minutes</span>
+    </div>
+    <div class="countdown-item">
+     <span class="countdown-value" id="cd-secs">-</span>
+     <span class="countdown-label">Seconds</span>
+    </div>
+   </div>
+
+   <blockquote class="hero-quote">
+    "The only way to do great work is to love what you do. Preparation is the mother of confidence."
+   </blockquote>
+
+   <div class="hero-actions">
+    <a href="modules/aws.html" class="btn btn-primary">🚀 Start Studying</a>
+    <a href="modules/sql.html" class="btn btn-secondary">📝 Practice SQL</a>
+   </div>
+  </div>
+ </section>
+
+ <main>
+
+
+  <section class="section" id="modules-grid">
+   <div class="section-header animate-in">
+    <h2>Select a Study Module</h2>
+    <p>Choose a topic below to begin your focused study session.</p>
+   </div>
+
+   <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 30px;">
+    <a href="modules/aws.html" class="content-card animate-in"
+     style="text-decoration:none; display:block; transition:transform 0.3s;">
+     <div class="subsection-icon aws-icon">☁️</div>
+     <h3 style="margin-top:15px; color:var(--text-main);">Module 1: AWS & Data Eng</h3>
+     <p style="color:var(--text-muted); margin-top:10px;">Redshift, ETL/ELT, DMS CDC, Dimensional Modeling.</p>
+    </a>
+
+    <a href="modules/domain.html" class="content-card animate-in"
+     style="text-decoration:none; display:block; transition:transform 0.3s; transition-delay:0.1s;">
+     <div class="subsection-icon check-icon">🏢</div>
+     <h3 style="margin-top:15px; color:var(--text-main);">Module 2: NBFC Domain</h3>
+     <p style="color:var(--text-muted); margin-top:10px;">Loan lifecycle, NPA, DPD, LTV/FOIR concepts.</p>
+    </a>
+
+    <a href="modules/sql.html" class="content-card animate-in"
+     style="text-decoration:none; display:block; transition:transform 0.3s; transition-delay:0.2s;">
+     <div class="subsection-icon kp-icon" style="background:rgba(59,130,246,0.1); color:#60a5fa;">📝</div>
+     <h3 style="margin-top:15px; color:var(--text-main);">Module 3: SQL Mastery</h3>
+     <p style="color:var(--text-muted); margin-top:10px;">Window functions, CTEs, scenario-based practice.</p>
+    </a>
+
+    <a href="modules/airflow.html" class="content-card animate-in"
+     style="text-decoration:none; display:block; transition:transform 0.3s; transition-delay:0.3s;">
+     <div class="subsection-icon aws-icon" style="background:rgba(20,184,166,0.1); color:#14b8a6;">💨</div>
+     <h3 style="margin-top:15px; color:var(--text-main);">Module 4: Apache Airflow</h3>
+     <p style="color:var(--text-muted); margin-top:10px;">DAGs, TaskFlow, orchestration, XComs.</p>
+    </a>
+
+    <a href="modules/tableau.html" class="content-card animate-in"
+     style="text-decoration:none; display:block; transition:transform 0.3s; transition-delay:0.35s;">
+     <div class="subsection-icon sql-icon" style="background:rgba(234,179,8,0.1); color:#eab308;">📊</div>
+     <h3 style="margin-top:15px; color:var(--text-main);">Module 5: Tableau BI</h3>
+     <p style="color:var(--text-muted); margin-top:10px;">RLS, MIS Dashboards, Materialized Views.</p>
+    </a>
+
+    <a href="modules/behavioral.html" class="content-card animate-in"
+     style="text-decoration:none; display:block; transition:transform 0.3s; transition-delay:0.4s;">
+     <div class="subsection-icon check-icon" style="background:rgba(236,72,153,0.1); color:#f472b6;">🛡️</div>
+     <h3 style="margin-top:15px; color:var(--text-main);">Module 6: Resume Defense</h3>
+     <p style="color:var(--text-muted); margin-top:10px;">Framing gaps, domain transition, behavioral scripts.</p>
+    </a>
+   </div>
+  </section>
+ </main>
+
+ <!-- ===== FOOTER ===== -->
+ <footer class="footer">
+  <p>Built with 💜 for Lakhbeer Shah's Interview Preparation — Wednesday 2026</p>
+  <div class="footer-links">
+   <a href="#hero">Back to Top</a>
+   <a href="modules/aws.html">AWS</a>
+   <a href="modules/domain.html">NBFC</a>
+   <a href="modules/sql.html">SQL</a>
+   <a href="modules/airflow.html">Airflow</a>
+   <a href="modules/tableau.html">Tableau</a>
+   <a href="modules/behavioral.html">Behaviour</a>
+   <a href="modules/interview.html">Q&amp;A</a>
+  </div>
+ </footer>
+
+ <script src="assets/js/script.js"></script>
+</body>
+
+</html>

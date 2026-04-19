@@ -1,0 +1,418 @@
+================================================================================
+INTERVIEW PREPARATION PORTAL — MASTER PROMPT
+================================================================================
+Use this prompt + paste the Job Description below to generate a complete,
+production-ready, multi-page interview preparation website.
+================================================================================
+
+ROLE:
+You are a senior full-stack developer and interview prep expert. Your job is to
+build a premium, multi-page, static interview preparation website based on the
+Job Description (JD) provided at the end of this prompt.
+
+================================================================================
+STEP 1: ANALYZE THE JOB DESCRIPTION
+================================================================================
+
+Read the JD carefully and extract:
+
+1. TECHNICAL SKILLS — List every technology, tool, and framework mentioned.
+   Group them into categories (e.g., Cloud, Database, ETL, BI, Programming).
+
+2. DOMAIN KNOWLEDGE — Identify the industry/domain (e.g., NBFC, Banking,
+   E-commerce, Healthcare). Extract domain-specific terminology and concepts.
+
+3. EXPERIENCE LEVEL — Note the years of experience and seniority level.
+   This determines the depth of questions (junior = definitions, senior = 
+   architecture decisions, trade-offs, debugging scenarios).
+
+4. RESPONSIBILITIES — List the key day-to-day responsibilities. These become
+   the "what would you actually do" interview scenarios.
+
+5. SOFT SKILLS — Note collaboration, communication, or leadership mentions.
+   These feed into the behavioral/resume defense module.
+
+================================================================================
+STEP 2: GENERATE THE MODULE MAP
+================================================================================
+
+Based on the JD analysis, create these page types:
+
+A. STUDY MODULES (one HTML page per major skill cluster):
+   - Each module covers 3-5 subtopics with deep educational content
+   - Each subtopic has: theory explanation, tables, code examples, key tips
+   - Each subtopic has: 3+ Q&A pairs (click-to-reveal accordion style)
+   - Each subtopic has: a "Mastered" checkbox for progress tracking
+
+   Example module breakdown for a Data Engineer JD:
+   - Module 1: Cloud Platform & Data Warehouse (e.g., AWS Redshift)
+   - Module 2: Domain Knowledge (e.g., NBFC Housing Finance)
+   - Module 3: SQL & Database Optimization
+   - Module 4: Orchestration (e.g., Apache Airflow)
+   - Module 5: BI & Visualization (e.g., Tableau)
+   - Module 6: Behavioral / Resume Defense
+
+B. INTERVIEW QUESTION BANK (one HTML page):
+   - Organized by topic categories
+   - 10-20 questions per category
+   - Senior-level: focus on "why", trade-offs, debugging, architecture
+   - Each answer includes: explanation, code snippets, comparison tables,
+     and "what to say in the interview" tips
+   - Domain-specific scenarios woven into every answer
+
+C. BEHAVIORAL / RESUME DEFENSE (one HTML page):
+   - Flashcard-style Q&A for common behavioral questions
+   - STAR method script blocks
+   - Domain transition framing (if applicable)
+   - "Tell me about yourself" script customized for the JD
+
+================================================================================
+STEP 3: PROJECT STRUCTURE
+================================================================================
+
+Create this exact folder structure:
+
+project-root/
+├── index.html              # Dashboard with hero, countdown, module grid
+├── assets/
+│   ├── css/
+│   │   └── styles.css      # Complete design system (dark/light themes)
+│   └── js/
+│       └── script.js        # Interactive engine (accordions, progress, etc.)
+├── modules/
+│   ├── [module1].html       # Study module pages (one per skill cluster)
+│   ├── [module2].html
+│   ├── [module3].html
+│   ├── [moduleN].html
+│   ├── interview.html       # Interview Question Bank
+│   └── behavioral.html      # Resume Defense & Behavioral
+└── prompt.txt               # This file (for regeneration)
+
+================================================================================
+STEP 4: DESIGN SYSTEM SPECIFICATION
+================================================================================
+
+TYPOGRAPHY:
+- Primary: 'Inter' from Google Fonts (weights: 300-900)
+- Monospace: 'JetBrains Mono' from Google Fonts (for code blocks)
+- Base size: 16px, line-height: 1.7
+
+COLOR PALETTE (DARK MODE — DEFAULT):
+- Background primary:    #0a0e1a
+- Background secondary:  #111827
+- Background card:       rgba(17, 24, 39, 0.85)
+- Background code:       #1e293b
+- Text primary:          #f1f5f9
+- Text secondary:        #94a3b8
+- Text muted:            #64748b
+- Accent primary:        #6366f1 (Indigo)
+- Accent secondary:      #8b5cf6 (Purple)
+- Accent tertiary:       #06b6d4 (Cyan)
+- Accent success:        #10b981 (Green)
+- Accent warning:        #f59e0b (Amber)
+- Accent danger:         #ef4444 (Red)
+- Gradient primary:      linear-gradient(135deg, #6366f1, #8b5cf6, #06b6d4)
+- Gradient hero:         linear-gradient(135deg, #0f172a, #1e1b4b, #0f172a, #164e63)
+
+COLOR PALETTE (LIGHT MODE):
+- Background primary:    #f8fafc
+- Background secondary:  #ffffff
+- Background card:       rgba(255, 255, 255, 0.9)
+- Text primary:          #0f172a
+- Text secondary:        #475569
+
+BORDERS & SHADOWS:
+- Border default:        rgba(255, 255, 255, 0.08) [dark], rgba(0, 0, 0, 0.08) [light]
+- Border hover:          rgba(99, 102, 241, 0.4)
+- Shadow glow:           0 0 40px rgba(99, 102, 241, 0.15)
+- Border radius:         8px (sm), 12px (md), 16px (lg), 24px (xl)
+
+VISUAL EFFECTS:
+- Glassmorphism:         backdrop-filter: blur(20px) on navbar and cards
+- Animated grid:         Subtle moving grid lines in hero background
+- Gradient text:         H1 and H2 headings use gradient clip text
+- Glow pulse:            Radial gradient animation on hero section
+- Scroll animations:     IntersectionObserver fadeInUp on sections
+- Custom scrollbar:      Accent-colored thin scrollbar
+
+================================================================================
+STEP 5: COMPONENT LIBRARY (HTML PATTERNS)
+================================================================================
+
+Use these exact HTML patterns for consistency across all pages:
+
+--- NAVIGATION (every page) ---
+<nav class="navbar" id="navbar">
+  <div class="nav-content">
+    <a href="../index.html" class="nav-brand">
+      <span class="brand-icon">🎯</span>
+      <span>InterviewPrep</span>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="[module].html">[Module Name]</a></li>
+      <!-- Repeat for each module -->
+    </ul>
+    <div class="nav-actions">
+      <div class="progress-badge">
+        <svg class="progress-ring" viewBox="0 0 20 20">
+          <circle cx="10" cy="10" r="8" fill="none" stroke="rgba(99,102,241,0.2)" stroke-width="2.5"/>
+          <circle id="progressRing" cx="10" cy="10" r="8" fill="none" stroke="#6366f1" stroke-width="2.5"
+                  stroke-dasharray="50.26" stroke-dashoffset="50.26" stroke-linecap="round"
+                  transform="rotate(-90 10 10)" style="transition: stroke-dashoffset 0.5s ease;"/>
+        </svg>
+        <span id="progressText">0% Mastered</span>
+      </div>
+      <button class="theme-toggle" id="themeToggle">🌙</button>
+      <button class="nav-toggle" id="navToggle">☰</button>
+    </div>
+  </div>
+</nav>
+
+--- SECTION HEADER ---
+<div class="section-header animate-in">
+  <span class="section-badge aws">☁️ Module N</span>
+  <h2>Module Title</h2>
+  <p>Brief module description.</p>
+</div>
+
+--- STATS ROW ---
+<div class="stats-row animate-in">
+  <div class="stat-card">
+    <div class="stat-value">N</div>
+    <div class="stat-label">Subtopics</div>
+  </div>
+  <!-- Repeat for Q&A count, estimated time, priority -->
+</div>
+
+--- SUBTOPIC WITH MASTERY CHECKBOX ---
+<div class="subsection animate-in" id="unique-id">
+  <div class="subsection-header">
+    <div class="subsection-icon aws-icon">🔧</div>
+    <h3>A. Subtopic Title</h3>
+    <label class="progress-check">
+      <input type="checkbox" id="prog-unique-id">
+      <span class="check-custom">✓</span>
+      <span class="check-label">Mastered</span>
+    </label>
+  </div>
+  <div class="content-card">
+    <!-- Educational content: h4, p, tables, code blocks, key-points -->
+  </div>
+</div>
+
+--- Q&A ACCORDION ---
+<div class="qa-section">
+  <div class="qa-section-title">🧠 Test Your Knowledge</div>
+  <div class="qa-item">
+    <div class="qa-question">
+      <span class="qa-q-number">1</span>
+      <span class="qa-q-text">Question text here</span>
+      <span class="qa-toggle-icon">▼</span>
+    </div>
+    <div class="qa-answer">
+      <div class="qa-answer-inner">
+        <p>Detailed answer with <strong>bold terms</strong>, tables, and code.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+--- CODE BLOCK WITH COPY BUTTON ---
+<div class="code-block">
+  <div class="code-header">
+    <span class="code-lang">SQL — Description</span>
+    <button class="code-copy">Copy</button>
+  </div>
+  <pre><span class="token-keyword">SELECT</span> col
+<span class="token-keyword">FROM</span> table;</pre>
+</div>
+
+--- DATA TABLE ---
+<table class="data-table">
+  <thead><tr><th>Column 1</th><th>Column 2</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Row 1</strong></td><td>Value</td></tr>
+  </tbody>
+</table>
+
+--- KEY POINT CALLOUT ---
+<div class="key-point">
+  <span class="kp-icon">💡</span>
+  <span class="kp-text"><strong>Interview Tip:</strong> Explanation.</span>
+</div>
+<!-- Variants: class="key-point warning" or class="key-point success" -->
+
+--- FLOW DIAGRAM ---
+<div class="flow-diagram">
+  <div class="flow-step">Step 1</div>
+  <span class="flow-arrow">→</span>
+  <div class="flow-step">Step 2</div>
+</div>
+
+--- SQL SCENARIO (with reveal button) ---
+<div class="sql-scenario">
+  <div class="scenario-label">📋 Scenario N</div>
+  <h4>Scenario title</h4>
+  <p>Business context and requirements.</p>
+  <button class="reveal-btn">👁️ Reveal Solution</button>
+  <div class="sql-solution">
+    <div class="sql-solution-inner">
+      <!-- Code block with solution -->
+    </div>
+  </div>
+</div>
+
+--- BEHAVIORAL FLASHCARD ---
+<div class="flashcard">
+  <div class="flashcard-front">
+    <div class="flashcard-icon">💼</div>
+    <div class="flashcard-title">Question text</div>
+    <span class="flashcard-toggle">Tap to reveal →</span>
+  </div>
+  <div class="flashcard-back">
+    <div class="flashcard-back-inner">
+      <p>Answer with STAR method script block.</p>
+      <div class="script-block">
+        <div class="script-label">🎯 Interview Script</div>
+        <p>"Verbatim script text..."</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+--- PAGE NAVIGATION FOOTER ---
+<div class="page-navigation animate-in" style="display:flex; justify-content:space-between; margin-top:40px; padding-top:20px; border-top:1px solid rgba(255,255,255,0.1);">
+  <a href="prev.html" class="btn btn-secondary">← Previous Module</a>
+  <a href="next.html" class="btn btn-primary">Next Module →</a>
+</div>
+
+--- SYNTAX HIGHLIGHTING (use span classes in <pre> blocks) ---
+.token-keyword  → purple (#c792ea) — SQL keywords, Python keywords
+.token-string   → green (#c3e88d)  — String literals
+.token-number   → orange (#f78c6c) — Numeric values
+.token-comment  → gray (#546e7a)   — Comments (italic)
+.token-function → blue (#82aaff)   — Function names
+.token-table    → yellow (#ffcb6b) — Table/column references
+
+================================================================================
+STEP 6: JAVASCRIPT ENGINE
+================================================================================
+
+The script.js must handle ALL of these features:
+
+1. THEME TOGGLE — Dark/light mode with localStorage persistence
+2. NAVBAR — Scroll shadow, mobile hamburger menu, active link highlighting
+3. COUNTDOWN TIMER — Countdown to interview date (auto-detect next Wednesday 10AM)
+4. PROGRESS TRACKING — Checkbox state saved to localStorage, SVG ring % updates
+5. Q&A ACCORDION — Click to expand/collapse with smooth max-height animation
+6. REVEAL BUTTONS — Click to show SQL solutions (toggle hidden content)
+7. FLASHCARDS — Click front to expand back panel
+8. CODE COPY — Copy code block content to clipboard with "Copied!" feedback
+9. SCROLL ANIMATIONS — IntersectionObserver to fade-in sections on scroll
+10. SMOOTH SCROLL — Anchor link smooth scrolling
+
+Key implementation detail: Use max-height animation pattern for all
+expand/collapse interactions. Set max-height to 0 when collapsed and to
+element.scrollHeight when expanded. This provides smooth CSS transitions.
+
+Update TOTAL_CHECKBOXES constant to match the actual number of mastery
+checkboxes across ALL module pages.
+
+================================================================================
+STEP 7: CONTENT GENERATION RULES
+================================================================================
+
+ANSWER DEPTH (based on experience level in JD):
+- 0-2 years:  Definition + simple example + one-liner tip
+- 3-5 years:  Concept + code example + comparison table + common mistake
+- 5+ years:   Architecture decision + trade-off analysis + production debugging
+              scenario + "what I actually did" narrative + domain-specific context
+
+DOMAIN INTEGRATION:
+- Every technical answer must include a domain-specific example from the JD
+- e.g., For NBFC: "loan_id", "DPD buckets", "NPA classification"
+- e.g., For E-commerce: "order_id", "cart abandonment", "inventory sync"
+
+QUESTION STYLE:
+- Mix these question types in every Q&A section:
+  1. "Explain X" — conceptual understanding
+  2. "Write SQL to..." — hands-on coding
+  3. "Your pipeline fails because..." — debugging scenario
+  4. "Compare X vs Y" — trade-off analysis (use tables)
+  5. "How would you design..." — architecture/system design
+
+TABLES:
+- Use comparison tables heavily (feature vs feature)
+- Use tables for classification data (e.g., DPD buckets, node types)
+- Always use <table class="data-table"> with proper thead/tbody
+
+CODE:
+- Use syntax-highlighted code blocks for all SQL, Python, YAML, JSON
+- Add meaningful comments in code
+- Use domain-specific table/column names in examples
+- Always show the code-copy button
+
+INTERVIEW TIPS:
+- Add "💡 Interview Tip" callouts after complex topics
+- Add "⚠️ Critical" warnings for common mistakes
+- Include "what to say" verbatim scripts for behavioral questions
+
+================================================================================
+STEP 8: INDEX PAGE (DASHBOARD)
+================================================================================
+
+The index.html must include:
+
+1. HERO SECTION with:
+   - Animated background grid
+   - Pulsing "Interview Preparation Active" badge
+   - Role title in gradient text (from JD)
+   - Tech tag pills (extracted from JD skills)
+   - Countdown timer to interview date
+   - Motivational quote
+   - "Start Studying" and "Practice" CTA buttons
+
+2. MODULE GRID section with:
+   - Card for each module page with icon, title, description
+   - Staggered animation delays for visual effect
+   - Links to each module page
+
+3. FOOTER with links to all modules
+
+================================================================================
+STEP 9: CROSS-PAGE CONSISTENCY
+================================================================================
+
+- Every module page must have the SAME navbar with links to ALL other modules
+- From module pages: brand logo links to "../index.html"
+- From module pages: nav links point to sibling files (e.g., "aws.html")
+- Footer on every page with links to all modules
+- Progress tracking works across pages via localStorage
+- Theme preference persists across pages via localStorage
+
+================================================================================
+STEP 10: QUALITY CHECKLIST
+================================================================================
+
+Before delivering, verify:
+[ ] All pages load without errors (check console)
+[ ] Dark/light theme toggle works and persists
+[ ] All Q&A accordions expand/collapse smoothly
+[ ] All code copy buttons work
+[ ] All navigation links work (no broken links)
+[ ] Brand logo always navigates to index.html
+[ ] Progress checkboxes save state across page reloads
+[ ] Mobile responsive (navbar collapses, cards stack)
+[ ] No placeholder content — every section has real, detailed content
+[ ] Domain-specific examples in every technical answer
+[ ] At least 3 Q&A pairs per subtopic in study modules
+[ ] At least 10 questions per category in interview bank
+[ ] Syntax highlighting applied to all code blocks
+[ ] Tables used for all comparison/classification data
+[ ] Interview tips and key-point callouts throughout
+
+================================================================================
+JOB DESCRIPTION (PASTE BELOW THIS LINE)
+================================================================================
+
+[PASTE THE FULL JOB DESCRIPTION HERE]

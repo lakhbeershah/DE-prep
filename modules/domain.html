@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Comprehensive Interview Prep Portal for Data Engineer role at NBFC Housing Finance — AWS Redshift, ETL, SQL, and Domain Knowledge.">
+  <title>NBFC Data Engineer Interview Mastery | Prep Portal</title>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body>
+
+<!-- ===== NAVIGATION ===== -->
+<nav class="navbar" id="navbar">
+  <div class="nav-content">
+    <a href="../index.html" class="nav-brand">
+      <span class="brand-icon">🎯</span>
+      <span>InterviewPrep</span>
+    </a>
+
+    <ul class="nav-links" id="navLinks">
+      <li><a href="aws.html">AWS</a></li>
+      <li><a href="domain.html">NBFC</a></li>
+      <li><a href="sql.html">SQL</a></li>
+      <li><a href="airflow.html">Airflow</a></li>
+      <li><a href="tableau.html">Tableau</a></li>
+      <li><a href="behavioral.html">Behaviour</a></li>
+      <li><a href="interview.html">Q&amp;A</a></li>
+    </ul>
+
+    <div class="nav-actions">
+      <div class="progress-badge">
+        <svg class="progress-ring" viewBox="0 0 20 20">
+          <circle cx="10" cy="10" r="8" fill="none" stroke="rgba(99,102,241,0.2)" stroke-width="2.5"/>
+          <circle id="progressRing" cx="10" cy="10" r="8" fill="none" stroke="#6366f1" stroke-width="2.5"
+                  stroke-dasharray="50.26" stroke-dashoffset="50.26" stroke-linecap="round"
+                  transform="rotate(-90 10 10)" style="transition: stroke-dashoffset 0.5s ease;"/>
+        </svg>
+        <span id="progressText">0% Mastered</span>
+      </div>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">🌙</button>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">☰</button>
+    </div>
+  </div>
+</nav>
+
+
+<main style="padding-top:100px;">
+<!-- ============================================================ -->
+<!-- MODULE 2: NBFC & HOUSING FINANCE DOMAIN                      -->
+<!-- ============================================================ -->
+<section class="section" id="module-domain">
+  <div class="section-header animate-in">
+    <span class="section-badge domain">🏠 Module 2</span>
+    <h2>NBFC & Housing Finance Domain</h2>
+    <p>Understand the business side — loan lifecycle, financial metrics, regulatory requirements, and delinquency management.</p>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-row animate-in">
+    <div class="stat-card">
+      <div class="stat-value">4</div>
+      <div class="stat-label">Subtopics</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">14</div>
+      <div class="stat-label">Q&A Pairs</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">45</div>
+      <div class="stat-label">Minutes Est.</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">🎯</div>
+      <div class="stat-label">Domain Critical</div>
+    </div>
+  </div>
+
+  <!-- SUBTOPIC A: Housing Loan Lifecycle -->
+  <div class="subsection animate-in" id="domain-lifecycle">
+    <div class="subsection-header">
+      <div class="subsection-icon domain-icon">🔄</div>
+      <h3>A. The Housing Loan Lifecycle (Origination to Closure)</h3>
+      <label class="progress-check">
+        <input type="checkbox" id="prog-domain-a">
+        <span class="check-custom">✓</span>
+        <span class="check-label">Mastered</span>
+      </label>
+    </div>
+
+    <div class="content-card">
+      <h4>NBFC Basics</h4>
+      <p>An <strong>NBFC (Non-Banking Financial Company)</strong> is a company registered under the Companies Act that provides financial services (loans, deposits, insurance) but does not hold a banking license. An NBFC – Housing Finance Company (HFC) specifically provides home loans and is regulated by the <strong>National Housing Bank (NHB)</strong> under the oversight of <strong>Reserve Bank of India (RBI)</strong>.</p>
+
+      <h4>Housing Loan Products</h4>
+      <table class="data-table">
+        <thead>
+          <tr><th>Product</th><th>Full Form</th><th>Description</th><th>Typical LTV</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>HL</strong></td><td>Home Loan</td><td>Purchase of ready/under-construction property</td><td>75-90%</td></tr>
+          <tr><td><strong>LAP</strong></td><td>Loan Against Property</td><td>Loan secured by existing property for any purpose</td><td>50-70%</td></tr>
+          <tr><td><strong>AHL</strong></td><td>Affordable Housing Loan</td><td>Loans under ₹35 lakhs for economically weaker sections (PMAY)</td><td>Up to 90%</td></tr>
+          <tr><td><strong>BT</strong></td><td>Balance Transfer</td><td>Transfer existing loan from another lender for lower rate</td><td>Based on outstanding</td></tr>
+          <tr><td><strong>Top-Up</strong></td><td>Top-Up Loan</td><td>Additional amount on existing home loan</td><td>Based on property revaluation</td></tr>
+          <tr><td><strong>CL-HL</strong></td><td>Construction-Linked HL</td><td>Disbursed in tranches as construction progresses</td><td>75-80%</td></tr>
+        </tbody>
+      </table>
+
+      <h4>8-Stage Loan Lifecycle</h4>
+      <div class="flow-diagram">
+        <div class="flow-step">1. Lead<br>Generation</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-step">2. Application<br>& KYC</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-step">3. Credit<br>Appraisal</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-step">4. Sanction</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-step">5. Legal &<br>Technical</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-step">6. Disburse-<br>ment</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-step">7. Repayment<br>& Servicing</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-step">8. Closure /<br>Foreclosure</div>
+      </div>
+
+      <ol>
+        <li><strong>Lead Generation:</strong> Customer inquiry from DSA (Direct Selling Agent), branch walk-in, digital channel, or referral.</li>
+        <li><strong>Application & KYC:</strong> Customer submits application form with documents — PAN, Aadhaar, income proof, bank statements, property documents. KYC verification done with CKYC registry.</li>
+        <li><strong>Credit Appraisal:</strong> Underwriting team assesses creditworthiness — CIBIL/bureau score check (minimum 650-700), income verification, FOIR (Fixed Obligations to Income Ratio, should be < 50-60%), existing loan exposure check.</li>
+        <li><strong>Sanction:</strong> Loan approved with terms — sanctioned amount, interest rate (fixed/floating), tenure (up to 30 years), processing fee. Sanction letter issued.</li>
+        <li><strong>Legal & Technical:</strong> Legal team verifies property ownership chain and title. Technical team conducts property valuation for LTV calculation.</li>
+        <li><strong>Disbursement:</strong> Funds released — either full disbursement (ready property) or tranche-based (under construction). Mortgage/charge created on property.</li>
+        <li><strong>Repayment & Servicing:</strong> EMI collection starts (usually via NACH/ECS auto-debit). Interest rate resets (for floating), pre-payment processing, insurance premium tracking.</li>
+        <li><strong>Closure / Foreclosure:</strong> Loan closed after all EMIs paid (regular closure) or early pay-off (foreclosure/pre-payment). Property documents returned. NOC issued.</li>
+      </ol>
+
+      <div class="key-point">
+        <span class="kp-icon">💡</span>
+        <span class="kp-text"><strong>Interview Tip:</strong> When asked "describe the loan lifecycle," walk through all 8 stages and mention which systems handle each stage: LOS (stages 1-5), LMS (stages 6-8), and CRM (customer interactions across all stages).</span>
+      </div>
+    </div>
+
+    <!-- Q&A for Lifecycle -->
+    <div class="qa-section">
+      <div class="qa-section-title">🧠 Test Your Knowledge — Loan Lifecycle</div>
+
+      <div class="qa-item">
+        <div class="qa-question">
+          <span class="qa-q-number">1</span>
+          <span class="qa-q-text">As a data engineer, what tables would you create to track the complete loan lifecycle in a data warehouse? List at least 5 fact/dimension tables.</span>
+          <span class="qa-toggle-icon">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p><strong>Core Data Warehouse Tables:</strong></p>
+            <ul>
+              <li><strong>fact_loan_application</strong> — One row per application: application_id, customer_id, product_id, date_id, requested_amount, CIBIL_score, FOIR, application_status, TAT_days.</li>
+              <li><strong>fact_sanction</strong> — One row per sanctioned loan: sanction_id, loan_id, sanctioned_amount, interest_rate, tenure, processing_fee, sanction_date_id.</li>
+              <li><strong>fact_disbursement</strong> — One row per disbursement tranche: disbursement_id, loan_id, tranche_number, disbursed_amount, cumulative_disbursed.</li>
+              <li><strong>fact_repayment</strong> — One row per EMI payment: payment_id, loan_id, due_date_id, payment_date_id, emi_amount, principal_component, interest_component, outstanding_balance, dpd.</li>
+              <li><strong>fact_collection</strong> — One row per collection activity: collection_id, loan_id, agent_id, action_type (call/visit/legal), outcome, promise_to_pay_date, recovery_amount.</li>
+              <li><strong>dim_customer (SCD2), dim_product, dim_branch, dim_date, dim_property</strong></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question">
+          <span class="qa-q-number">2</span>
+          <span class="qa-q-text">What is the difference between a Login, Sanction, and Disbursement in the lending context? Why do these stages have separate tracking?</span>
+          <span class="qa-toggle-icon">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p><strong>Login:</strong> The formal acceptance of a loan application — all documents collected, application entered into LOS. This is the first data point for TAT (Turn Around Time) tracking.</p>
+            <p><strong>Sanction:</strong> Credit committee approves the loan with specific terms. Not all logins convert to sanctions (rejection rate could be 30-40%). The <strong>Login-to-Sanction conversion rate</strong> is a key business KPI.</p>
+            <p><strong>Disbursement:</strong> Actual funds released to the customer/seller. Not all sanctions convert to disbursements — a customer might choose a competitor or property deal might fall through. <strong>Sanction-to-Disbursement conversion rate</strong> is another critical KPI.</p>
+            <p><strong>Why separate tracking:</strong></p>
+            <ul>
+              <li><strong>Funnel analytics:</strong> Business needs to see the conversion funnel — 1000 leads → 500 logins → 350 sanctions → 300 disbursements.</li>
+              <li><strong>Revenue recognition:</strong> Processing fees are earned at sanction, but interest income starts only at disbursement.</li>
+              <li><strong>Regulatory reporting:</strong> NHB requires separate reporting of sanctions vs. disbursements, including pipeline amounts.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question">
+          <span class="qa-q-number">3</span>
+          <span class="qa-q-text">What is a construction-linked disbursement? How would you design the data model to track tranche-based disbursements?</span>
+          <span class="qa-toggle-icon">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p><strong>Construction-Linked Disbursement:</strong> For under-construction properties, the loan amount is released in installments (tranches) aligned with construction milestones — typically 4-6 disbursements:</p>
+            <ul>
+              <li>Tranche 1 (20%): On booking — foundation completion</li>
+              <li>Tranche 2 (20%): Plinth level</li>
+              <li>Tranche 3 (25%): Superstructure completion</li>
+              <li>Tranche 4 (20%): Finishing work</li>
+              <li>Tranche 5 (15%): Possession/OC received</li>
+            </ul>
+            <p><strong>Data Model:</strong></p>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">SQL — Tranche Tracking Table</span><button class="code-copy">Copy</button></div>
+              <pre><span class="token-keyword">CREATE TABLE</span> fact_disbursement_tranche (
+    tranche_id          <span class="token-function">BIGINT</span> <span class="token-keyword">IDENTITY</span>,
+    loan_id             <span class="token-function">BIGINT</span>,
+    tranche_number      <span class="token-function">INT</span>,         <span class="token-comment">-- 1,2,3,4,5</span>
+    tranche_amount      <span class="token-function">DECIMAL</span>(15,2),
+    cumulative_disbursed <span class="token-function">DECIMAL</span>(15,2),
+    remaining_sanctioned <span class="token-function">DECIMAL</span>(15,2),
+    construction_stage  <span class="token-function">VARCHAR</span>(50), <span class="token-comment">-- 'Foundation','Plinth','Superstructure'</span>
+    disbursement_date   <span class="token-function">DATE</span>,
+    processing_status   <span class="token-function">VARCHAR</span>(20),
+    <span class="token-keyword">CONSTRAINT</span> pk_tranche <span class="token-keyword">PRIMARY KEY</span> (tranche_id)
+);</pre>
+            </div>
+            <p><strong>Key queries this enables:</strong> "What % of sanctioned amounts are pending disbursement?", "Average time between tranches?", "Loans stuck at partial disbursement?"</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUBTOPIC B: Key Financial Metrics -->
+  <div class="subsection animate-in" id="domain-metrics">
+    <div class="subsection-header">
+      <div class="subsection-icon domain-icon">📊</div>
+      <h3>B. Key Financial Metrics (EMI, LTV, FOIR)</h3>
+      <label class="progress-check">
+        <input type="checkbox" id="prog-domain-b">
+        <span class="check-custom">✓</span>
+        <span class="check-label">Mastered</span>
+      </label>
+    </div>
+
+    <div class="content-card">
+      <h4>EMI (Equated Monthly Installment)</h4>
+      <p>EMI is the fixed monthly payment a borrower makes. It consists of two components:</p>
+      <ul>
+        <li><strong>Principal Component:</strong> The portion that reduces the outstanding loan balance. Increases over time.</li>
+        <li><strong>Interest Component:</strong> Calculated on the outstanding balance. Decreases over time.</li>
+      </ul>
+      <div class="code-block">
+        <div class="code-header"><span class="code-lang">Formula — EMI Calculation</span><button class="code-copy">Copy</button></div>
+        <pre><span class="token-comment">EMI = P × r × (1+r)^n / ((1+r)^n - 1)</span>
+
+Where:
+  P = Principal loan amount
+  r = Monthly interest rate (annual rate / 12 / 100)
+  n = Tenure in months
+
+<span class="token-comment">Example: Loan = ₹50,00,000 | Rate = 8.5% p.a. | Tenure = 20 years</span>
+  P = 5000000
+  r = 8.5 / 12 / 100 = 0.007083
+  n = 240 months
+
+  EMI = 5000000 × 0.007083 × (1.007083)^240 / ((1.007083)^240 - 1)
+  EMI ≈ ₹43,391
+
+<span class="token-comment">Total payment = 43,391 × 240 = ₹1,04,13,840</span>
+<span class="token-comment">Total interest = ₹1,04,13,840 - ₹50,00,000 = ₹54,13,840</span></pre>
+      </div>
+
+      <h4>LTV (Loan to Value Ratio)</h4>
+      <p><strong>LTV = (Loan Amount / Property Value) × 100</strong></p>
+      <ul>
+        <li>Determines how much of the property value is being financed.</li>
+        <li>RBI/NHB guidelines: Maximum LTV for home loans up to ₹30 lakhs = 90%; ₹30-75 lakhs = 80%; above ₹75 lakhs = 75%.</li>
+        <li>Lower LTV = Lower risk for the lender (more equity/skin-in-the-game from borrower).</li>
+        <li>LAP typically has lower LTV (50-70%) because it's a general-purpose loan secured by property.</li>
+      </ul>
+
+      <h4>FOIR (Fixed Obligations to Income Ratio)</h4>
+      <p><strong>FOIR = (All existing EMIs + proposed EMI) / Monthly Income × 100</strong></p>
+      <ul>
+        <li>Acceptable FOIR: typically 40-60% for salaried, 35-50% for self-employed.</li>
+        <li>If FOIR > threshold, the loan either gets rejected or the sanctioned amount is reduced.</li>
+      </ul>
+
+      <h4>Other Critical Metrics</h4>
+      <table class="data-table">
+        <thead>
+          <tr><th>Metric</th><th>Formula</th><th>Significance</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>AUM</strong></td><td>Sum of outstanding balance of all active loans</td><td>Total portfolio size — key growth metric</td></tr>
+          <tr><td><strong>Yield</strong></td><td>Total interest income / Average AUM × 100</td><td>Portfolio profitability measure</td></tr>
+          <tr><td><strong>NIM</strong></td><td>Yield - Cost of Funds</td><td>Net Interest Margin — core profitability</td></tr>
+          <tr><td><strong>GNPA%</strong></td><td>Gross NPA / Total Outstanding × 100</td><td>Asset quality indicator — lower is better</td></tr>
+          <tr><td><strong>NNPA%</strong></td><td>(Gross NPA - Provisions) / (Total Outstanding - Provisions) × 100</td><td>Net NPA after provisions</td></tr>
+          <tr><td><strong>PCR</strong></td><td>Total Provisions / Gross NPA × 100</td><td>Provision Coverage Ratio — higher = more conservative</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Q&A for Metrics -->
+    <div class="qa-section">
+      <div class="qa-section-title">🧠 Test Your Knowledge — Financial Metrics</div>
+
+      <div class="qa-item">
+        <div class="qa-question">
+          <span class="qa-q-number">1</span>
+          <span class="qa-q-text">Write a SQL query to calculate the monthly EMI schedule for a ₹50 lakh loan at 8.5% for 20 years, showing principal and interest breakdown.</span>
+          <span class="qa-toggle-icon">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">SQL — EMI Amortization Schedule</span><button class="code-copy">Copy</button></div>
+              <pre><span class="token-keyword">WITH RECURSIVE</span> amortization <span class="token-keyword">AS</span> (
+    <span class="token-comment">-- Base case: Month 0 (loan start)</span>
+    <span class="token-keyword">SELECT</span>
+        <span class="token-number">0</span> <span class="token-keyword">AS</span> month_num,
+        <span class="token-number">5000000.00</span> <span class="token-keyword">AS</span> opening_balance,
+        <span class="token-number">0.00</span> <span class="token-keyword">AS</span> emi,
+        <span class="token-number">0.00</span> <span class="token-keyword">AS</span> interest_component,
+        <span class="token-number">0.00</span> <span class="token-keyword">AS</span> principal_component,
+        <span class="token-number">5000000.00</span> <span class="token-keyword">AS</span> closing_balance
+    <span class="token-keyword">UNION ALL</span>
+    <span class="token-comment">-- Recursive: Each subsequent month</span>
+    <span class="token-keyword">SELECT</span>
+        month_num + <span class="token-number">1</span>,
+        closing_balance,
+        <span class="token-number">43391.00</span>,  <span class="token-comment">-- Pre-calculated EMI</span>
+        <span class="token-function">ROUND</span>(closing_balance * <span class="token-number">0.085</span> / <span class="token-number">12</span>, <span class="token-number">2</span>),
+        <span class="token-number">43391.00</span> - <span class="token-function">ROUND</span>(closing_balance * <span class="token-number">0.085</span> / <span class="token-number">12</span>, <span class="token-number">2</span>),
+        closing_balance - (<span class="token-number">43391.00</span> - <span class="token-function">ROUND</span>(closing_balance * <span class="token-number">0.085</span> / <span class="token-number">12</span>, <span class="token-number">2</span>))
+    <span class="token-keyword">FROM</span> amortization
+    <span class="token-keyword">WHERE</span> month_num < <span class="token-number">240</span>
+)
+<span class="token-keyword">SELECT</span> month_num, opening_balance, emi,
+       interest_component, principal_component, closing_balance
+<span class="token-keyword">FROM</span> amortization
+<span class="token-keyword">WHERE</span> month_num > <span class="token-number">0</span>;</pre>
+            </div>
+            <p><strong>Key insight:</strong> In the early months, ~70% of EMI goes to interest. By the last few years, ~90% goes to principal. This is why pre-payment early in the loan tenure saves the most interest.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question">
+          <span class="qa-q-number">2</span>
+          <span class="qa-q-text">A customer earns ₹1,20,000/month and already pays ₹15,000 EMI for a car loan. The FOIR threshold is 50%. What is the maximum EMI this customer can afford for a home loan?</span>
+          <span class="qa-toggle-icon">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p><strong>Calculation:</strong></p>
+            <ul>
+              <li>Monthly Income = ₹1,20,000</li>
+              <li>Maximum FOIR = 50%</li>
+              <li>Maximum total EMI = ₹1,20,000 × 50% = ₹60,000</li>
+              <li>Existing car EMI = ₹15,000</li>
+              <li><strong>Maximum home loan EMI = ₹60,000 - ₹15,000 = ₹45,000</strong></li>
+            </ul>
+            <p>At 8.5% for 20 years, an EMI of ₹45,000 translates to approximately ₹51.8 lakhs loan eligibility.</p>
+            <p><strong>Data engineering relevance:</strong> You'd build a derived column in the data warehouse: <span class="inline-code">max_eligible_emi = (monthly_income * foir_threshold) - existing_emi_obligations</span> — this feeds into the credit appraisal dashboard in Tableau.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question">
+          <span class="qa-q-number">3</span>
+          <span class="qa-q-text">What is the difference between GNPA % and NNPA %? Why does the NBFC's management dashboard track both?</span>
+          <span class="qa-toggle-icon">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p><strong>GNPA (Gross NPA) %</strong> = Total NPA amount / Total outstanding portfolio × 100</p>
+            <p>This shows the <strong>raw asset quality</strong> — what percentage of the portfolio has gone bad (90+ DPD).</p>
+            <p><strong>NNPA (Net NPA) %</strong> = (Gross NPA - Provisions) / (Total Outstanding - Provisions) × 100</p>
+            <p>This shows the <strong>net exposure after provisions</strong> — the actual risk remaining after the company has set aside money to absorb expected losses.</p>
+            <p><strong>Why track both:</strong></p>
+            <ul>
+              <li><strong>GNPA:</strong> Tells you how well the company is <em>originating</em> loans (credit quality). Rising GNPA = bad underwriting decisions.</li>
+              <li><strong>NNPA:</strong> Tells you how well the company is <em>provisioning</em> for losses. Low NNPA with high GNPA = company is being conservative (good). High NNPA = underprovisionaged (risky).</li>
+              <li><strong>Regulatory requirement:</strong> RBI mandates disclosure of both in quarterly results. Rating agencies (CRISIL, ICRA) use NNPA for credit ratings.</li>
+              <li><strong>Data engineering:</strong> Both metrics need to be calculated at portfolio-level, product-level, branch-level, and vintage-level for drill-down analysis in Tableau.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUBTOPIC C: Delinquency Management -->
+  <div class="subsection animate-in" id="domain-delinquency">
+    <div class="subsection-header">
+      <div class="subsection-icon domain-icon">⚠️</div>
+      <h3>C. Delinquency Management (DPD, NPA Classification)</h3>
+      <label class="progress-check">
+        <input type="checkbox" id="prog-domain-c">
+        <span class="check-custom">✓</span>
+        <span class="check-label">Mastered</span>
+      </label>
+    </div>
+
+    <div class="content-card">
+      <h4>DPD (Days Past Due)</h4>
+      <p><strong>DPD = Current Date - EMI Due Date</strong> (when EMI is unpaid)</p>
+      <p>DPD is the fundamental metric for measuring loan delinquency. It starts counting from the day after the EMI due date if payment is not received.</p>
+
+      <h4>DPD Buckets (Standard Industry Classification)</h4>
+      <table class="data-table">
+        <thead>
+          <tr><th>Bucket</th><th>DPD Range</th><th>Classification</th><th>Action</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>X</strong></td><td>0</td><td>Current / Regular</td><td>No action needed</td></tr>
+          <tr><td><strong>SMA-0</strong></td><td>1-30</td><td>Special Mention Account</td><td>SMS/email reminder</td></tr>
+          <tr><td><strong>SMA-1</strong></td><td>31-60</td><td>Special Mention Account</td><td>Phone calls, soft collection</td></tr>
+          <tr><td><strong>SMA-2</strong></td><td>61-90</td><td>Special Mention Account</td><td>Field visits, collection agency</td></tr>
+          <tr><td><strong>NPA</strong></td><td>90+</td><td>Non-Performing Asset</td><td>Legal notice, SARFAESI proceedings</td></tr>
+          <tr><td><strong>D1</strong></td><td>91-180</td><td>Sub-Standard</td><td>15% provision required</td></tr>
+          <tr><td><strong>D2</strong></td><td>181-365</td><td>Doubtful-1</td><td>25% provision + 100% on unsecured portion</td></tr>
+          <tr><td><strong>D3</strong></td><td>366-1095</td><td>Doubtful-2</td><td>40% provision + 100% on unsecured portion</td></tr>
+          <tr><td><strong>Loss</strong></td><td>1095+</td><td>Loss Asset</td><td>100% provision / Write-off</td></tr>
+        </tbody>
+      </table>
+
+      <h4>NPA Classification Rules (RBI Guidelines)</h4>
+      <ul>
+        <li><strong>Standard to NPA:</strong> Automatically classified as NPA when DPD crosses 90 days. No human intervention needed — the system must auto-classify.</li>
+        <li><strong>NPA to Standard (Upgrade):</strong> When all overdue amounts (principal + interest + penal interest) are fully paid and the account becomes current.</li>
+        <li><strong>Provisioning:</strong> Every NPA requires the NBFC to set aside provisions (reserves) against potential losses. These provisions directly reduce profitability.</li>
+      </ul>
+
+      <div class="code-block">
+        <div class="code-header"><span class="code-lang">SQL — DPD & NPA Classification Logic</span><button class="code-copy">Copy</button></div>
+        <pre><span class="token-keyword">SELECT</span>
+    loan_id,
+    emi_due_date,
+    payment_date,
+    <span class="token-keyword">CASE</span>
+        <span class="token-keyword">WHEN</span> payment_date <span class="token-keyword">IS NOT NULL</span>
+            <span class="token-keyword">THEN</span> <span class="token-function">DATEDIFF</span>(<span class="token-string">'day'</span>, emi_due_date, payment_date)
+        <span class="token-keyword">ELSE</span> <span class="token-function">DATEDIFF</span>(<span class="token-string">'day'</span>, emi_due_date, <span class="token-function">CURRENT_DATE</span>)
+    <span class="token-keyword">END</span> <span class="token-keyword">AS</span> dpd,
+    <span class="token-keyword">CASE</span>
+        <span class="token-keyword">WHEN</span> dpd = <span class="token-number">0</span> <span class="token-keyword">THEN</span> <span class="token-string">'X-Current'</span>
+        <span class="token-keyword">WHEN</span> dpd <span class="token-keyword">BETWEEN</span> <span class="token-number">1</span> <span class="token-keyword">AND</span> <span class="token-number">30</span> <span class="token-keyword">THEN</span> <span class="token-string">'SMA-0'</span>
+        <span class="token-keyword">WHEN</span> dpd <span class="token-keyword">BETWEEN</span> <span class="token-number">31</span> <span class="token-keyword">AND</span> <span class="token-number">60</span> <span class="token-keyword">THEN</span> <span class="token-string">'SMA-1'</span>
+        <span class="token-keyword">WHEN</span> dpd <span class="token-keyword">BETWEEN</span> <span class="token-number">61</span> <span class="token-keyword">AND</span> <span class="token-number">90</span> <span class="token-keyword">THEN</span> <span class="token-string">'SMA-2'</span>
+        <span class="token-keyword">WHEN</span> dpd > <span class="token-number">90</span> <span class="token-keyword">THEN</span> <span class="token-string">'NPA'</span>
+    <span class="token-keyword">END</span> <span class="token-keyword">AS</span> asset_classification
+<span class="token-keyword">FROM</span> fact_repayment;</pre>
+      </div>
+
+      <h4>Collections Process</h4>
+      <p>Collections is the process of recovering overdue amounts. It follows a structured escalation:</p>
+      <ul>
+        <li><strong>Soft Collection (1-30 DPD):</strong> Automated SMS, email, IVR calls. Data: Contact attempts, response rate.</li>
+        <li><strong>Tele-calling (31-60 DPD):</strong> Dedicated collection agents make phone calls. Data: Call outcomes (PTP = Promise to Pay, broken PTP, not reachable).</li>
+        <li><strong>Field Collection (61-90 DPD):</strong> Physical visits to customer's home/office. Data: Visit reports, PTP amounts, partial payments.</li>
+        <li><strong>Legal Action (90+ DPD):</strong> Legal notices under SARFAESI Act (Securitisation and Reconstruction of Financial Assets and Enforcement of Securities Interest Act). Property auction process.</li>
+      </ul>
+
+      <div class="key-point warning">
+        <span class="kp-icon">⚠️</span>
+        <span class="kp-text"><strong>Critical:</strong> In many interviews, they'll ask "How would you build a collections dashboard?" — Answer: DPD bucket-wise distribution (pie chart), Resolution rate by bucket, PTP conversion rate, Month-over-month roll-rate analysis (how many loans moved from SMA-1 to SMA-2 vs. SMA-1 to Current).</span>
+      </div>
+    </div>
+
+    <!-- Q&A for Delinquency -->
+    <div class="qa-section">
+      <div class="qa-section-title">🧠 Test Your Knowledge — Delinquency</div>
+
+      <div class="qa-item">
+        <div class="qa-question">
+          <span class="qa-q-number">1</span>
+          <span class="qa-q-text">Write a SQL query to create a DPD bucket distribution report showing loan count and outstanding amount per bucket.</span>
+          <span class="qa-toggle-icon">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">SQL — DPD Bucket Distribution</span><button class="code-copy">Copy</button></div>
+              <pre><span class="token-keyword">WITH</span> latest_dpd <span class="token-keyword">AS</span> (
+    <span class="token-keyword">SELECT</span> loan_id,
+           <span class="token-function">MAX</span>(dpd) <span class="token-keyword">AS</span> current_dpd,
+           <span class="token-function">MAX</span>(outstanding_balance) <span class="token-keyword">AS</span> outstanding
+    <span class="token-keyword">FROM</span> fact_repayment
+    <span class="token-keyword">WHERE</span> emi_due_date <= <span class="token-function">CURRENT_DATE</span>
+    <span class="token-keyword">GROUP BY</span> loan_id
+)
+<span class="token-keyword">SELECT</span>
+    <span class="token-keyword">CASE</span>
+        <span class="token-keyword">WHEN</span> current_dpd = <span class="token-number">0</span> <span class="token-keyword">THEN</span> <span class="token-string">'X (Current)'</span>
+        <span class="token-keyword">WHEN</span> current_dpd <span class="token-keyword">BETWEEN</span> <span class="token-number">1</span> <span class="token-keyword">AND</span> <span class="token-number">30</span> <span class="token-keyword">THEN</span> <span class="token-string">'SMA-0 (1-30)'</span>
+        <span class="token-keyword">WHEN</span> current_dpd <span class="token-keyword">BETWEEN</span> <span class="token-number">31</span> <span class="token-keyword">AND</span> <span class="token-number">60</span> <span class="token-keyword">THEN</span> <span class="token-string">'SMA-1 (31-60)'</span>
+        <span class="token-keyword">WHEN</span> current_dpd <span class="token-keyword">BETWEEN</span> <span class="token-number">61</span> <span class="token-keyword">AND</span> <span class="token-number">90</span> <span class="token-keyword">THEN</span> <span class="token-string">'SMA-2 (61-90)'</span>
+        <span class="token-keyword">WHEN</span> current_dpd > <span class="token-number">90</span> <span class="token-keyword">THEN</span> <span class="token-string">'NPA (90+)'</span>
+    <span class="token-keyword">END</span> <span class="token-keyword">AS</span> dpd_bucket,
+    <span class="token-function">COUNT</span>(*) <span class="token-keyword">AS</span> loan_count,
+    <span class="token-function">SUM</span>(outstanding) <span class="token-keyword">AS</span> total_outstanding,
+    <span class="token-function">ROUND</span>(<span class="token-function">COUNT</span>(*) * <span class="token-number">100.0</span> / <span class="token-function">SUM</span>(<span class="token-function">COUNT</span>(*)) <span class="token-keyword">OVER</span>(), <span class="token-number">2</span>) <span class="token-keyword">AS</span> pct_of_portfolio
+<span class="token-keyword">FROM</span> latest_dpd
+<span class="token-keyword">GROUP BY</span> dpd_bucket
+<span class="token-keyword">ORDER BY</span>
+    <span class="token-keyword">CASE</span> dpd_bucket
+        <span class="token-keyword">WHEN</span> <span class="token-string">'X (Current)'</span> <span class="token-keyword">THEN</span> <span class="token-number">1</span>
+        <span class="token-keyword">WHEN</span> <span class="token-string">'SMA-0 (1-30)'</span> <span class="token-keyword">THEN</span> <span class="token-number">2</span>
+        <span class="token-keyword">WHEN</span> <span class="token-string">'SMA-1 (31-60)'</span> <span class="token-keyword">THEN</span> <span class="token-number">3</span>
+        <span class="token-keyword">WHEN</span> <span class="token-string">'SMA-2 (61-90)'</span> <span class="token-keyword">THEN</span> <span class="token-number">4</span>
+        <span class="token-keyword">WHEN</span> <span class="token-string">'NPA (90+)'</span> <span class="token-keyword">THEN</span> <span class="token-number">5</span>
+    <span class="token-keyword">END</span>;</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question">
+          <span class="qa-q-number">2</span>
+          <span class="qa-q-text">What is a roll-rate analysis, and why is it critical for NBFC risk management? How would you build it as a data engineer?</span>
+          <span class="qa-toggle-icon">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p><strong>Roll-Rate Analysis</strong> measures the movement (flow) of loans between DPD buckets from one month to the next. It answers: "Of the loans in SMA-1 last month, how many moved to SMA-2, how many cured back to Current, and how many stayed?"</p>
+            <p><strong>Example Roll-Rate Matrix (March → April):</strong></p>
+            <table class="data-table">
+              <thead><tr><th>From \ To</th><th>Current</th><th>SMA-0</th><th>SMA-1</th><th>SMA-2</th><th>NPA</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Current</strong></td><td>95%</td><td>4%</td><td>0.8%</td><td>0.1%</td><td>0.1%</td></tr>
+                <tr><td><strong>SMA-0</strong></td><td>60%</td><td>15%</td><td>20%</td><td>3%</td><td>2%</td></tr>
+                <tr><td><strong>SMA-1</strong></td><td>25%</td><td>10%</td><td>20%</td><td>35%</td><td>10%</td></tr>
+                <tr><td><strong>SMA-2</strong></td><td>10%</td><td>5%</td><td>5%</td><td>20%</td><td>60%</td></tr>
+                <tr><td><strong>NPA</strong></td><td>5%</td><td>2%</td><td>1%</td><td>2%</td><td>90%</td></tr>
+              </tbody>
+            </table>
+            <p><strong>How to build it:</strong> Snapshot the DPD bucket of every loan on the last day of each month. Create a monthly_dpd_snapshot table. Then join current month snapshot with previous month to calculate the transition matrix.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question">
+          <span class="qa-q-number">3</span>
+          <span class="qa-q-text">A loan has the following payment history: EMI due on 5th of each month. Paid Jan-5 on time, Feb-5 not paid, Mar-5 not paid, Apr-5 not paid, May-5 paid ₹3 EMIs. What is the DPD on each date?</span>
+          <span class="qa-toggle-icon">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p><strong>DPD Calculation:</strong></p>
+            <ul>
+              <li><strong>Jan 5:</strong> Paid on time → DPD = 0</li>
+              <li><strong>Feb 5:</strong> Not paid → DPD starts. On Feb 28: DPD = 23 days</li>
+              <li><strong>Mar 5:</strong> Still not paid (Feb EMI overdue) → DPD = 28 days (from Feb 5 due date). Now 2 EMIs overdue.</li>
+              <li><strong>Mar 31:</strong> DPD = 54 days (counted from earliest unpaid EMI: Feb 5)</li>
+              <li><strong>Apr 5:</strong> 3 EMIs now overdue (Feb, Mar, Apr) → DPD = 59 days</li>
+              <li><strong>Apr 30:</strong> DPD = 84 days → SMA-2 category</li>
+              <li><strong>May 5:</strong> Customer pays 3 EMIs → ALL overdue cleared → DPD resets to 0</li>
+            </ul>
+            <p><strong>Key Rule:</strong> DPD is always calculated from the <strong>oldest unpaid EMI due date</strong>, not from the most recent. This is critical — many candidates get this wrong. Also, partial payment that doesn't clear the oldest due EMI does NOT reset DPD.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUBTOPIC D: Data Governance, Quality & Regulatory MIS -->
+  <div class="subsection animate-in" id="domain-governance">
+    <div class="subsection-header">
+      <div class="subsection-icon domain-icon">📋</div>
+      <h3>D. Data Governance, Quality & Regulatory MIS</h3>
+      <label class="progress-check">
+        <input type="checkbox" id="prog-domain-d">
+        <span class="check-custom">✓</span>
+        <span class="check-label">Mastered</span>
+      </label>
+    </div>
+
+    <div class="content-card">
+      <h4>Data Governance Framework</h4>
+      <p>In an NBFC, data governance is non-negotiable because of regulatory scrutiny by <strong>RBI</strong> and <strong>NHB</strong>. A Data Engineer must build guardrails into every pipeline.</p>
+      <ul>
+        <li><strong>Data Ownership:</strong> Every table in the warehouse must have a documented business owner (e.g., Collections team owns <code>fact_collection</code>, Risk team owns the NPA classification logic).</li>
+        <li><strong>Data Lineage:</strong> You must be able to trace any number on a Tableau dashboard back to its source system (LOS, LMS, CRM) through every transformation step. Tools: AWS Glue Data Catalog lineage, or manual lineage documentation.</li>
+        <li><strong>Access Controls:</strong> Strict separation — analysts can only read from <code>analytics</code> schema. ETL service accounts write to <code>staging</code> and <code>dwh</code>. Nobody except DBAs touches <code>admin</code>. Enforced via Redshift <code>GRANT</code>/<code>REVOKE</code> and IAM roles.</li>
+      </ul>
+
+      <h4>Data Quality Framework</h4>
+      <p>Financial data demands 100% accuracy. Build automated DQ checks into every ETL pipeline:</p>
+      <table class="data-table">
+        <thead>
+          <tr><th>DQ Check Type</th><th>What It Validates</th><th>NBFC Example</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Completeness</strong></td><td>No unexpected NULLs in critical fields</td><td><code>loan_id</code>, <code>customer_id</code>, <code>emi_amount</code> must never be NULL</td></tr>
+          <tr><td><strong>Uniqueness</strong></td><td>No duplicate primary keys</td><td>No duplicate <code>loan_id</code> in <code>fact_loan_account</code></td></tr>
+          <tr><td><strong>Referential Integrity</strong></td><td>All FKs exist in parent dimension</td><td>Every <code>branch_id</code> in fact table exists in <code>dim_branch</code></td></tr>
+          <tr><td><strong>Range / Threshold</strong></td><td>Values within expected business ranges</td><td>Interest rate between 6% and 18%; LTV ≤ 90%</td></tr>
+          <tr><td><strong>Freshness</strong></td><td>Data arrived on time</td><td>Today's staging table has rows with <code>etl_load_date = CURRENT_DATE</code></td></tr>
+          <tr><td><strong>Reconciliation</strong></td><td>Source count = Target count</td><td>MySQL source rows match Redshift staging count (covered in SQL Scenario 6)</td></tr>
+        </tbody>
+      </table>
+
+      <h4>Regulatory MIS & NHB/RBI Reporting</h4>
+      <p>An NBFC-HFC must submit periodic returns to the <strong>National Housing Bank (NHB)</strong> and <strong>RBI</strong>:</p>
+      <ul>
+        <li><strong>NHB Quarterly Returns:</strong> Portfolio composition (product-wise, geography-wise), NPA movement (opening balance → additions → recoveries → write-offs → closing balance), asset classification distribution.</li>
+        <li><strong>RBI Monthly Returns:</strong> ALM (Asset-Liability Mismatch) statements, exposure reports, large loan reports.</li>
+        <li><strong>Audit Requirements:</strong> Complete audit trail of all data changes. Every ETL run must log: rows loaded/rejected, checksums, timestamps, and the IAM role used. This is stored in an <code>etl_audit</code> schema.</li>
+      </ul>
+
+      <h4>Python Script: Automated DQ Check (Boto3 + Redshift)</h4>
+      <div class="code-block">
+        <div class="code-header"><span class="code-lang">Python — Data Quality Check via Boto3</span><button class="code-copy">Copy</button></div>
+        <pre><span class="token-keyword">import</span> boto3
+<span class="token-keyword">import</span> json
+
+<span class="token-keyword">def</span> run_dq_check():
+    <span class="token-comment"># Connect to Redshift Data API (serverless, no driver needed)</span>
+    client = boto3.client(<span class="token-string">'redshift-data'</span>, region_name=<span class="token-string">'ap-south-1'</span>)
+
+    dq_queries = {
+        <span class="token-string">'null_check'</span>: <span class="token-string">"""
+            SELECT COUNT(*) AS null_loans
+            FROM fact_loan_account
+            WHERE loan_id IS NULL OR customer_id IS NULL
+        """</span>,
+        <span class="token-string">'duplicate_check'</span>: <span class="token-string">"""
+            SELECT loan_id, COUNT(*) AS cnt
+            FROM fact_loan_account
+            GROUP BY loan_id HAVING COUNT(*) > 1
+            LIMIT 10
+        """</span>,
+        <span class="token-string">'freshness_check'</span>: <span class="token-string">"""
+            SELECT CASE
+                WHEN MAX(etl_load_date) = CURRENT_DATE THEN 'PASS'
+                ELSE 'FAIL - STALE DATA'
+            END AS freshness_status
+            FROM staging.stg_repayments
+        """</span>
+    }
+
+    <span class="token-keyword">for</span> check_name, sql <span class="token-keyword">in</span> dq_queries.items():
+        response = client.execute_statement(
+            ClusterIdentifier=<span class="token-string">'nbfc-redshift-cluster'</span>,
+            Database=<span class="token-string">'nbfc_dwh'</span>,
+            DbUser=<span class="token-string">'etl_service'</span>,
+            Sql=sql
+        )
+        <span class="token-builtin">print</span>(<span class="token-string">f"Submitted DQ check: {check_name} | ID: {response['Id']}"</span>)
+
+<span class="token-keyword">if</span> __name__ == <span class="token-string">'__main__'</span>:
+    run_dq_check()</pre>
+      </div>
+      <div class="key-point">
+        <span class="kp-icon">💡</span>
+        <span class="kp-text"><strong>Interview Tip:</strong> When they ask "How do you ensure data quality?", don't just say "we check." Walk through the 6 DQ dimensions above and say: "I automate these as Python scripts triggered by Airflow after every ETL load, and the results are logged to an audit table. If any check fails, the pipeline halts and sends a Slack/email alert."</span>
+      </div>
+    </div>
+
+    <div class="qa-section">
+      <div class="qa-section-title">🧠 Test Your Knowledge — Data Governance & Quality</div>
+
+      <div class="qa-item">
+        <div class="qa-question">
+          <span class="qa-q-number">1</span>
+          <span class="qa-q-text">Your ETL pipeline loaded 50,000 rows yesterday but the source system shows 50,012. How do you investigate and resolve this discrepancy?</span>
+          <span class="qa-toggle-icon">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <ol>
+              <li><strong>Check ETL audit logs:</strong> Look at the <code>etl_audit</code> table for yesterday's run — how many rows were extracted, how many passed DQ checks, and how many were rejected?</li>
+              <li><strong>Check STL_LOAD_ERRORS:</strong> If data was rejected during COPY, Redshift logs the reason (data type mismatch, encoding error, etc.).</li>
+              <li><strong>Check for duplicates in source:</strong> The source might have 12 duplicate rows that your ETL correctly deduplicated.</li>
+              <li><strong>Check filter logic:</strong> Your ETL might have a WHERE clause that excludes certain records (e.g., soft-deleted rows, test accounts).</li>
+              <li><strong>Resolution:</strong> Build a reconciliation table that logs source_count, target_count, and delta for every run. Set an alert threshold (e.g., >0.1% difference triggers investigation).</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question">
+          <span class="qa-q-number">2</span>
+          <span class="qa-q-text">How would you handle a scenario where the source system schema changes without notice (e.g., a new column is added or a column is renamed)?</span>
+          <span class="qa-toggle-icon">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p><strong>Prevention:</strong></p>
+            <ul>
+              <li><strong>Schema validation step:</strong> Add a pre-load task in your Airflow DAG that compares the incoming file/table schema against expected schema stored in a config file.</li>
+              <li><strong>Glue Crawlers:</strong> Schedule Glue Crawlers to detect schema drift. If the crawler detects new columns, send an SNS alert for human review before proceeding.</li>
+              <li><strong>Defensive SQL:</strong> Use explicit column lists in your SELECT and COPY statements instead of <code>SELECT *</code>. If a column is renamed, the pipeline fails explicitly (which is better than loading wrong data silently).</li>
+            </ul>
+            <p><strong>Recovery:</strong> Add the new column to staging, run ALTER TABLE on the target, backfill the new column, and update all downstream views/MVs.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question">
+          <span class="qa-q-number">3</span>
+          <span class="qa-q-text">What is the difference between Data Quality and Data Governance? Give NBFC-specific examples of each.</span>
+          <span class="qa-toggle-icon">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <table class="data-table">
+              <thead><tr><th>Aspect</th><th>Data Quality</th><th>Data Governance</th></tr></thead>
+              <tbody>
+                <tr><td><strong>What</strong></td><td>Is the data accurate, complete, and timely?</td><td>Who can access, modify, and own the data?</td></tr>
+                <tr><td><strong>Scope</strong></td><td>Technical — automated checks in pipelines</td><td>Organizational — policies, roles, accountability</td></tr>
+                <tr><td><strong>NBFC Example</strong></td><td>Detecting that 500 loans have NULL interest rates in staging</td><td>Defining that only the Risk team can modify the NPA classification logic</td></tr>
+                <tr><td><strong>Tools</strong></td><td>Python DQ scripts, Great Expectations, dbt tests</td><td>Data catalogs, access policies, lineage tools</td></tr>
+              </tbody>
+            </table>
+            <p><strong>Interview answer:</strong> "Data Quality is the health of the data itself. Data Governance is the organizational framework that ensures data quality is maintained — it defines who is responsible, who can access what, and what the standards are."</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question">
+          <span class="qa-q-number">4</span>
+          <span class="qa-q-text">An NHB quarterly return requires NPA movement data (opening → additions → recoveries → write-offs → closing). How would you build this as a data engineer?</span>
+          <span class="qa-toggle-icon">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p><strong>Design an NPA Movement Fact Table:</strong></p>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">SQL — NPA Movement Report</span><button class="code-copy">Copy</button></div>
+              <pre><span class="token-keyword">SELECT</span>
+    product_type,
+    <span class="token-function">SUM</span>(<span class="token-keyword">CASE WHEN</span> npa_status_prev = <span class="token-string">'NPA'</span> <span class="token-keyword">THEN</span> outstanding <span class="token-keyword">ELSE</span> <span class="token-number">0</span> <span class="token-keyword">END</span>) <span class="token-keyword">AS</span> opening_npa,
+    <span class="token-function">SUM</span>(<span class="token-keyword">CASE WHEN</span> npa_status_prev != <span class="token-string">'NPA'</span> <span class="token-keyword">AND</span> npa_status_curr = <span class="token-string">'NPA'</span>
+        <span class="token-keyword">THEN</span> outstanding <span class="token-keyword">ELSE</span> <span class="token-number">0</span> <span class="token-keyword">END</span>) <span class="token-keyword">AS</span> additions,
+    <span class="token-function">SUM</span>(<span class="token-keyword">CASE WHEN</span> npa_status_prev = <span class="token-string">'NPA'</span> <span class="token-keyword">AND</span> npa_status_curr = <span class="token-string">'Standard'</span>
+        <span class="token-keyword">THEN</span> outstanding <span class="token-keyword">ELSE</span> <span class="token-number">0</span> <span class="token-keyword">END</span>) <span class="token-keyword">AS</span> recoveries,
+    <span class="token-function">SUM</span>(<span class="token-keyword">CASE WHEN</span> npa_status_prev = <span class="token-string">'NPA'</span> <span class="token-keyword">AND</span> is_written_off = <span class="token-keyword">TRUE</span>
+        <span class="token-keyword">THEN</span> outstanding <span class="token-keyword">ELSE</span> <span class="token-number">0</span> <span class="token-keyword">END</span>) <span class="token-keyword">AS</span> write_offs
+<span class="token-keyword">FROM</span> fact_npa_monthly_snapshot
+<span class="token-keyword">WHERE</span> report_quarter = <span class="token-string">'Q4-FY2026'</span>
+<span class="token-keyword">GROUP BY</span> product_type;</pre>
+            </div>
+            <p><strong>Key design:</strong> Maintain a monthly snapshot table that captures each loan's NPA status at month-end. Compare consecutive months to derive movement. This requires SCD-style snapshotting — not just current state.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question">
+          <span class="qa-q-number">5</span>
+          <span class="qa-q-text">How do you implement a data quality alerting system that stops bad data from reaching production dashboards?</span>
+          <span class="qa-toggle-icon">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p><strong>Gate-based architecture:</strong></p>
+            <ol>
+              <li><strong>Staging gate:</strong> Raw data lands in <code>staging</code> schema. Airflow runs DQ checks (null, duplicate, freshness, range). If ANY check fails → halt pipeline, send SNS/Slack alert, log to <code>dq_failures</code> table.</li>
+              <li><strong>Promotion gate:</strong> Only after ALL DQ checks pass, the Airflow DAG promotes data from <code>staging</code> → <code>dwh</code> schema. This is the "production" layer that Tableau points to.</li>
+              <li><strong>Dashboard staleness alert:</strong> A separate monitoring DAG checks if the <code>dwh</code> layer was updated today. If not, it means the pipeline failed silently — send an alert to the data team AND the business stakeholders.</li>
+            </ol>
+            <p><strong>Result:</strong> Business users never see bad or stale data. If something goes wrong, they see yesterday's data (which is correct) while the data team fixes the pipeline.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<div class="page-navigation animate-in" style="display:flex; justify-content:space-between; margin-top:40px; padding-top:20px; border-top:1px solid rgba(255,255,255,0.1);"><a href="aws.html" class="btn btn-secondary">← Module 1: AWS</a><a href="sql.html" class="btn btn-primary">Module 3: SQL →</a></div>
+</main>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <p>Built with 💜 for Lakhbeer Shah's Interview Preparation — Wednesday 2026</p>
+  <div class="footer-links">
+    <a href="../index.html">Dashboard</a>
+    <a href="aws.html">AWS</a>
+    <a href="domain.html">NBFC</a>
+    <a href="sql.html">SQL</a>
+    <a href="airflow.html">Airflow</a>
+    <a href="tableau.html">Tableau</a>
+    <a href="behavioral.html">Behaviour</a>
+    <a href="interview.html">Q&amp;A</a>
+  </div>
+</footer>
+
+<script src="../assets/js/script.js"></script>
+</body>
+</html>

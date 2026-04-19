@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Comprehensive Interview Prep Portal for Data Engineer role at NBFC Housing Finance — Apache Airflow Orchestration.">
+  <title>NBFC Data Engineer Interview Mastery | Airflow</title>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body>
+
+<!-- ===== NAVIGATION ===== -->
+<nav class="navbar" id="navbar">
+  <div class="nav-content">
+    <a href="../index.html" class="nav-brand">
+      <span class="brand-icon">🎯</span>
+      <span>InterviewPrep</span>
+    </a>
+
+    <ul class="nav-links" id="navLinks">
+      <li><a href="aws.html">AWS</a></li>
+      <li><a href="domain.html">NBFC</a></li>
+      <li><a href="sql.html">SQL</a></li>
+      <li><a href="airflow.html">Airflow</a></li>
+      <li><a href="tableau.html">Tableau</a></li>
+      <li><a href="behavioral.html">Behaviour</a></li>
+      <li><a href="interview.html">Q&amp;A</a></li>
+    </ul>
+
+    <div class="nav-actions">
+      <div class="progress-badge">
+        <svg class="progress-ring" viewBox="0 0 20 20">
+          <circle cx="10" cy="10" r="8" fill="none" stroke="rgba(99,102,241,0.2)" stroke-width="2.5"/>
+          <circle id="progressRing" cx="10" cy="10" r="8" fill="none" stroke="#6366f1" stroke-width="2.5"
+                  stroke-dasharray="50.26" stroke-dashoffset="50.26" stroke-linecap="round"
+                  transform="rotate(-90 10 10)" style="transition: stroke-dashoffset 0.5s ease;"/>
+        </svg>
+        <span id="progressText">0% Mastered</span>
+      </div>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">🌙</button>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">☰</button>
+    </div>
+  </div>
+</nav>
+
+<main style="padding-top:100px;">
+<!-- ============================================================ -->
+<!-- MODULE 5: APACHE AIRFLOW & ORCHESTRATION                     -->
+<!-- ============================================================ -->
+<section class="section" id="module-airflow">
+  <div class="section-header animate-in">
+    <span class="section-badge aws">💨 Module 5</span>
+    <h2>Apache Airflow Orchestration</h2>
+    <p>Master DAG design, scheduling, Python/Bash scripting, and troubleshooting for complex ETL pipelines.</p>
+  </div>
+
+  <div class="stats-row animate-in">
+    <div class="stat-card">
+      <div class="stat-value">2</div>
+      <div class="stat-label">Subtopics</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">8</div>
+      <div class="stat-label">Scenarios</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">45</div>
+      <div class="stat-label">Minutes Est.</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">🐍</div>
+      <div class="stat-label">Python Focus</div>
+    </div>
+  </div>
+
+  <!-- SUBTOPIC A: Core Architecture & Components -->
+  <div class="subsection animate-in" id="airflow-core">
+    <div class="subsection-header">
+      <div class="subsection-icon aws-icon">🏗️</div>
+      <h3>A. Core Architecture & Components</h3>
+      <label class="progress-check">
+        <input type="checkbox" id="prog-airflow-a">
+        <span class="check-custom">✓</span>
+        <span class="check-label">Mastered</span>
+      </label>
+    </div>
+
+    <div class="content-card">
+      <h4>What is Apache Airflow?</h4>
+      <p>Airflow is an open-source platform to programmatically <strong>author, schedule, and monitor</strong> workflows. Pipelines are defined using <strong>Python</strong> scripts via a concept called DAGs.</p>
+
+      <h4>Airflow Architecture</h4>
+      <ul>
+        <li><strong>Webserver:</strong> The Flask-based UI where you monitor DAG runs, view logs, and trigger manual executions.</li>
+        <li><strong>Scheduler:</strong> A daemon that constantly monitors all DAGs and tasks. When dependencies are met and schedules align, it sends tasks to the executor.</li>
+        <li><strong>Executor / Workers:</strong> Executes the tasks assigned by the scheduler. (e.g., CeleryExecutor scales workers across multiple machines; LocalExecutor runs on the scheduler machine).</li>
+        <li><strong>Metadata Database:</strong> (usually PostgreSQL or MySQL) stores state, history, user information, and variables.</li>
+      </ul>
+
+      <h4>Key Concepts</h4>
+      <table class="data-table">
+        <thead>
+          <tr><th>Component</th><th>Definition</th><th>Example Use Case</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>DAG</strong></td>
+            <td>Directed Acyclic Graph. A collection of tasks reflecting dependencies.</td>
+            <td>"Nightly_NBFC_ETL_Pipeline"</td>
+          </tr>
+          <tr>
+            <td><strong>Operator</strong></td>
+            <td>A template for a specific kind of work.</td>
+            <td><span class="inline-code">PythonOperator</span> (executes python logic)</td>
+          </tr>
+          <tr>
+            <td><strong>Sensor</strong></td>
+            <td>A special operator that waits for an external event to happen.</td>
+            <td><span class="inline-code">S3KeySensor</span> (waits for a CSV to land)</td>
+          </tr>
+          <tr>
+            <td><strong>Task</strong></td>
+            <td>An instantiated Operator inside a specific DAG.</td>
+            <td><span class="inline-code">run_dq_check = PythonOperator(...)</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h4>Python vs Shell Scripting in Pipelines</h4>
+      <ul>
+        <li><strong>Shell Scripting (BashOperator):</strong> Ideal for simple file system operations (moving files, unzipping), executing compiled binaries, or invoking external CLI commands (e.g., <span class="inline-code">aws s3 cp</span>).</li>
+        <li><strong>Python Scripting (PythonOperator):</strong> Ideal for interacting with REST APIs, manipulating small internal dataframes (Pandas), or implementing complex business logic and conditional branching.</li>
+      </ul>
+      <div class="key-point">
+        <span class="kp-icon">💡</span>
+        <span class="kp-text"><strong>Interview Tip:</strong> Emphasize that Airflow is an <strong>orchestrator, not an execution engine</strong>. It orchestrates big data tools (like Spark, Redshift, Snowflake). You should never process 10GB of data directly inside an Airflow PythonOperator because it will crash the worker. Send the compute to Redshift or EMR instead.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUBTOPIC B: Scheduling and Advanced Paradigms -->
+  <div class="subsection animate-in" id="airflow-advanced">
+    <div class="subsection-header">
+      <div class="subsection-icon check-icon">⚙️</div>
+      <h3>B. Scheduling & Advanced Paradigms</h3>
+      <label class="progress-check">
+        <input type="checkbox" id="prog-airflow-b">
+        <span class="check-custom">✓</span>
+        <span class="check-label">Mastered</span>
+      </label>
+    </div>
+
+    <div class="content-card">
+      <h4>Execution Dates & Catchup</h4>
+      <p>Airflow's timing logic is famously counter-intuitive. A DAG run begins <strong>at the end</strong> of its schedule interval.</p>
+      <ul>
+        <li><strong>Logical Date (Execution Date):</strong> The start of the data interval. If a daily DAG is scheduled for <span class="inline-code">@daily</span> (midnight), the run for Jan 1st data will physically execute on <strong>Jan 2nd at 00:00.</strong></li>
+        <li><strong>Catchup:</strong> If <span class="inline-code">catchup=True</span>, Airflow will automatically trigger runs for every interval between the <span class="inline-code">start_date</span> and today that haven't been completed. Useful for backfilling historical loan data.</li>
+      </ul>
+
+      <h4>Passing Data Between Tasks (XComs)</h4>
+      <p>Tasks in Airflow run independently, often on entirely different worker machines. They cannot share local python variables.</p>
+      <ul>
+        <li><strong>XCom (Cross-Communication):</strong> Allows tasks to push and pull small amounts of metadata to the Metadata Database (e.g., passing a generated Job ID or row count from Task A to Task B).</li>
+        <li><strong>Anti-pattern:</strong> Pushing a Pandas DataFrame to XCom. If the dataframe is huge, it will crash the Airflow Metadata Database. Write large data to S3, and pass the S3 URI via XCom instead.</li>
+      </ul>
+    </div>
+
+    <div class="qa-section">
+      <div class="qa-section-title">🧠 Test Your Knowledge — Airflow Scripts & Scenarios</div>
+
+      <div class="qa-item">
+        <div class="qa-question">
+          <span class="qa-q-number">1</span>
+          <span class="qa-q-text">Write a basic Python Airflow script that defines a DAG to check if an S3 file exists, runs a python script, and then triggers a dbt model.</span>
+          <span class="qa-toggle-icon">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">Python — Airflow DAG Definition</span><button class="code-copy">Copy</button></div>
+              <pre><span class="token-keyword">from</span> datetime <span class="token-keyword">import</span> datetime, timedelta
+<span class="token-keyword">from</span> airflow <span class="token-keyword">import</span> DAG
+<span class="token-keyword">from</span> airflow.providers.amazon.aws.sensors.s3 <span class="token-keyword">import</span> S3KeySensor
+<span class="token-keyword">from</span> airflow.operators.python <span class="token-keyword">import</span> PythonOperator
+<span class="token-keyword">from</span> airflow.operators.bash <span class="token-keyword">import</span> BashOperator
+
+default_args = {
+    <span class="token-string">'owner'</span>: <span class="token-string">'data_eng_team'</span>,
+    <span class="token-string">'depends_on_past'</span>: <span class="token-keyword">False</span>,
+    <span class="token-string">'email_on_failure'</span>: <span class="token-keyword">True</span>,
+    <span class="token-string">'retries'</span>: <span class="token-number">3</span>,
+    <span class="token-string">'retry_delay'</span>: timedelta(minutes=<span class="token-number">5</span>)
+}
+
+<span class="token-keyword">def</span> process_metadata():
+    <span class="token-comment"># Perform lightweight Python scripting, API calls, or logging</span>
+    <span class="token-builtin">print</span>(<span class="token-string">"Metadata processed and validated!"</span>)
+
+<span class="token-keyword">with</span> DAG(
+    <span class="token-string">'nbfc_daily_pipeline'</span>,
+    default_args=default_args,
+    description=<span class="token-string">'Daily housing loan data pipeline'</span>,
+    schedule_interval=<span class="token-string">'@daily'</span>,
+    start_date=datetime(<span class="token-number">2024</span>, <span class="token-number">1</span>, <span class="token-number">1</span>),
+    catchup=<span class="token-keyword">False</span>
+) <span class="token-keyword">as</span> dag:
+
+    <span class="token-comment"># Task 1: Sensor waiting for the file</span>
+    check_s3_file = S3KeySensor(
+        task_id=<span class="token-string">'check_s3_file'</span>,
+        bucket_name=<span class="token-string">'nbfc-raw-data'</span>,
+        bucket_key=<span class="token-string">'loans/{{ ds }}/daily_dump.csv'</span>, <span class="token-comment"># {{ ds }} is the execution_date macro</span>
+        timeout=<span class="token-number">3600</span>
+    )
+
+    <span class="token-comment"># Task 2: Python Operator</span>
+    extract_metadata = PythonOperator(
+        task_id=<span class="token-string">'extract_metadata'</span>,
+        python_callable=process_metadata
+    )
+
+    <span class="token-comment"># Task 3: Bash Operator (Triggering a shell script or dbt)</span>
+    run_dbt = BashOperator(
+        task_id=<span class="token-string">'run_dbt_models'</span>,
+        bash_command=<span class="token-string">'dbt run --models fact_loan_account'</span>
+    )
+
+    <span class="token-comment"># defined dependencies using bitshift operators</span>
+    check_s3_file >> extract_metadata >> run_dbt</pre>
+            </div>
+            <p><strong>Note the dependencies at the bottom:</strong> The <code>>></code> operator logically links the tasks sequentially.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question">
+          <span class="qa-q-number">2</span>
+          <span class="qa-q-text">A daily ETL DAG failed on the "Transform" task at 3:00 AM. It's now 9:00 AM. How do you troubleshoot and resume it?</span>
+          <span class="qa-toggle-icon">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p><strong>Step 1: Check the Logs.</strong> Go to the Airflow Web UI, click the failed red "Transform" task square, and view the Log tab. Look for standard Python errors (e.g., <code>KeyError</code>, <code>ConnectionTimeout</code>).</p>
+            <p><strong>Step 2: Investigate Data or Code.</strong> Determine if the error was transient (e.g., a database connection timeout) or fatal (e.g., a schema change in the source file causing a column mismatch).</p>
+            <p><strong>Step 3: Resolve & Resume.</strong> If transient, click the failed task and hit <strong>"Clear"</strong>. This resets the task's state to None, and the scheduler will automatically retry it. Because dependencies are preserved, downstream tasks will also run once "Transform" succeeds. You do not need to restart the entire DAG from the beginning.</p>
+            <p><strong>Important requirement: Idempotency.</strong> For "Clearing" to work safely, the task must be <em>idempotent</em> — running it 5 times must have the exact same end result as running it 1 time, without duplicating data.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question">
+          <span class="qa-q-number">3</span>
+          <span class="qa-q-text">You are designing a new architecture on AWS. When would you choose AWS Step Functions vs Apache Airflow for Pipeline Orchestration?</span>
+          <span class="qa-toggle-icon">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <table class="data-table">
+              <thead><tr><th>Feature</th><th>Apache Airflow (via MWAA)</th><th>AWS Step Functions</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Workflow Definition</strong></td><td>Python code (highly flexible, object-oriented)</td><td>JSON / Amazon States Language (ASL)</td></tr>
+                <tr><td><strong>Complexity</strong></td><td>Excels at highly complex dependencies, dynamic task generation, and data-aware scheduling.</td><td>Excels at straightforward lambda-chaining and AWS service orchestration.</td></tr>
+                <tr><td><strong>State Handling</strong></td><td>Tasks run until complete; state managed centrally via relational DB.</td><td>Transitions instantly between states, max 1 year execution length.</td></tr>
+                <tr><td><strong>Vendor Lock-in</strong></td><td>No lock-in. Can deploy on-prem, GCP, Azure, or AWS.</td><td>Total AWS lock-in.</td></tr>
+                <tr><td><strong>Recommendation</strong></td><td>Use for Data Engineering pipelines with complex backfilling.</td><td>Use for application-integration (microservices).</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question">
+          <span class="qa-q-number">4</span>
+          <span class="qa-q-text">What is idempotency in the context of Airflow tasks, and why is it critical for financial data pipelines?</span>
+          <span class="qa-toggle-icon">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p><strong>Idempotency</strong> means running a task N times produces the exact same result as running it once. In financial pipelines, this prevents catastrophic errors like:</p>
+            <ul>
+              <li>Double-loading EMI payments (inflating collections by 2x)</li>
+              <li>Duplicate NPA classifications causing wrong provisioning</li>
+              <li>Overstating disbursement amounts in regulatory reports</li>
+            </ul>
+            <p><strong>How to achieve it:</strong> Use <code>DELETE + INSERT</code> (or <code>TRUNCATE + LOAD</code>) instead of pure <code>INSERT</code>. This way, if a task runs twice, the second run deletes the first run's data and re-inserts cleanly. Alternatively, use <code>MERGE</code>/<code>UPSERT</code> with a unique key.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question">
+          <span class="qa-q-number">5</span>
+          <span class="qa-q-text">How do you handle dependencies between two completely separate DAGs? For example, DAG_A loads raw data and DAG_B transforms it.</span>
+          <span class="qa-toggle-icon">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p><strong>Option 1 — ExternalTaskSensor:</strong> In DAG_B, add an <code>ExternalTaskSensor</code> that monitors DAG_A's final task. DAG_B will not start until DAG_A completes successfully.</p>
+            <p><strong>Option 2 — TriggerDagRunOperator:</strong> At the end of DAG_A, add a <code>TriggerDagRunOperator</code> that explicitly kicks off DAG_B. This is a push model vs. the poll model of sensors.</p>
+            <p><strong>Option 3 — Dataset-aware scheduling (Airflow 2.4+):</strong> DAG_A declares that it produces a dataset (<code>Dataset("s3://bucket/processed/")</code>). DAG_B is scheduled <code>schedule=[dataset_obj]</code>. Airflow automatically triggers DAG_B when DAG_A writes to that dataset.</p>
+            <p><strong>NBFC recommendation:</strong> Use TriggerDagRunOperator for critical financial pipelines (explicit, auditable). Use Datasets for loosely coupled analytical pipelines.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question">
+          <span class="qa-q-number">6</span>
+          <span class="qa-q-text">What is the difference between CeleryExecutor, LocalExecutor, and KubernetesExecutor? Which would you choose for an NBFC data team?</span>
+          <span class="qa-toggle-icon">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <table class="data-table">
+              <thead><tr><th>Executor</th><th>How It Works</th><th>Best For</th></tr></thead>
+              <tbody>
+                <tr><td><strong>LocalExecutor</strong></td><td>Runs tasks as subprocesses on the scheduler machine</td><td>Small teams, dev/staging environments</td></tr>
+                <tr><td><strong>CeleryExecutor</strong></td><td>Distributes tasks across a pool of worker machines via Redis/RabbitMQ</td><td>Production workloads with high parallelism</td></tr>
+                <tr><td><strong>KubernetesExecutor</strong></td><td>Spins up a fresh Kubernetes pod per task</td><td>Cloud-native teams, complete task isolation</td></tr>
+              </tbody>
+            </table>
+            <p><strong>For NBFC:</strong> Use <strong>CeleryExecutor</strong> (or <strong>AWS MWAA</strong> which manages this for you). Financial pipelines need reliable parallel execution but don't usually require per-task container isolation. MWAA abstracts away all infrastructure management.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question">
+          <span class="qa-q-number">7</span>
+          <span class="qa-q-text">Your nightly Airflow pipeline has 30 tasks. 25 succeed but 5 fail due to a temporary Redshift connection timeout. How do you re-run ONLY the 5 failed tasks?</span>
+          <span class="qa-toggle-icon">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p><strong>Use "Clear" with selective scope:</strong> In the Airflow UI, click on the failed DAG run → select the 5 failed task instances → click <strong>"Clear"</strong>. This resets their state to "None" and the scheduler will automatically retry them. The 25 already-succeeded tasks remain untouched.</p>
+            <p><strong>Key requirement:</strong> The failed tasks MUST be idempotent. If they did a partial INSERT before failing, clearing and re-running will cause duplicate rows unless you use DELETE+INSERT or MERGE patterns.</p>
+            <p><strong>CLI alternative:</strong> <code>airflow tasks clear -t task_name -s START_DATE -e END_DATE dag_id</code></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question">
+          <span class="qa-q-number">8</span>
+          <span class="qa-q-text">How do you securely store database passwords and API keys in Airflow? Never hardcode credentials — explain the best practice.</span>
+          <span class="qa-toggle-icon">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p><strong>Use Airflow Connections + a Secrets Backend:</strong></p>
+            <ul>
+              <li><strong>Airflow Connections:</strong> Store credentials via the UI (Admin → Connections) or CLI. Operators reference connections by <code>conn_id</code> (e.g., <code>RedshiftSQLOperator(redshift_conn_id='nbfc_redshift')</code>).</li>
+              <li><strong>AWS Secrets Manager Backend:</strong> Configure Airflow to pull secrets from AWS Secrets Manager at runtime. Secrets are never stored in the Airflow Metadata DB. Set <code>secrets_backend = airflow.providers.amazon.aws.secrets.secrets_manager.SecretsManagerBackend</code> in <code>airflow.cfg</code>.</li>
+              <li><strong>Never do:</strong> <code>password = "MyP@ssw0rd"</code> in DAG Python files. These get committed to Git and are visible to anyone with repository access.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="page-navigation animate-in" style="display:flex; justify-content:space-between; margin-top:40px; padding-top:20px; border-top:1px solid rgba(255,255,255,0.1);"><a href="sql.html" class="btn btn-secondary">← Module 3: SQL</a><a href="behavioral.html" class="btn btn-primary">Module 5: Behavioral →</a></div>
+</main>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <p>Built with 💜 for Lakhbeer Shah's Interview Preparation — Wednesday 2026</p>
+  <div class="footer-links">
+    <a href="../index.html">Dashboard</a>
+    <a href="aws.html">AWS</a>
+    <a href="domain.html">NBFC</a>
+    <a href="sql.html">SQL</a>
+    <a href="airflow.html">Airflow</a>
+    <a href="tableau.html">Tableau</a>
+    <a href="behavioral.html">Behaviour</a>
+    <a href="interview.html">Q&amp;A</a>
+  </div>
+</footer>
+
+<script src="../assets/js/script.js"></script>
+</body>
+</html>

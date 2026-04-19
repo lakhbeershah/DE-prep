@@ -1,0 +1,1239 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Comprehensive Interview Prep Portal for Data Engineer role at NBFC Housing Finance — AWS Redshift, ETL, SQL, and Domain Knowledge.">
+  <title>NBFC Data Engineer Interview Mastery | Prep Portal</title>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body>
+
+<!-- ===== NAVIGATION ===== -->
+<nav class="navbar" id="navbar">
+  <div class="nav-content">
+    <a href="../index.html" class="nav-brand">
+      <span class="brand-icon">🎯</span>
+      <span>InterviewPrep</span>
+    </a>
+
+    <ul class="nav-links" id="navLinks">
+      <li><a href="aws.html">AWS</a></li>
+      <li><a href="domain.html">NBFC</a></li>
+      <li><a href="sql.html">SQL</a></li>
+      <li><a href="airflow.html">Airflow</a></li>
+      <li><a href="tableau.html">Tableau</a></li>
+      <li><a href="behavioral.html">Behaviour</a></li>
+      <li><a href="interview.html">Q&amp;A</a></li>
+    </ul>
+
+    <div class="nav-actions">
+      <div class="progress-badge">
+        <svg class="progress-ring" viewBox="0 0 20 20">
+          <circle cx="10" cy="10" r="8" fill="none" stroke="rgba(99,102,241,0.2)" stroke-width="2.5"/>
+          <circle id="progressRing" cx="10" cy="10" r="8" fill="none" stroke="#6366f1" stroke-width="2.5"
+                  stroke-dasharray="50.26" stroke-dashoffset="50.26" stroke-linecap="round"
+                  transform="rotate(-90 10 10)" style="transition: stroke-dashoffset 0.5s ease;"/>
+        </svg>
+        <span id="progressText">0% Mastered</span>
+      </div>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">🌙</button>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">☰</button>
+    </div>
+  </div>
+</nav>
+
+
+<main style="padding-top:100px;">
+<!-- ============================================================ -->
+<!-- MODULE 1: AWS & DATA ENGINEERING CORE                         -->
+<!-- ============================================================ -->
+<section class="section" id="module-aws">
+  <div class="section-header animate-in">
+    <span class="section-badge aws">☁️ Module 1</span>
+    <h2>AWS & Data Engineering Core</h2>
+    <p>Master the cloud data engineering stack — Redshift architecture, ETL pipelines, CDC, and dimensional modeling.</p>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-row animate-in">
+    <div class="stat-card">
+      <div class="stat-value">6</div>
+      <div class="stat-label">Subtopics</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">18</div>
+      <div class="stat-label">Q&A Pairs</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">90</div>
+      <div class="stat-label">Minutes Est.</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">⭐</div>
+      <div class="stat-label">High Priority</div>
+    </div>
+  </div>
+
+  <!-- SUBTOPIC A: AWS Redshift Architecture & Optimization -->
+  <div class="subsection animate-in" id="aws-redshift">
+    <div class="subsection-header">
+      <div class="subsection-icon aws-icon">🏗️</div>
+      <h3>A. AWS Redshift Architecture & Optimization</h3>
+      <label class="progress-check">
+        <input type="checkbox" id="prog-aws-a">
+        <span class="check-custom">✓</span>
+        <span class="check-label">Mastered</span>
+      </label>
+    </div>
+
+    <div class="content-card">
+      <h4>Redshift Core Architecture</h4>
+      <p>Amazon Redshift is a <strong>columnar, Massively Parallel Processing (MPP)</strong> data warehouse. Understanding its architecture is critical for optimization.</p>
+      <ul>
+        <li><strong>Leader Node:</strong> Receives queries from clients, parses SQL, creates an optimized execution plan, and coordinates parallel execution across compute nodes. It does not store user data.</li>
+        <li><strong>Compute Nodes:</strong> Store data in columnar format and execute the query plan in parallel. Each compute node is divided into <strong>node slices</strong> (virtual CPUs with dedicated memory and disk).</li>
+        <li><strong>Node Slices:</strong> Each slice processes a portion of the workload. The number of slices per node depends on the node type (e.g., dc2.large has 2 slices, ra3.xlplus has 2 slices, ra3.4xlarge has 4 slices).</li>
+        <li><strong>Columnar Storage:</strong> Data is stored column-by-column rather than row-by-row, enabling high compression ratios and fast analytical queries that only read the columns they need.</li>
+        <li><strong>Zone Maps:</strong> Redshift maintains min/max metadata for each 1MB block. When a query has a WHERE clause, Redshift uses zone maps to skip entire blocks — this is why SORTKEY choice is critical.</li>
+      </ul>
+
+      <div class="key-point">
+        <span class="kp-icon">💡</span>
+        <span class="kp-text"><strong>Interview Tip:</strong> Always mention "columnar storage + MPP" when describing Redshift. Then follow up with how DISTKEY and SORTKEY are used to minimize data shuffling and maximize zone map effectiveness.</span>
+      </div>
+
+      <h4>Distribution Styles</h4>
+      <p>Distribution style determines how Redshift distributes rows across compute node slices. The goal is to <strong>minimize data movement during JOINs</strong>.</p>
+
+      <table class="data-table">
+        <thead>
+          <tr><th>Style</th><th>How It Works</th><th>Best For</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>KEY</strong></td>
+            <td>Rows with the same DISTKEY value go to the same slice</td>
+            <td>Large fact tables joined to dimensions on a specific column (e.g., <span class="inline-code">loan_id</span>, <span class="inline-code">customer_id</span>)</td>
+          </tr>
+          <tr>
+            <td><strong>ALL</strong></td>
+            <td>Entire table is replicated on every compute node</td>
+            <td>Small dimension tables (< 2-3 million rows) like <span class="inline-code">dim_branch</span>, <span class="inline-code">dim_product</span></td>
+          </tr>
+          <tr>
+            <td><strong>EVEN</strong></td>
+            <td>Round-robin distribution across all slices</td>
+            <td>Tables not used in JOINs, or staging tables for even workload</td>
+          </tr>
+          <tr>
+            <td><strong>AUTO</strong></td>
+            <td>Redshift decides (starts ALL for small tables, switches to EVEN as table grows)</td>
+            <td>Default — good starting point if unsure</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h4>Sort Keys</h4>
+      <p>Sort keys determine the physical order of data on disk, directly impacting zone map effectiveness and query performance.</p>
+      <ul>
+        <li><strong>COMPOUND Sort Key:</strong> Optimized for queries that filter on a prefix of the key columns, similar to a compound index. Example: <span class="inline-code">COMPOUND SORTKEY(year, month, day)</span> — best when queries filter on year first, then month.</li>
+        <li><strong>INTERLEAVED Sort Key:</strong> Gives equal weight to all columns in the key, ideal when queries filter on any combination of columns. Higher maintenance cost (more frequent VACUUM needed).</li>
+      </ul>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang">SQL — Redshift Table DDL</span>
+          <button class="code-copy">Copy</button>
+        </div>
+        <pre><span class="token-keyword">CREATE TABLE</span> fact_loan_payments (
+    payment_id        <span class="token-function">BIGINT</span> <span class="token-keyword">IDENTITY</span>(1,1),
+    loan_id           <span class="token-function">BIGINT</span> <span class="token-keyword">NOT NULL</span>,
+    customer_id       <span class="token-function">BIGINT</span> <span class="token-keyword">NOT NULL</span>,
+    payment_date      <span class="token-function">DATE</span> <span class="token-keyword">NOT NULL</span>,
+    emi_amount        <span class="token-function">DECIMAL</span>(15,2),
+    principal_amount  <span class="token-function">DECIMAL</span>(15,2),
+    interest_amount   <span class="token-function">DECIMAL</span>(15,2),
+    outstanding_bal   <span class="token-function">DECIMAL</span>(15,2),
+    dpd               <span class="token-function">INT</span>,
+    payment_status    <span class="token-function">VARCHAR</span>(20)
+)
+<span class="token-keyword">DISTSTYLE</span> KEY
+<span class="token-keyword">DISTKEY</span>(loan_id)
+<span class="token-keyword">COMPOUND SORTKEY</span>(payment_date, loan_id);</pre>
+      </div>
+
+      <h4>Data Compression & Ingestion</h4>
+      <p>Compression reduces storage footprint and improves query performance by minimizing disk I/O. Redshift supports multiple encodings:</p>
+      <ul>
+        <li><strong>LZO:</strong> Default for most columns. Good balance of compression correlation and speed.</li>
+        <li><strong>AZ64:</strong> Proprietary AWS encoding optimized for numeric and date/time types. Faster and higher compression than LZO for these types.</li>
+        <li><strong>ZSTD:</strong> High compression ratio, ideal for large VARCHAR/JSON strings.</li>
+      </ul>
+      <p>Best practices for data ingestion:</p>
+      <ul>
+        <li><strong>COPY Command:</strong> The most efficient way to load data (from S3, DynamoDB, EMR). It leverages MPP by having each compute node read data in parallel.</li>
+        <li><strong>UNLOAD Command:</strong> Extracts query results to S3 in parallel across nodes (e.g., CSV, Parquet).</li>
+        <li><strong>Manifest Files:</strong> Used with COPY to load explicitly listed files, avoiding S3 eventual consistency issues and guaranteeing parallel loading.</li>
+        <li><strong>STL_LOAD_ERRORS:</strong> System table to query when a COPY command fails (e.g., data type mismatch, parsing errors).</li>
+      </ul>
+
+      <h4>VACUUM and ANALYZE</h4>
+      <ul>
+        <li><strong>VACUUM DELETE:</strong> Reclaims disk space from deleted rows. Redshift uses a soft-delete model — deleted rows are only flagged, not removed until VACUUM.</li>
+        <li><strong>VACUUM SORT ONLY:</strong> Re-sorts rows that were added to unsorted regions after inserts.</li>
+        <li><strong>VACUUM FULL:</strong> Performs both delete reclamation and re-sorting. Most expensive but most thorough.</li>
+        <li><strong>ANALYZE:</strong> Updates table statistics used by the query optimizer. Run after major data loads to ensure optimal query plans.</li>
+      </ul>
+
+      <div class="key-point success">
+        <span class="kp-icon">✅</span>
+        <span class="kp-text"><strong>Your Strength:</strong> You've configured Redshift in your DBeaver/Bastion Host project and handled 100GB+ datasets. Mention your hands-on experience with DISTKEY, SORTKEY, and query tuning.</span>
+      </div>
+    </div>
+
+    <!-- Q&A for Redshift -->
+    <div class="qa-section">
+      <div class="qa-section-title">🧠 Test Your Knowledge — Redshift</div>
+
+      <div class="qa-item">
+        <div class="qa-question">
+          <span class="qa-q-number">1</span>
+          <span class="qa-q-text">You have a fact_loan_payments table with 500 million rows and a dim_branch table with 200 rows. Both are joined on branch_id. What distribution styles would you choose for each, and why?</span>
+          <span class="qa-toggle-icon">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p><strong>Answer:</strong></p>
+            <ul>
+              <li><strong>fact_loan_payments → DISTSTYLE KEY, DISTKEY(branch_id)</strong> if branch_id is the primary join column across most queries. However, if this table is more commonly joined on <span class="inline-code">loan_id</span> or <span class="inline-code">customer_id</span>, keep the DISTKEY on that column instead.</li>
+              <li><strong>dim_branch → DISTSTYLE ALL</strong> because it has only 200 rows. The entire table fits easily in memory of every slice. Redshift will replicate it on every node so JOINs are co-located — no network data shuffling required.</li>
+            </ul>
+            <p><strong>Why this matters:</strong> When the fact table's DISTKEY doesn't match the join column, Redshift must <strong>redistribute</strong> (shuffle) one of the tables across the network, which is extremely expensive at 500M rows. Using DISTSTYLE ALL on small dimensions eliminates this cost entirely since the data is already on every node.</p>
+            <div class="key-point">
+              <span class="kp-icon">💡</span>
+              <span class="kp-text"><strong>Pro Tip:</strong> If the fact table is frequently joined on multiple columns (loan_id for payment queries, customer_id for customer queries), choose the most common join column as DISTKEY and use DISTSTYLE ALL for the other dimension tables.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question">
+          <span class="qa-q-number">2</span>
+          <span class="qa-q-text">Explain the difference between COMPOUND and INTERLEAVED sort keys. When would you choose one over the other in a housing finance data warehouse?</span>
+          <span class="qa-toggle-icon">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p><strong>COMPOUND Sort Key:</strong></p>
+            <ul>
+              <li>Works like a hierarchical index — optimized for queries that filter on the <strong>leftmost prefix</strong> of sort key columns.</li>
+              <li>Example: <span class="inline-code">COMPOUND SORTKEY(payment_date, branch_id)</span> — excellent for "all payments in date range" but useless for "all payments for branch_id=5" without a date filter.</li>
+              <li><strong>Lower maintenance:</strong> VACUUM is cheaper and less frequent.</li>
+            </ul>
+            <p><strong>INTERLEAVED Sort Key:</strong></p>
+            <ul>
+              <li>Gives <strong>equal weight</strong> to each column — any column can be independently filtered.</li>
+              <li>Example: <span class="inline-code">INTERLEAVED SORTKEY(payment_date, branch_id, product_type)</span> — works well for "all payments for branch_id=5" even without a date filter.</li>
+              <li><strong>Higher maintenance:</strong> VACUUM REINDEX is expensive and must be run more frequently.</li>
+            </ul>
+            <p><strong>Housing Finance Recommendation:</strong> Use <strong>COMPOUND</strong> for most fact tables since financial queries are almost always filtered by date range first (e.g., "show me March 2024 disbursements"). Use INTERLEAVED only for tables where ad-hoc queries with unpredictable filter combinations are common, like an exploratory analytics table.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question">
+          <span class="qa-q-number">3</span>
+          <span class="qa-q-text">A Redshift query that used to take 8 seconds is now taking 45 seconds after a week of daily data loads. What are your first 3 diagnostic steps?</span>
+          <span class="qa-toggle-icon">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p><strong>Step 1: Check unsorted rows percentage</strong></p>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">SQL</span><button class="code-copy">Copy</button></div>
+              <pre><span class="token-keyword">SELECT</span> <span class="token-string">"table"</span>, unsorted, vacuum_sort_benefit
+<span class="token-keyword">FROM</span> svv_table_info
+<span class="token-keyword">WHERE</span> <span class="token-string">"table"</span> = <span class="token-string">'fact_loan_payments'</span>;</pre>
+            </div>
+            <p>If <span class="inline-code">unsorted</span> is > 20%, the zone maps are ineffective and Redshift is scanning unnecessary blocks. <strong>Fix:</strong> Run <span class="inline-code">VACUUM SORT ONLY fact_loan_payments;</span></p>
+            <p><strong>Step 2: Check stale statistics</strong></p>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">SQL</span><button class="code-copy">Copy</button></div>
+              <pre><span class="token-keyword">SELECT</span> <span class="token-string">"table"</span>, stats_off
+<span class="token-keyword">FROM</span> svv_table_info
+<span class="token-keyword">WHERE</span> <span class="token-string">"table"</span> = <span class="token-string">'fact_loan_payments'</span>;</pre>
+            </div>
+            <p>If <span class="inline-code">stats_off</span> is high (> 10), the query optimizer is making bad decisions. <strong>Fix:</strong> Run <span class="inline-code">ANALYZE fact_loan_payments;</span></p>
+            <p><strong>Step 3: Check the query execution plan</strong></p>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">SQL</span><button class="code-copy">Copy</button></div>
+              <pre><span class="token-keyword">EXPLAIN</span> <span class="token-keyword">SELECT</span> ...your query...;</pre>
+            </div>
+            <p>Look for <span class="inline-code">DS_BCAST_INNER</span> (broadcasting a large table) or <span class="inline-code">DS_DIST_ALL_INNER</span> (redistributing data) — these are red flags indicating improper distribution. Also check <span class="inline-code">STL_ALERT_EVENT_LOG</span> for Redshift-generated performance alerts.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question">
+          <span class="qa-q-number">4</span>
+          <span class="qa-q-text">You need to load a 150GB single CSV file from S3 into Redshift as fast as possible. How do you execute this?</span>
+          <span class="qa-toggle-icon">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p>Never load a single massive file; it forces a single compute node slice to do all the work and completely bypasses the MPP architecture.</p>
+            <p><strong>Solution:</strong> Split the file into multiples of the number of slices in your cluster (e.g., 64 or 128 smaller files). Compress the files using gzip or bzip2, and issue a single COPY command using a manifest file or prefix. Redshift will automatically divide the work across all slices to load the data in parallel.</p>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">SQL</span><button class="code-copy">Copy</button></div>
+              <pre><span class="token-keyword">COPY</span> target_table
+<span class="token-keyword">FROM</span> <span class="token-string">'s3://my-bucket/split-files-prefix/'</span>
+IAM_ROLE <span class="token-string">'arn:aws:iam::123456789012:role/MyRedshiftRole'</span>
+CSV GZIP;</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question">
+          <span class="qa-q-number">5</span>
+          <span class="qa-q-text">Your table experiences heavy daily UPDATE and DELETE operations, leading to slower query times. How do you resolve this at the system level?</span>
+          <span class="qa-toggle-icon">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p>Redshift uses a soft-delete mechanism (tombstoning), meaning deleted rows or old versions of newly updated rows are not immediately removed from disk. This wastes block storage space and forces Redshift to scan more blocks than necessary, slowing down queries.</p>
+            <p><strong>Solution:</strong> Run VACUUM to reclaim space and re-sort rows, then run ANALYZE to update query planner statistics.</p>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">SQL</span><button class="code-copy">Copy</button></div>
+              <pre><span class="token-keyword">VACUUM DELETE ONLY</span> target_table;
+<span class="token-keyword">ANALYZE</span> target_table;</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question">
+          <span class="qa-q-number">6</span>
+          <span class="qa-q-text">What is data skew in Redshift and how do you detect and resolve it?</span>
+          <span class="qa-toggle-icon">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p><strong>Data skew</strong> occurs when one compute node slice has significantly more data than others due to a poor DISTKEY choice (e.g., using a low-cardinality column like <code>status</code> with only 3 values).</p>
+            <p><strong>Detection:</strong></p>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">SQL</span><button class="code-copy">Copy</button></div>
+              <pre><span class="token-keyword">SELECT</span> <span class="token-string">"table"</span>, skew_rows, skew_sortkey1
+<span class="token-keyword">FROM</span> svv_table_info
+<span class="token-keyword">WHERE</span> skew_rows > <span class="token-number">4.0</span>; <span class="token-comment">-- Ratio > 4x means heavy skew</span></pre>
+            </div>
+            <p><strong>Fix:</strong> Change DISTKEY to a high-cardinality column like <code>loan_id</code> or <code>customer_id</code>. If no single column provides even distribution, switch to <code>DISTSTYLE EVEN</code>.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question">
+          <span class="qa-q-number">7</span>
+          <span class="qa-q-text">What is the difference between DELETE + INSERT vs. MERGE (UPSERT) in Redshift? When do you use each for ETL?</span>
+          <span class="qa-toggle-icon">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <table class="data-table">
+              <thead><tr><th>Approach</th><th>How</th><th>Best For</th></tr></thead>
+              <tbody>
+                <tr><td><strong>DELETE + INSERT</strong></td><td>Delete matching rows from target, then INSERT all rows from staging</td><td>Full/incremental fact table loads</td></tr>
+                <tr><td><strong>MERGE</strong></td><td>Single SQL that UPDATEs existing / INSERTs new rows</td><td>SCD Type 1 dimension updates</td></tr>
+              </tbody>
+            </table>
+            <p><strong>NBFC context:</strong> Use <code>MERGE</code> for dimensions (e.g., <code>dim_customer</code> where address changes). Use <code>DELETE + INSERT</code> for fact tables where you reload entire partitions.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question">
+          <span class="qa-q-number">8</span>
+          <span class="qa-q-text">How do you implement a staging-to-production promotion pattern in Redshift with zero data loss?</span>
+          <span class="qa-toggle-icon">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p><strong>The atomic transaction pattern:</strong></p>
+            <ol>
+              <li>COPY raw data from S3 into <code>staging.stg_table</code></li>
+              <li>Run DQ checks (null, duplicate, count reconciliation)</li>
+              <li>If DQ passes → <code>BEGIN TRANSACTION</code></li>
+              <li><code>DELETE FROM dwh.target WHERE load_date = '{{ ds }}'</code></li>
+              <li><code>INSERT INTO dwh.target SELECT * FROM staging.stg_table</code></li>
+              <li><code>COMMIT</code> — both succeed or both roll back</li>
+            </ol>
+            <p><strong>Why:</strong> If INSERT fails halfway, the DELETE rolls back too — preventing data loss. Non-negotiable for financial data.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question">
+          <span class="qa-q-number">9</span>
+          <span class="qa-q-text">What is Redshift Concurrency Scaling and when does it activate?</span>
+          <span class="qa-toggle-icon">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p><strong>Concurrency Scaling</strong> automatically adds transient clusters when queries start queuing beyond the main cluster's capacity.</p>
+            <p><strong>NBFC scenario:</strong> At 9 AM, 50+ analysts open Tableau while nightly ETL is still running VACUUM. Without concurrency scaling, BI queries queue for 10+ minutes. With it, transient clusters absorb the BI load seamlessly.</p>
+            <p><strong>Cost:</strong> You get 1 hour/day free per provisioned node. Additional usage is billed per-second.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question">
+          <span class="qa-q-number">10</span>
+          <span class="qa-q-text">Explain Redshift Stored Procedures vs. dbt models. When would you use each?</span>
+          <span class="qa-toggle-icon">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <table class="data-table">
+              <thead><tr><th>Feature</th><th>Stored Procedures</th><th>dbt Models</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Language</strong></td><td>PL/pgSQL (loops, IF/ELSE, transactions)</td><td>Pure SQL + Jinja templating</td></tr>
+                <tr><td><strong>Testing</strong></td><td>Hard to unit test</td><td>Built-in (unique, not_null, relationships)</td></tr>
+                <tr><td><strong>Version Control</strong></td><td>Difficult — lives in DB</td><td>Native Git — every model is a .sql file</td></tr>
+                <tr><td><strong>Best For</strong></td><td>Complex DML (SCD2 merges, multi-step transactions)</td><td>Analytics layer views/summary tables</td></tr>
+              </tbody>
+            </table>
+            <p><strong>Recommendation:</strong> Stored procedures for ETL core logic needing transactions. dbt for building the analytics layer that Tableau consumes.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUBTOPIC A2: Advanced Redshift & Data Lake Ecosystem -->
+  <div class="subsection animate-in" id="aws-redshift-advanced">
+    <div class="subsection-header">
+      <div class="subsection-icon aws-icon">🚀</div>
+      <h3>A2. Advanced Redshift & Data Lake Ecosystem (6 YOE)</h3>
+      <label class="progress-check">
+        <input type="checkbox" id="prog-aws-a2">
+        <span class="check-custom">✓</span>
+        <span class="check-label">Mastered</span>
+      </label>
+    </div>
+
+    <div class="content-card">
+      <h4>Modern Architecture & Scaling</h4>
+      <ul>
+        <li><strong>RA3 Nodes & Managed Storage:</strong> Decouples compute from storage, allowing them to scale independently. Data is locally cached on SSDs and tiered automatically to S3.</li>
+        <li><strong>Redshift Serverless:</strong> Auto-scales compute capacity based on workload without managing clusters. Excellent for unpredictable or variable workloads.</li>
+        <li><strong>Concurrency Scaling:</strong> Automatically adds temporary clusters to handle burst/peak workloads (e.g., concurrent queries during end-of-month reporting).</li>
+        <li><strong>Elastic Resize vs. Classic Resize:</strong> Elastic resize adds/removes nodes in minutes (good for temporary surges). Classic resize provisions a whole new cluster and copies data (takes hours, but needed for changing node types).</li>
+      </ul>
+
+      <h4>Query Optimization & Workload Management (WLM)</h4>
+      <ul>
+        <li><strong>Auto vs. Manual WLM:</strong> Auto WLM dynamically manages memory and concurrency based on active queries. Manual WLM allows defining static queues (e.g., ETL queue with 60% memory, BI queue with 40%).</li>
+        <li><strong>Short Query Acceleration (SQA):</strong> Prioritizes fast-running queries so they aren't stuck behind long-running ETL loads.</li>
+        <li><strong>System Tables for Performance:</strong> Monitor performance using <code>SVV_TABLE_INFO</code> (for skew and unsorted percentage) and <code>STL_QUERY</code>.</li>
+        <li><strong>Reading EXPLAIN plans:</strong> Identifying <em>nested loops</em> (avoid at all costs), <em>broadcast joins</em> (bad distribution), and <em>hash joins</em> (expected).</li>
+      </ul>
+
+      <h4>Advanced Integrations & Ecosystem</h4>
+      <ul>
+        <li><strong>Redshift Spectrum:</strong> Create external schemas to query data residing in S3 (via AWS Glue Data Catalog) directly using SQL without consuming Redshift storage.</li>
+        <li><strong>Federated Queries:</strong> Query live, operational database records situated in Amazon RDS/Aurora PostgreSQL or MySQL directly from Redshift.</li>
+        <li><strong>Aurora Zero-ETL:</strong> Automatically replicates Amazon Aurora transaction data into Redshift in near real-time, removing the need to build and maintain custom pipelines.</li>
+        <li><strong>Amazon Redshift ML:</strong> Train and deploy SageMaker machine learning models entirely via standard SQL statements.</li>
+      </ul>
+
+      <h4>Security & Administration</h4>
+      <ul>
+        <li><strong>Cross-cluster Data Sharing:</strong> Native capability (RA3 only) to share live data across different Redshift clusters and AWS accounts without data cloning.</li>
+        <li><strong>Row-Level Security (RLS) & Column-Level Security (CLS):</strong> Fine-grained control restricting access to sensitive records or columns based on the IAM role querying them.</li>
+        <li><strong>KMS Encryption & VPC Routing:</strong> Encrypt clusters using KMS and enable Enhanced VPC Routing so traffic to S3 flows via internal VPC endpoints rather than the public internet.</li>
+      </ul>
+    </div>
+
+    <!-- Q&A for Advanced Redshift -->
+    <div class="qa-section">
+      <div class="qa-section-title">🧠 Test Your Knowledge — Advanced Redshift</div>
+
+      <div class="qa-item">
+        <div class="qa-question">
+          <span class="qa-q-number">1</span>
+          <span class="qa-q-text">A query joining two large tables is severely underperforming. You notice a "Broadcast Join" or "DS_BCAST_INNER" in the EXPLAIN plan. How do you fix this?</span>
+          <span class="qa-toggle-icon">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p>A broadcast join means an entire table is being sent over the network to all compute nodes, causing massive network I/O. This occurs when joined tables are not distributed on the joining key.</p>
+            <p><strong>Solution:</strong> Change the Distribution Style of both tables to KEY and use the joining column as the DISTKEY. This enables a <strong>Collocated Join</strong> where matching rows already reside on the same exact compute slice, preventing network data shifting.</p>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">SQL</span><button class="code-copy">Copy</button></div>
+              <pre><span class="token-keyword">ALTER TABLE</span> table_name
+<span class="token-keyword">ALTER DISTSTYLE KEY DISTKEY</span> (join_column);</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question">
+          <span class="qa-q-number">2</span>
+          <span class="qa-q-text">We need to analyze historical application logs stored in S3 (Parquet format) alongside our current dimensional tables in Redshift. We do not want to consume Redshift storage. What is the solution?</span>
+          <span class="qa-toggle-icon">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p>Use <strong>Redshift Spectrum</strong>. You create an external schema tied to the AWS Glue Data Catalog, define an external table pointing to the S3 bucket, and write standard SQL to join it directly with your local internal Redshift tables.</p>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">SQL</span><button class="code-copy">Copy</button></div>
+              <pre><span class="token-keyword">CREATE EXTERNAL SCHEMA</span> spectrum_schema
+<span class="token-keyword">FROM DATA CATALOG</span>
+DATABASE <span class="token-string">'glue_log_db'</span>
+IAM_ROLE <span class="token-string">'arn:aws:iam::123456789012:role/SpectrumRole'</span>;
+
+<span class="token-keyword">SELECT</span> d.region, <span class="token-function">count</span>(l.error_code) 
+<span class="token-keyword">FROM</span> local_dim_table d
+<span class="token-keyword">JOIN</span> spectrum_schema.historical_logs l <span class="token-keyword">ON</span> d.id = l.device_id
+<span class="token-keyword">GROUP BY</span> d.region;</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question">
+          <span class="qa-q-number">3</span>
+          <span class="qa-q-text">You need to implement data masking so that junior analysts cannot see the PII in the email column, but senior analysts can. How do you configure this?</span>
+          <span class="qa-toggle-icon">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p>Use <strong>Column-Level Security (CLS)</strong>. You explicitly grant column-level permissions to the senior role, and deny or withhold it from the junior role.</p>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">SQL</span><button class="code-copy">Copy</button></div>
+              <pre><span class="token-keyword">GRANT SELECT</span> (id, name, purchase_date)
+<span class="token-keyword">ON</span> customer_table <span class="token-keyword">TO</span> junior_analyst_role;
+
+<span class="token-keyword">GRANT SELECT</span> (id, name, email, purchase_date)
+<span class="token-keyword">ON</span> customer_table <span class="token-keyword">TO</span> senior_analyst_role;</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUBTOPIC A3: Core AWS Ecosystem & Data Lakes -->
+  <div class="subsection animate-in" id="aws-ecosystem">
+    <div class="subsection-header">
+      <div class="subsection-icon aws-icon">🌐</div>
+      <h3>A3. Core AWS Ecosystem & Data Lakes</h3>
+      <label class="progress-check">
+        <input type="checkbox" id="prog-aws-a3">
+        <span class="check-custom">✓</span>
+        <span class="check-label">Mastered</span>
+      </label>
+    </div>
+
+    <div class="content-card">
+      <h4>AWS Ecosystem Foundation for Data Engineers</h4>
+      <p>Redshift doesn't operate in a vacuum. A modern data platform relies on the broader AWS ecosystem for storage, security, compute, and orchestration.</p>
+      
+      <ul>
+        <li><strong>Amazon S3 (Data Lakes):</strong> The backbone of AWS data architecture. Used for landing zones (raw data), curated zones (processed Parquet), and Redshift Spectrum external tables. Uses partitioning strategies (e.g., <code>s3://nbfc-data/year=2024/month=03/</code>) to optimize Glue and Spectrum scans.</li>
+        <li><strong>IAM Access Controls:</strong> Identity and Access Management determines "who can do what."
+          <ul>
+            <li><strong>Roles vs Policies:</strong> Grant Redshift an IAM Role with an attached policy (e.g., <code>AmazonS3ReadOnlyAccess</code>) so it can execute <code>COPY</code> commands securely without hardcoded API keys.</li>
+            <li><strong>Least Privilege:</strong> Ensure roles only have access to specific buckets needed for the ETL pipeline.</li>
+          </ul>
+        </li>
+        <li><strong>Amazon EC2:</strong> Virtual servers. Frequently used to host older third-party ETL tools, Bastion Hosts (jump boxes to access private Redshift clusters securely), or AWS DMS replication instances.</li>
+        <li><strong>AWS Lambda:</strong> Serverless event-driven compute. Often used to trigger ETL pipelines the moment a new CSV file lands in an S3 bucket (S3 Event Notifications → Lambda trigger → Start Glue Workflow).</li>
+      </ul>
+
+      <div class="key-point">
+        <span class="kp-icon">💡</span>
+        <span class="kp-text"><strong>Interview Tip:</strong> When asked about data migration or pipelines, show architecture awareness: "We trigger a Lambda function via an S3 event, which kicks off a Glue job that runs under a constrained IAM Role, processing data from the lake and loading it into Redshift."</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUBTOPIC B: ETL vs. ELT & Pipeline Orchestration -->
+  <div class="subsection animate-in" id="aws-etl">
+    <div class="subsection-header">
+      <div class="subsection-icon aws-icon">⚙️</div>
+      <h3>B. ETL vs. ELT & Pipeline Orchestration</h3>
+      <label class="progress-check">
+        <input type="checkbox" id="prog-aws-b">
+        <span class="check-custom">✓</span>
+        <span class="check-label">Mastered</span>
+      </label>
+    </div>
+
+    <div class="content-card">
+      <h4>ETL vs. ELT — Core Differences</h4>
+      <table class="data-table">
+        <thead>
+          <tr><th>Aspect</th><th>ETL</th><th>ELT</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Transform Location</strong></td><td>Outside the warehouse (Glue, Spark, Informatica)</td><td>Inside the warehouse (Redshift SQL, dbt)</td></tr>
+          <tr><td><strong>Best For</strong></td><td>Complex transformations, data cleansing, format conversion</td><td>Large-volume analytics where warehouse MPP is leveraged</td></tr>
+          <tr><td><strong>Scalability</strong></td><td>Limited by ETL server resources</td><td>Leverages warehouse's MPP engine — scales with cluster</td></tr>
+          <tr><td><strong>Latency</strong></td><td>Higher — data must be processed before loading</td><td>Lower — raw data loaded quickly, transformed in-place</td></tr>
+          <tr><td><strong>Cost</strong></td><td>Separate compute cost for ETL engine</td><td>Uses warehouse compute — may increase Redshift costs</td></tr>
+          <tr><td><strong>Typical Tools</strong></td><td>AWS Glue, Informatica, Talend, Airflow + Spark</td><td>dbt, Redshift SQL, Stored Procedures</td></tr>
+        </tbody>
+      </table>
+
+      <div class="key-point">
+        <span class="kp-icon">💡</span>
+        <span class="kp-text"><strong>NBFC Context:</strong> Housing finance companies typically use a <strong>hybrid approach</strong> — ETL for initial data cleansing and format conversion from source systems (LOS, LMS, CRM), then ELT for complex aggregations and reporting views inside Redshift.</span>
+      </div>
+
+      <h4>Scripting & Orchestration Standards</h4>
+      <p>Modern data pipelines require robust scripting to handle API pagination, file manipulations, and orchestration triggers.</p>
+      <ul>
+        <li><strong>Python Scripting:</strong> The industry standard for Data Engineering. Used for writing Glue PySpark jobs, interacting with AWS APIs via Boto3 (e.g., triggering a Lambda or checking S3 object metadata), and defining Airflow DAGs.</li>
+        <li><strong>Shell Scripting (Bash):</strong> Used for lightweight wrapper scripts, cron jobs, and rapid file system operations (like unzipping raw vendor data files or moving massive CSVs across Linux environments before loading into S3).</li>
+      </ul>
+
+      <h4>AWS Glue — Serverless ETL</h4>
+      <ul>
+        <li><strong>Glue Jobs:</strong> Serverless Spark (PySpark/Scala) jobs for batch ETL. You pay per DPU-hour (Data Processing Unit). Supports job bookmarks for incremental processing.</li>
+        <li><strong>Glue Crawlers:</strong> Automatically discover schema from S3, RDS, Redshift and populate the Glue Data Catalog. Critical for dynamic schema detection.</li>
+        <li><strong>Glue Data Catalog:</strong> Centralized metadata store compatible with Athena, Redshift Spectrum, and EMR. Acts as a Hive metastore replacement.</li>
+        <li><strong>Glue Workflows:</strong> Orchestrate crawlers and jobs as a DAG (Directed Acyclic Graph). For simple pipelines — for complex ones, use Step Functions.</li>
+        <li><strong>Job Bookmarks:</strong> Track previously processed data so the next run only processes new/changed records. Essential for incremental loads.</li>
+      </ul>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang">Python — Glue ETL Job Example</span>
+          <button class="code-copy">Copy</button>
+        </div>
+        <pre><span class="token-keyword">import</span> sys
+<span class="token-keyword">from</span> awsglue.transforms <span class="token-keyword">import</span> *
+<span class="token-keyword">from</span> awsglue.utils <span class="token-keyword">import</span> getResolvedOptions
+<span class="token-keyword">from</span> awsglue.context <span class="token-keyword">import</span> GlueContext
+<span class="token-keyword">from</span> pyspark.context <span class="token-keyword">import</span> SparkContext
+
+<span class="token-comment"># Initialize Glue context</span>
+sc = SparkContext()
+glueContext = GlueContext(sc)
+spark = glueContext.spark_session
+
+<span class="token-comment"># Read from source (LOS system in RDS MySQL)</span>
+loan_applications = glueContext.create_dynamic_frame.from_catalog(
+    database=<span class="token-string">"nbfc_source"</span>,
+    table_name=<span class="token-string">"loan_applications"</span>,
+    transformation_ctx=<span class="token-string">"loan_apps_src"</span>
+)
+
+<span class="token-comment"># Transform: Clean, filter, and derive columns</span>
+mapped = ApplyMapping.apply(
+    frame=loan_applications,
+    mappings=[
+        (<span class="token-string">"app_id"</span>, <span class="token-string">"long"</span>, <span class="token-string">"application_id"</span>, <span class="token-string">"long"</span>),
+        (<span class="token-string">"cust_name"</span>, <span class="token-string">"string"</span>, <span class="token-string">"customer_name"</span>, <span class="token-string">"string"</span>),
+        (<span class="token-string">"loan_amt"</span>, <span class="token-string">"double"</span>, <span class="token-string">"sanctioned_amount"</span>, <span class="token-string">"decimal"</span>),
+        (<span class="token-string">"app_date"</span>, <span class="token-string">"string"</span>, <span class="token-string">"application_date"</span>, <span class="token-string">"date"</span>)
+    ]
+)
+
+<span class="token-comment"># Load to Redshift</span>
+glueContext.write_dynamic_frame.from_jdbc_conf(
+    frame=mapped,
+    catalog_connection=<span class="token-string">"redshift-connection"</span>,
+    connection_options={
+        <span class="token-string">"dbtable"</span>: <span class="token-string">"staging.stg_loan_applications"</span>,
+        <span class="token-string">"database"</span>: <span class="token-string">"nbfc_dw"</span>
+    },
+    redshift_tmp_dir=<span class="token-string">"s3://nbfc-etl-temp/redshift-temp/"</span>
+)</pre>
+      </div>
+
+      <h4>AWS Step Functions — Orchestration</h4>
+      <p>Step Functions orchestrate multi-step data pipelines as state machines using JSON-based Amazon States Language (ASL). Each step can invoke a Glue job, Lambda function, or any AWS service.</p>
+      <ul>
+        <li><strong>States:</strong> Task (do work), Choice (branch logic), Wait (delay), Parallel (concurrent execution), Map (iterate over list), Pass (transform input), Fail/Succeed (terminal).</li>
+        <li><strong>Error Handling:</strong> Built-in retry with exponential backoff and Catch for fallback states. Critical for production ETL where transient failures are common.</li>
+        <li><strong>Use Case:</strong> Orchestrate a nightly pipeline: Trigger Glue crawler → Run transformation jobs → Run data quality checks → Load to Redshift → Trigger Tableau extract refresh.</li>
+      </ul>
+
+      <div class="flow-diagram">
+        <div class="flow-step">S3 Event</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-step">Lambda Trigger</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-step">Glue Crawler</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-step">Glue ETL Job</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-step">DQ Checks</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-step">Redshift COPY</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-step">Tableau Refresh</div>
+      </div>
+    </div>
+
+    <!-- Q&A for ETL -->
+    <div class="qa-section">
+      <div class="qa-section-title">🧠 Test Your Knowledge — ETL/ELT</div>
+
+      <div class="qa-item">
+        <div class="qa-question">
+          <span class="qa-q-number">1</span>
+          <span class="qa-q-text">In an NBFC housing finance pipeline, source data comes from LOS (Loan Origination System) as JSON, LMS (Loan Management System) as CSV, and CRM as database tables. Design the ETL architecture.</span>
+          <span class="qa-toggle-icon">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p><strong>Architecture Design:</strong></p>
+            <ol>
+              <li><strong>Ingestion Layer:</strong>
+                <ul>
+                  <li>LOS (JSON) → AWS DMS or custom Lambda → S3 raw zone (<span class="inline-code">s3://nbfc-data/raw/los/</span>) partitioned by date</li>
+                  <li>LMS (CSV) → SFTP server → Lambda trigger → S3 raw zone (<span class="inline-code">s3://nbfc-data/raw/lms/</span>)</li>
+                  <li>CRM (database) → AWS DMS with CDC → S3 raw zone (<span class="inline-code">s3://nbfc-data/raw/crm/</span>)</li>
+                </ul>
+              </li>
+              <li><strong>Processing Layer (ETL in Glue):</strong>
+                <ul>
+                  <li>Glue crawlers catalog all raw data</li>
+                  <li>Glue PySpark jobs: schema validation, data type casting, deduplication, business rule application</li>
+                  <li>Output to S3 curated zone in Parquet format (<span class="inline-code">s3://nbfc-data/curated/</span>)</li>
+                </ul>
+              </li>
+              <li><strong>Loading Layer:</strong>
+                <ul>
+                  <li>Use Redshift COPY command from S3 curated zone → staging tables</li>
+                  <li>Run Redshift stored procedures for SCD Type 2 merges into dimension tables</li>
+                  <li>Insert into fact tables with incremental logic</li>
+                </ul>
+              </li>
+              <li><strong>Orchestration:</strong> Step Functions manage the entire flow with error handling, retries, and SNS notifications on failure</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question">
+          <span class="qa-q-number">2</span>
+          <span class="qa-q-text">What is a Glue Job Bookmark and why is it essential for incremental loads in financial data pipelines?</span>
+          <span class="qa-toggle-icon">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p><strong>Glue Job Bookmarks</strong> are a built-in mechanism that tracks the state of previously processed data. When enabled, the Glue job remembers which S3 objects (files) or JDBC rows it has already processed.</p>
+            <p><strong>How it works:</strong></p>
+            <ul>
+              <li>For <strong>S3 sources:</strong> Tracks the last-modified timestamp of processed files. Next run only reads files added/modified after the bookmark.</li>
+              <li>For <strong>JDBC sources:</strong> Tracks the last primary key value or timestamp column. Next run applies a WHERE clause to fetch only new records.</li>
+            </ul>
+            <p><strong>Why it's essential for financial data:</strong></p>
+            <ul>
+              <li><strong>Data accuracy:</strong> Prevents duplicate processing of loan transactions, which could cause incorrect EMI calculations, wrong outstanding balances, or double-counted collections.</li>
+              <li><strong>Audit compliance:</strong> Financial regulations require that records are processed exactly once. Bookmarks ensure idempotent processing.</li>
+              <li><strong>Cost efficiency:</strong> Processing 100GB of data daily when only 2GB changed is wasteful. Bookmarks reduce Glue DPU-hours by 90%+.</li>
+              <li><strong>Reconciliation:</strong> Makes it easy to reconcile source vs. target counts since you know exactly what was processed in each run.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question">
+          <span class="qa-q-number">3</span>
+          <span class="qa-q-text">How would you implement error handling and alerting in a Step Functions-based ETL pipeline for a housing finance company?</span>
+          <span class="qa-toggle-icon">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p><strong>Comprehensive error handling strategy:</strong></p>
+            <ul>
+              <li><strong>Retry with Backoff:</strong> Configure each Task state with retry policies for transient errors (network timeouts, throttling):
+                <br><span class="inline-code">"Retry": [{"ErrorEquals": ["States.TaskFailed"], "IntervalSeconds": 30, "MaxAttempts": 3, "BackoffRate": 2}]</span></li>
+              <li><strong>Catch with Fallback:</strong> Use Catch blocks to redirect failures to an error-handling state that logs the failure details to a DynamoDB table and sends an SNS notification.</li>
+              <li><strong>Data Quality Gate:</strong> Add a Choice state after the DQ check step. If record count mismatch > 1% or null rate > threshold, route to a "HaltPipeline" state instead of proceeding to load.</li>
+              <li><strong>Dead Letter Queue:</strong> For Lambda-based steps, configure DLQ (SQS) to capture failed invocations for later investigation.</li>
+              <li><strong>CloudWatch Alarms:</strong> Set alarms on Step Function execution failures and duration anomalies. PagerDuty integration for on-call alerting.</li>
+              <li><strong>Audit Log:</strong> Each successful run writes metadata (source record count, target record count, run timestamp, duration) to an audit table in Redshift for regulatory compliance.</li>
+            </ul>
+            <p><strong>Why this matters for NBFC:</strong> Financial regulators (RBI/NHB) require complete audit trails. If a nightly load fails silently and reports are generated with stale data, it could lead to incorrect NPA classification or regulatory penalties.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question">
+          <span class="qa-q-number">4</span>
+          <span class="qa-q-text">How do you efficiently write a transformed PySpark dataframe into Redshift as part of an automated AWS migration pipeline?</span>
+          <span class="qa-toggle-icon">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p>Use the <strong>spark-redshift connector</strong>. It writes data to a temporary S3 bucket in parallel using Spark worker nodes, and then automatically issues the COPY command to Redshift.</p>
+            <p>This bypasses the massive bottleneck of writing through the JDBC driver directly one row at a time.</p>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">Python</span><button class="code-copy">Copy</button></div>
+              <pre>df.write \
+  .format(<span class="token-string">"io.github.spark_redshift_community.spark.redshift"</span>) \
+  .option(<span class="token-string">"url"</span>, <span class="token-string">"jdbc:redshift://&lt;endpoint&gt;:5439/dbname"</span>) \
+  .option(<span class="token-string">"dbtable"</span>, <span class="token-string">"target_table"</span>) \
+  .option(<span class="token-string">"tempdir"</span>, <span class="token-string">"s3a://temp-bucket/path"</span>) \
+  .option(<span class="token-string">"aws_iam_role"</span>, <span class="token-string">"arn:aws:iam::123:role/RedshiftS3Role"</span>) \
+  .mode(<span class="token-string">"overwrite"</span>) \
+  .save()</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUBTOPIC C: CDC using AWS DMS -->
+  <div class="subsection animate-in" id="aws-cdc">
+    <div class="subsection-header">
+      <div class="subsection-icon aws-icon">🔄</div>
+      <h3>C. Change Data Capture (CDC) using AWS DMS</h3>
+      <label class="progress-check">
+        <input type="checkbox" id="prog-aws-c">
+        <span class="check-custom">✓</span>
+        <span class="check-label">Mastered</span>
+      </label>
+    </div>
+
+    <div class="content-card">
+      <h4>What is CDC?</h4>
+      <p><strong>Change Data Capture</strong> is a technique that identifies and tracks changes (INSERT, UPDATE, DELETE) in a source database so that only the changes are captured and replicated to the target system, not a full data dump every time.</p>
+      
+      <h4>CDC Methods</h4>
+      <table class="data-table">
+        <thead>
+          <tr><th>Method</th><th>Mechanism</th><th>Pros</th><th>Cons</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Timestamp-Based</strong></td>
+            <td>Filter rows where <span class="inline-code">updated_at > last_run</span></td>
+            <td>Simple, no special DB config</td>
+            <td>Cannot detect deletes, relies on accurate timestamps</td>
+          </tr>
+          <tr>
+            <td><strong>Log-Based (WAL/Binlog)</strong></td>
+            <td>Read database transaction logs (MySQL binlog, PostgreSQL WAL)</td>
+            <td>Captures all changes including deletes, low source impact</td>
+            <td>Requires DB-level configuration, can be complex</td>
+          </tr>
+          <tr>
+            <td><strong>Trigger-Based</strong></td>
+            <td>Database triggers write changes to an audit table</td>
+            <td>Captures all changes precisely</td>
+            <td>High performance overhead on source DB, intrusive</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h4>AWS DMS (Database Migration Service)</h4>
+      <p>AWS DMS is a managed service for migrating and replicating databases. For CDC, DMS reads the source database's transaction log (binlog for MySQL) and continuously streams changes to the target.</p>
+      <ul>
+        <li><strong>Replication Instance:</strong> EC2-based instance that runs the DMS replication tasks. Size based on data volume and throughput needs.</li>
+        <li><strong>Source Endpoint:</strong> MySQL on-premise or RDS (LOS, LMS systems).</li>
+        <li><strong>Target Endpoint:</strong> S3 (landing zone), Redshift, or Kinesis Data Streams.</li>
+        <li><strong>Full Load + CDC:</strong> Initial full dump followed by continuous change replication. Best for initial setup.</li>
+        <li><strong>CDC Only:</strong> After initial full load, only capture ongoing changes. Reduces source load.</li>
+      </ul>
+
+      <div class="flow-diagram">
+        <div class="flow-step">MySQL (LOS/LMS)</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-step">DMS (Reads Binlog)</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-step">S3 (CDC Files)</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-step">Glue (Merge Logic)</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-step">Redshift (DW)</div>
+      </div>
+
+      <div class="key-point warning">
+        <span class="kp-icon">⚠️</span>
+        <span class="kp-text"><strong>Gap Alert:</strong> You don't have direct CDC/DMS experience. Frame it as: "While I haven't used DMS in production, I've implemented incremental loads using timestamp-based CDC patterns and understand the concepts of log-based CDC. I've studied AWS DMS architecture and am confident I can implement it."</span>
+      </div>
+
+      <h4>CDC Output in S3</h4>
+      <p>When DMS writes to S3, each change record includes an operation column:</p>
+      <div class="code-block">
+        <div class="code-header"><span class="code-lang">CSV — DMS CDC Output Example</span><button class="code-copy">Copy</button></div>
+        <pre><span class="token-comment">Op, loan_id, customer_id, loan_amount, status, updated_at</span>
+I, 10001, 5001, 2500000.00, SANCTIONED, 2024-03-15 10:30:00
+U, 10001, 5001, 2500000.00, DISBURSED, 2024-03-16 14:20:00
+U, 10002, 5002, 1800000.00, NPA, 2024-03-16 09:00:00
+D, 10003, 5003, 500000.00, CANCELLED, 2024-03-16 11:45:00
+<span class="token-comment"># Op: I=Insert, U=Update, D=Delete</span></pre>
+      </div>
+    </div>
+
+    <!-- Q&A for CDC -->
+    <div class="qa-section">
+      <div class="qa-section-title">🧠 Test Your Knowledge — CDC</div>
+
+      <div class="qa-item">
+        <div class="qa-question">
+          <span class="qa-q-number">1</span>
+          <span class="qa-q-text">The NBFC's LOS system (MySQL) gets 50,000 loan application updates daily. Current approach is a nightly full dump of 10M rows. How would you optimize this using CDC?</span>
+          <span class="qa-toggle-icon">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p><strong>CDC optimization approach:</strong></p>
+            <ol>
+              <li><strong>Set up AWS DMS:</strong> Create a replication instance, configure MySQL as source endpoint (enable binlog_format=ROW), and S3 as target endpoint.</li>
+              <li><strong>Initial full load:</strong> Run a one-time full load task to migrate all 10M rows to S3 in Parquet format, partitioned by date.</li>
+              <li><strong>Enable CDC:</strong> Switch to CDC-only mode. DMS reads MySQL binary log and streams only the ~50K daily changes to S3.</li>
+              <li><strong>Merge in Redshift:</strong> Use a Glue job to apply the CDC changes using a MERGE (upsert) pattern:
+                <ul>
+                  <li>For INSERTs → Insert new rows into the target table</li>
+                  <li>For UPDATEs → Update existing rows (or insert new SCD Type 2 rows)</li>
+                  <li>For DELETEs → Soft-delete (set is_active=false, end_date=current)</li>
+                </ul>
+              </li>
+            </ol>
+            <p><strong>Benefits:</strong> Processing 50K rows vs. 10M rows = 99.5% reduction in data volume, faster pipeline (minutes vs. hours), lower Glue costs, reduced source database load, and near-real-time data freshness.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question">
+          <span class="qa-q-number">2</span>
+          <span class="qa-q-text">What is the difference between timestamp-based CDC and log-based CDC? Which would you recommend for financial transaction data?</span>
+          <span class="qa-toggle-icon">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p><strong>Timestamp-Based CDC:</strong> Queries the source with <span class="inline-code">WHERE updated_at > last_extraction_time</span>. Simple but has a critical flaw — <strong>cannot detect hard deletes</strong> because deleted rows no longer exist in the source. Also, if a row is updated without the timestamp changing (e.g., batch updates that don't modify updated_at), those changes are missed.</p>
+            <p><strong>Log-Based CDC (DMS):</strong> Reads the database's transaction log (binary log for MySQL). Captures <strong>every INSERT, UPDATE, and DELETE</strong> as it happens. Zero impact on application queries because it reads the log file, not the tables.</p>
+            <p><strong>Recommendation for financial data: Log-Based CDC (DMS)</strong> is strongly preferred because:</p>
+            <ul>
+              <li>Financial regulations require capturing all changes including deletions — a cancelled loan must be tracked, not silently lost.</li>
+              <li>Audit trail completeness — every state change of a loan (sanctioned → disbursed → NPA → write-off) must be captured.</li>
+              <li>No risk of missed updates — binlog is the database's ground truth.</li>
+              <li>Important for reconciliation — source count can be matched against CDC event count for validation.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question">
+          <span class="qa-q-number">3</span>
+          <span class="qa-q-text">After DMS replicates CDC data to S3, how would you apply a MERGE (upsert) operation in Redshift to update the target dimension table?</span>
+          <span class="qa-toggle-icon">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p>Redshift doesn't have a native MERGE statement (until recently). The classic pattern is a <strong>staging table + DELETE/INSERT</strong>:</p>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">SQL — Redshift MERGE Pattern</span><button class="code-copy">Copy</button></div>
+              <pre><span class="token-comment">-- Step 1: Load CDC data into staging</span>
+<span class="token-keyword">COPY</span> staging.stg_customers
+<span class="token-keyword">FROM</span> <span class="token-string">'s3://nbfc-cdc/customers/2024/03/16/'</span>
+IAM_ROLE <span class="token-string">'arn:aws:iam::role/redshift-s3-role'</span>
+FORMAT <span class="token-keyword">AS</span> PARQUET;
+
+<span class="token-comment">-- Step 2: Begin transaction for atomicity</span>
+<span class="token-keyword">BEGIN TRANSACTION</span>;
+
+<span class="token-comment">-- Step 3: Delete rows that were updated or deleted</span>
+<span class="token-keyword">DELETE FROM</span> dwh.dim_customers
+<span class="token-keyword">USING</span> staging.stg_customers s
+<span class="token-keyword">WHERE</span> dwh.dim_customers.customer_id = s.customer_id
+  <span class="token-keyword">AND</span> s.op <span class="token-keyword">IN</span> (<span class="token-string">'U'</span>, <span class="token-string">'D'</span>);
+
+<span class="token-comment">-- Step 4: Insert new and updated rows (not deletes)</span>
+<span class="token-keyword">INSERT INTO</span> dwh.dim_customers
+<span class="token-keyword">SELECT</span> customer_id, name, phone, email, address,
+       <span class="token-function">CURRENT_TIMESTAMP</span> <span class="token-keyword">AS</span> updated_at
+<span class="token-keyword">FROM</span> staging.stg_customers
+<span class="token-keyword">WHERE</span> op <span class="token-keyword">IN</span> (<span class="token-string">'I'</span>, <span class="token-string">'U'</span>);
+
+<span class="token-comment">-- Step 5: Commit</span>
+<span class="token-keyword">COMMIT</span>;
+
+<span class="token-comment">-- Step 6: Cleanup</span>
+<span class="token-keyword">TRUNCATE</span> staging.stg_customers;</pre>
+            </div>
+            <p><strong>Key:</strong> The BEGIN/COMMIT transaction ensures atomicity — if the INSERT fails, the DELETE is also rolled back, preventing data loss. This pattern is the gold standard for Redshift upserts.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUBTOPIC D: Dimensional Modeling -->
+  <div class="subsection animate-in" id="aws-dimensional">
+    <div class="subsection-header">
+      <div class="subsection-icon aws-icon">📐</div>
+      <h3>D. Dimensional Modeling (Star Schema, SCD)</h3>
+      <label class="progress-check">
+        <input type="checkbox" id="prog-aws-d">
+        <span class="check-custom">✓</span>
+        <span class="check-label">Mastered</span>
+      </label>
+    </div>
+
+    <div class="content-card">
+      <h4>Star Schema — The Foundation of Data Warehousing</h4>
+      <p>A star schema organizes data into a central <strong>fact table</strong> (numeric/measurable events) surrounded by <strong>dimension tables</strong> (descriptive context).</p>
+
+      <h4>Housing Finance Star Schema Example</h4>
+      <div class="code-block">
+        <div class="code-header"><span class="code-lang">Star Schema — NBFC Housing Finance</span><button class="code-copy">Copy</button></div>
+        <pre><span class="token-comment">                   ┌──────────────────┐
+                   │   dim_customer   │
+                   ├──────────────────┤
+                   │ customer_id (PK) │
+                   │ customer_name    │
+                   │ pan_number       │
+                   │ credit_score     │
+                   │ income           │
+                   │ employment_type  │
+                   └────────┬─────────┘
+                            │
+┌───────────────┐   ┌──────┴───────────────┐   ┌──────────────┐
+│  dim_product  │   │   fact_loan_account  │   │  dim_branch  │
+├───────────────┤   ├──────────────────────┤   ├──────────────┤
+│ product_id    │──▶│ loan_id (PK)         │◀──│ branch_id    │
+│ product_name  │   │ customer_id (FK)     │   │ branch_name  │
+│ product_type  │   │ product_id (FK)      │   │ region       │
+│ (HL/LAP/AH)  │   │ branch_id (FK)       │   │ state        │
+│ max_tenure    │   │ date_id (FK)         │   │ zone         │
+│ interest_type │   │ sanctioned_amount    │   └──────────────┘
+└───────────────┘   │ disbursed_amount     │
+                    │ outstanding_balance  │   ┌──────────────┐
+                    │ emi_amount           │   │  dim_date    │
+                    │ interest_rate        │   ├──────────────┤
+                    │ tenure_months        │   │ date_id      │
+                    │ dpd                  │──▶│ full_date    │
+                    │ npa_flag             │   │ month        │
+                    │ ltv_ratio            │   │ quarter      │
+                    └──────────────────────┘   │ fiscal_year  │
+                                               └──────────────┘</span></pre>
+      </div>
+
+      <h4>Advanced Table Structures</h4>
+      <p>A senior Data Engineer must classify tables correctly to solve different analytical problems:</p>
+      
+      <h5>Types of Fact Tables</h5>
+      <ul>
+        <li><strong>Transactional Fact:</strong> Records a single event at a point in time. Example: <code>fact_repayment</code> (logs individual EMI payments). Grain is one row per transaction.</li>
+        <li><strong>Accumulating Snapshot Fact:</strong> Tracks a multi-step process over time, with multiple date columns that get updated as the process moves forward. Example: <code>fact_loan_application</code> (logs dates for received, verified, sanctioned, rejected/disbursed).</li>
+        <li><strong>Periodic Snapshot Fact:</strong> Captures state at regular intervals. Example: <code>fact_monthly_balances</code> (logs the outstanding balance of every loan at the end of each month).</li>
+      </ul>
+
+      <h5>Types of Dimension Tables</h5>
+      <ul>
+        <li><strong>Conformed Dimension:</strong> A dimension shared identically across multiple fact tables natively, ensuring consistent reporting. Example: A standard <code>dim_date</code> or <code>dim_branch</code> shared by both <code>fact_disbursement</code> and <code>fact_repayment</code>.</li>
+        <li><strong>Role-playing Dimension:</strong> A single physical dimension table referenced multiple times for different purposes in the same query. Example: <code>dim_date</code> used as <code>application_date</code>, <code>sanction_date</code>, and <code>disbursement_date</code>.</li>
+      </ul>
+      <h4>Slowly Changing Dimensions (SCD)</h4>
+      <p>SCD handles how you manage changes to dimension table attributes over time — critical for historical reporting in finance.</p>
+
+      <table class="data-table">
+        <thead>
+          <tr><th>SCD Type</th><th>Strategy</th><th>Use Case in NBFC</th><th>Example</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Type 0</strong></td>
+            <td>Never update (retain original)</td>
+            <td>Customer PAN number, date of birth</td>
+            <td>Original value is always preserved</td>
+          </tr>
+          <tr>
+            <td><strong>Type 1</strong></td>
+            <td>Overwrite old value</td>
+            <td>Customer phone number, email address</td>
+            <td>Old value is lost — only current state kept</td>
+          </tr>
+          <tr>
+            <td><strong>Type 2</strong></td>
+            <td>Add new row with version tracking</td>
+            <td>Customer address (affects branch allocation), loan status</td>
+            <td>New row added with start_date, end_date, is_current flag</td>
+          </tr>
+          <tr>
+            <td><strong>Type 3</strong></td>
+            <td>Add column for previous value</td>
+            <td>Credit score (keep current + previous)</td>
+            <td>current_credit_score, previous_credit_score columns</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h4>SCD Type 2 Implementation in SQL</h4>
+      <div class="code-block">
+        <div class="code-header"><span class="code-lang">SQL — SCD Type 2 Merge for dim_customer</span><button class="code-copy">Copy</button></div>
+        <pre><span class="token-comment">-- Step 1: Expire changed records</span>
+<span class="token-keyword">UPDATE</span> dwh.dim_customer
+<span class="token-keyword">SET</span> end_date = <span class="token-function">CURRENT_DATE</span> - 1,
+    is_current = <span class="token-keyword">FALSE</span>
+<span class="token-keyword">WHERE</span> customer_id <span class="token-keyword">IN</span> (
+    <span class="token-keyword">SELECT</span> s.customer_id
+    <span class="token-keyword">FROM</span> staging.stg_customer s
+    <span class="token-keyword">JOIN</span> dwh.dim_customer d
+      <span class="token-keyword">ON</span> s.customer_id = d.customer_id
+     <span class="token-keyword">AND</span> d.is_current = <span class="token-keyword">TRUE</span>
+    <span class="token-keyword">WHERE</span> s.address <span class="token-operator">&lt;&gt;</span> d.address
+       <span class="token-keyword">OR</span> s.credit_score <span class="token-operator">&lt;&gt;</span> d.credit_score
+)
+<span class="token-keyword">AND</span> is_current = <span class="token-keyword">TRUE</span>;
+
+<span class="token-comment">-- Step 2: Insert new version of changed records</span>
+<span class="token-keyword">INSERT INTO</span> dwh.dim_customer (
+    customer_id, customer_name, address, credit_score,
+    start_date, end_date, is_current
+)
+<span class="token-keyword">SELECT</span> s.customer_id, s.customer_name, s.address,
+       s.credit_score, <span class="token-function">CURRENT_DATE</span>, <span class="token-string">'9999-12-31'</span>, <span class="token-keyword">TRUE</span>
+<span class="token-keyword">FROM</span> staging.stg_customer s
+<span class="token-keyword">JOIN</span> dwh.dim_customer d
+  <span class="token-keyword">ON</span> s.customer_id = d.customer_id
+ <span class="token-keyword">AND</span> d.is_current = <span class="token-keyword">FALSE</span>
+ <span class="token-keyword">AND</span> d.end_date = <span class="token-function">CURRENT_DATE</span> - 1;</pre>
+      </div>
+
+      <div class="key-point success">
+        <span class="kp-icon">✅</span>
+        <span class="kp-text"><strong>Your Strength:</strong> You've applied SCD methodology through PostgreSQL stored procedures in your pharmaceutical project. Translate this directly — "I implemented SCD Type 2 for tracking drug regulatory changes, and the same pattern applies to tracking customer address changes or loan status changes in housing finance."</span>
+      </div>
+    </div>
+
+    <!-- Q&A for Dimensional Modeling -->
+    <div class="qa-section">
+      <div class="qa-section-title">🧠 Test Your Knowledge — Dimensional Modeling</div>
+
+      <div class="qa-item">
+        <div class="qa-question">
+          <span class="qa-q-number">1</span>
+          <span class="qa-q-text">Design a star schema for tracking housing loan disbursements. What would be your fact table and dimension tables? Include grain definition.</span>
+          <span class="qa-toggle-icon">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p><strong>Grain Definition:</strong> One row per disbursement tranche per loan. A single loan can have multiple disbursements (e.g., construction-linked disbursements where funds are released at each construction stage).</p>
+            <p><strong>Fact Table: fact_disbursement</strong></p>
+            <ul>
+              <li><span class="inline-code">disbursement_id</span> (PK, surrogate key)</li>
+              <li><span class="inline-code">loan_id</span> (FK → dim_loan)</li>
+              <li><span class="inline-code">customer_id</span> (FK → dim_customer)</li>
+              <li><span class="inline-code">branch_id</span> (FK → dim_branch)</li>
+              <li><span class="inline-code">product_id</span> (FK → dim_product)</li>
+              <li><span class="inline-code">disbursement_date_id</span> (FK → dim_date)</li>
+              <li><span class="inline-code">disbursement_amount</span> (measure)</li>
+              <li><span class="inline-code">tranche_number</span> (degenerate dimension)</li>
+              <li><span class="inline-code">cumulative_disbursed</span> (measure)</li>
+              <li><span class="inline-code">remaining_sanctioned</span> (measure)</li>
+            </ul>
+            <p><strong>Dimension Tables:</strong></p>
+            <ul>
+              <li><strong>dim_customer</strong> — SCD Type 2 (track address/credit score changes)</li>
+              <li><strong>dim_loan</strong> — Loan details (sanctioned amount, tenure, interest rate, property details)</li>
+              <li><strong>dim_product</strong> — Product type (HL, LAP, Affordable Housing), interest type</li>
+              <li><strong>dim_branch</strong> — Branch, region, zone</li>
+              <li><strong>dim_date</strong> — Calendar with fiscal year, quarter, month, holidays</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question">
+          <span class="qa-q-number">2</span>
+          <span class="qa-q-text">When would you choose a Snowflake schema over a Star schema in a housing finance data warehouse?</span>
+          <span class="qa-toggle-icon">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p>A <strong>Snowflake schema</strong> normalizes dimension tables into sub-dimensions, reducing redundancy but adding more JOINs.</p>
+            <p><strong>When to use Snowflake:</strong></p>
+            <ul>
+              <li><strong>Geographic hierarchy:</strong> Instead of storing city, state, region, zone all in dim_branch, normalize into dim_branch → dim_city → dim_state → dim_region. This avoids update anomalies when a branch's region assignment changes.</li>
+              <li><strong>Product hierarchy:</strong> dim_product → dim_product_category → dim_product_group when there are many levels of product classification.</li>
+              <li><strong>Regulatory reporting:</strong> When exact normalization is required for regulatory feeds (RBI returns often need standardized geographic and product classifications).</li>
+            </ul>
+            <p><strong>When to stick with Star:</strong></p>
+            <ul>
+              <li>Most Redshift analytics — the denormalized star schema performs better because fewer JOINs = less data shuffling across nodes.</li>
+              <li>Tableau and BI tools work more efficiently with star schemas — simpler data model, faster query generation.</li>
+              <li><strong>General rule:</strong> Optimize for read performance (star) unless storage cost or update anomalies are a significant concern (snowflake).</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question">
+          <span class="qa-q-number">3</span>
+          <span class="qa-q-text">A customer changes their address from Delhi to Mumbai. This customer has 3 active loans. How does SCD Type 2 handle this, and what's the impact on historical reporting?</span>
+          <span class="qa-toggle-icon">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p><strong>SCD Type 2 handling:</strong></p>
+            <ol>
+              <li>The current row for this customer in <span class="inline-code">dim_customer</span> (address = 'Delhi', is_current = TRUE) gets expired: <span class="inline-code">end_date = '2024-03-15', is_current = FALSE</span></li>
+              <li>A new row is inserted: address = 'Mumbai', <span class="inline-code">start_date = '2024-03-16', end_date = '9999-12-31', is_current = TRUE</span></li>
+              <li>The <strong>surrogate key</strong> (dim_customer_sk) is different for the new row. The <strong>natural key</strong> (customer_id) remains the same.</li>
+            </ol>
+            <p><strong>Impact on historical reporting:</strong></p>
+            <ul>
+              <li>Queries for "loans disbursed to Delhi customers" will correctly show the 3 loans because they were associated with the Delhi version of the customer record.</li>
+              <li>Since fact tables reference the <strong>surrogate key</strong> (not the natural key), the existing 3 loans still point to the old dim_customer_sk (Delhi version).</li>
+              <li>New transactions (payments, collections) for these loans will now use the new dim_customer_sk (Mumbai version).</li>
+              <li><strong>Current state query:</strong> Join using <span class="inline-code">is_current = TRUE</span> to get Mumbai.</li>
+              <li><strong>Historical state query:</strong> Join using fact table's <span class="inline-code">dim_customer_sk</span> to get the address as it was when the loan was disbursed (Delhi).</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<div class="page-navigation animate-in" style="display:flex; justify-content:space-between; margin-top:40px; padding-top:20px; border-top:1px solid rgba(255,255,255,0.1);"><a href="../index.html" class="btn btn-secondary">← Home</a><a href="domain.html" class="btn btn-primary">Module 2: Domain →</a></div>
+</main>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <p>Built with 💜 for Lakhbeer Shah's Interview Preparation — Wednesday 2026</p>
+  <div class="footer-links">
+    <a href="#hero">Back to Top</a>
+    <a href="#module-aws">AWS</a>
+    <a href="#module-domain">NBFC</a>
+    <a href="#module-sql">SQL</a>
+    <a href="#module-behavioral">Behaviour</a>
+    <a href="interview.html">Q&amp;A</a>
+  </div>
+</footer>
+
+<script src="../assets/js/script.js"></script>
+</body>
+</html>

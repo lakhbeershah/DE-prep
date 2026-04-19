@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Senior Data Engineer Interview Questions — Redshift, SQL, AWS, Airflow deep-dive for 5+ YOE candidates.">
+  <title>Interview Questions Bank | Senior Data Engineer</title>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body>
+
+<!-- ===== NAVIGATION ===== -->
+<nav class="navbar" id="navbar">
+  <div class="nav-content">
+    <a href="../index.html" class="nav-brand">
+      <span class="brand-icon">🎯</span>
+      <span>InterviewPrep</span>
+    </a>
+
+    <ul class="nav-links" id="navLinks">
+      <li><a href="aws.html">AWS</a></li>
+      <li><a href="domain.html">NBFC</a></li>
+      <li><a href="sql.html">SQL</a></li>
+      <li><a href="airflow.html">Airflow</a></li>
+      <li><a href="tableau.html">Tableau</a></li>
+      <li><a href="behavioral.html">Behaviour</a></li>
+      <li><a href="interview.html">Q&amp;A</a></li>
+    </ul>
+
+    <div class="nav-actions">
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">🌙</button>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">☰</button>
+    </div>
+  </div>
+</nav>
+
+<main style="padding-top:100px;">
+
+<!-- ============ TOPIC SELECTOR ============ -->
+<section class="section" id="interview-bank">
+  <div class="section-header animate-in">
+    <span class="section-badge aws">🎤 Interview Bank</span>
+    <h2>Senior Data Engineer — Interview Questions</h2>
+    <p>85+ real interview questions with production-grade answers. Organized by topic for targeted revision.</p>
+  </div>
+
+  <!-- Topic Navigation Pills -->
+  <div class="stats-row animate-in" style="flex-wrap:wrap; gap:10px; justify-content:center;">
+    <a href="#redshift-arch" class="stat-card" style="text-decoration:none; cursor:pointer;">
+      <div class="stat-value">20</div>
+      <div class="stat-label">Architecture</div>
+    </a>
+    <a href="#redshift-perf" class="stat-card" style="text-decoration:none; cursor:pointer;">
+      <div class="stat-value">20</div>
+      <div class="stat-label">Performance</div>
+    </a>
+    <a href="#redshift-dwh" class="stat-card" style="text-decoration:none; cursor:pointer;">
+      <div class="stat-value">15</div>
+      <div class="stat-label">DWH Modeling</div>
+    </a>
+    <a href="#redshift-etl" class="stat-card" style="text-decoration:none; cursor:pointer;">
+      <div class="stat-value">15</div>
+      <div class="stat-label">ETL & CDC</div>
+    </a>
+    <a href="#redshift-sql" class="stat-card" style="text-decoration:none; cursor:pointer;">
+      <div class="stat-value">15</div>
+      <div class="stat-label">Advanced SQL</div>
+    </a>
+    <a href="#redshift-nbfc" class="stat-card" style="text-decoration:none; cursor:pointer;">
+      <div class="stat-value">15</div>
+      <div class="stat-label">NBFC & Security</div>
+    </a>
+  </div>
+
+<!-- ================================================================ -->
+<!-- CATEGORY 1: REDSHIFT ARCHITECTURE & DEEP INTERNALS               -->
+<!-- ================================================================ -->
+<div class="subsection animate-in" id="redshift-arch">
+  <div class="subsection-header">
+    <div class="subsection-icon aws-icon">🏗️</div>
+    <h3>1. Redshift Architecture & Deep Internals</h3>
+  </div>
+
+  <div class="qa-section">
+    <div class="qa-section-title">20 Questions — Architecture Deep Dive</div>
+
+    <div class="qa-item">
+      <div class="qa-question">
+        <span class="qa-q-number">1</span>
+        <span class="qa-q-text">Explain Amazon Redshift's Massively Parallel Processing (MPP) architecture.</span>
+        <span class="qa-toggle-icon">▼</span>
+      </div>
+      <div class="qa-answer">
+        <div class="qa-answer-inner">
+          <p>Redshift uses an MPP architecture where a <strong>Leader Node</strong> receives SQL queries, parses them, creates an optimized execution plan, and distributes the work across multiple <strong>Compute Nodes</strong>. Each compute node is further divided into <strong>node slices</strong> — virtual processing units with dedicated CPU, memory, and disk.</p>
+          <p>Data is distributed across slices based on the table's <strong>DISTSTYLE</strong>. When a query runs, all slices process their local data partition in parallel, then the Leader Node aggregates the results. This allows Redshift to scale linearly — 10 nodes process data ~10x faster than 1 node.</p>
+          <p><strong>Key point:</strong> The efficiency of MPP depends entirely on how well data is distributed. Poor DISTKEY choice causes <em>data skew</em> (one slice overloaded) or <em>data shuffling</em> (cross-node movement during JOINs), both of which kill performance.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="qa-item">
+      <div class="qa-question">
+        <span class="qa-q-number">2</span>
+        <span class="qa-q-text">What is the specific role of the Leader Node versus the Compute Nodes?</span>
+        <span class="qa-toggle-icon">▼</span>
+      </div>
+      <div class="qa-answer">
+        <div class="qa-answer-inner">
+          <table class="data-table">
+            <thead><tr><th>Component</th><th>Responsibilities</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Leader Node</strong></td><td>SQL parsing, query plan optimization, coordinating parallel execution, result aggregation, result caching, client communication (JDBC/ODBC), metadata management. Does NOT store user data.</td></tr>
+              <tr><td><strong>Compute Nodes</strong></td><td>Store user data in columnar format, execute the query plan fragments in parallel, perform local joins/aggregations/sorts, return intermediate results to the Leader Node.</td></tr>
+            </tbody>
+          </table>
+          <p><strong>Interview nuance:</strong> Some SQL functions (like <code>CURRENT_DATE</code>, <code>random()</code>) are <em>Leader-node-only functions</em> and will fail if used in queries referencing user tables. This is a common gotcha when migrating PostgreSQL code to Redshift.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="qa-item">
+      <div class="qa-question">
+        <span class="qa-q-number">3</span>
+        <span class="qa-q-text">How do RA3 nodes differ from older node types (DC2/DS2), and what is Managed Storage?</span>
+        <span class="qa-toggle-icon">▼</span>
+      </div>
+      <div class="qa-answer">
+        <div class="qa-answer-inner">
+          <table class="data-table">
+            <thead><tr><th>Feature</th><th>DC2/DS2 (Legacy)</th><th>RA3 (Current Gen)</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Storage</strong></td><td>Tightly coupled — local SSD/HDD</td><td>Decoupled — Managed Storage (S3-backed)</td></tr>
+              <tr><td><strong>Scaling</strong></td><td>Scale compute = scale storage (wasteful)</td><td>Scale compute and storage independently</td></tr>
+              <tr><td><strong>Hot Data</strong></td><td>All data on local disk</td><td>Frequently accessed data cached on local SSD; cold data auto-tiered to S3</td></tr>
+              <tr><td><strong>Data Sharing</strong></td><td>Not supported</td><td>Cross-cluster data sharing (live, no ETL)</td></tr>
+            </tbody>
+          </table>
+          <p><strong>Managed Storage</strong> is Redshift's intelligent storage layer that automatically manages data placement between high-performance SSD cache and S3. You pay per GB used, not per node storage capacity. This makes RA3 dramatically more cost-effective for large datasets where only a subset is "hot."</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="qa-item">
+      <div class="qa-question">
+        <span class="qa-q-number">4</span>
+        <span class="qa-q-text">Explain columnar data storage and why it is superior for OLAP workloads over row-based storage.</span>
+        <span class="qa-toggle-icon">▼</span>
+      </div>
+      <div class="qa-answer">
+        <div class="qa-answer-inner">
+          <p><strong>Row-based</strong> (MySQL, PostgreSQL): Stores entire rows together. Reading 3 columns from a 50-column table still reads all 50 columns — wasteful for analytics.</p>
+          <p><strong>Columnar</strong> (Redshift): Stores each column separately on disk. A <code>SELECT SUM(amount) FROM payments</code> reads ONLY the <code>amount</code> column, skipping the other 49.</p>
+          <p><strong>Why it's superior for OLAP:</strong></p>
+          <ul>
+            <li><strong>I/O reduction:</strong> Analytics queries typically touch 3-5 columns out of 30+. Columnar reads 90% less data.</li>
+            <li><strong>Compression:</strong> Same-type values in a column compress far better than mixed-type row data. A column of dates compresses 10-20x vs. rows.</li>
+            <li><strong>Vectorized processing:</strong> CPU can process batches of same-type values using SIMD instructions, much faster than heterogeneous rows.</li>
+            <li><strong>Zone maps:</strong> Min/max metadata per 1MB block enables entire block skipping during filtered queries.</li>
+          </ul>
+          <p><strong>Trade-off:</strong> Columnar is terrible for single-row lookups (OLTP) because reading one row requires reading from every column file. This is why Redshift is NOT a replacement for MySQL — it's complementary.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="qa-item">
+      <div class="qa-question">
+        <span class="qa-q-number">5</span>
+        <span class="qa-q-text">How does Redshift utilize Zone Maps and Data Block filtering to minimize I/O?</span>
+        <span class="qa-toggle-icon">▼</span>
+      </div>
+      <div class="qa-answer">
+        <div class="qa-answer-inner">
+          <p>Redshift stores data in 1MB immutable blocks. For each block, it maintains a <strong>Zone Map</strong> — metadata recording the <strong>minimum and maximum values</strong> in that block.</p>
+          <p>When a query has a <code>WHERE payment_date BETWEEN '2024-01-01' AND '2024-03-31'</code>, Redshift checks zone maps before reading any data. If a block's max date is '2023-12-15', the entire block is skipped — zero I/O.</p>
+          <p><strong>Why SORTKEY is critical:</strong> If the table is sorted by <code>payment_date</code>, all January data is physically adjacent. Zone maps can skip 90%+ of blocks. Without a sort key, dates are randomly scattered across blocks — every block might contain some January data, and zone maps become useless.</p>
+          <p><strong>Interview example:</strong> "After adding a COMPOUND SORTKEY on payment_date, our portfolio query went from scanning 500GB to 15GB — a 97% I/O reduction."</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="qa-item">
+      <div class="qa-question">
+        <span class="qa-q-number">6</span>
+        <span class="qa-q-text">What is a node slice, and how is data allocated across slices?</span>
+        <span class="qa-toggle-icon">▼</span>
+      </div>
+      <div class="qa-answer">
+        <div class="qa-answer-inner">
+          <p>A <strong>node slice</strong> is a virtual processing unit within a compute node. Each slice has its own portion of CPU, memory, and disk. The number of slices per node depends on the node type:</p>
+          <ul>
+            <li><strong>dc2.large:</strong> 2 slices</li>
+            <li><strong>ra3.xlplus:</strong> 2 slices</li>
+            <li><strong>ra3.4xlarge:</strong> 4 slices</li>
+            <li><strong>ra3.16xlarge:</strong> 16 slices</li>
+          </ul>
+          <p>Data is allocated to slices based on the DISTSTYLE. With KEY distribution, a hash function on the DISTKEY column determines which slice receives each row. With EVEN, rows are round-robin'd across all slices.</p>
+          <p><strong>Performance implication:</strong> When two tables share the same DISTKEY, matching rows are co-located on the same slice — enabling a <em>collocated join</em> with zero network transfer. This is the single most impactful Redshift optimization.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="qa-item">
+      <div class="qa-question">
+        <span class="qa-q-number">7</span>
+        <span class="qa-q-text">When would you recommend Redshift Serverless over a Provisioned cluster?</span>
+        <span class="qa-toggle-icon">▼</span>
+      </div>
+      <div class="qa-answer">
+        <div class="qa-answer-inner">
+          <table class="data-table">
+            <thead><tr><th>Use Case</th><th>Serverless</th><th>Provisioned</th></tr></thead>
+            <tbody>
+              <tr><td>Unpredictable/bursty workloads</td><td>✅ Auto-scales</td><td>❌ Fixed compute</td></tr>
+              <tr><td>Steady 24/7 production loads</td><td>❌ Expensive at scale</td><td>✅ Reserved pricing</td></tr>
+              <tr><td>Dev/test environments</td><td>✅ Pay only when querying</td><td>❌ Pays even when idle</td></tr>
+              <tr><td>Fine-grained control (WLM, node types)</td><td>❌ Limited config</td><td>✅ Full control</td></tr>
+              <tr><td>Cross-cluster data sharing</td><td>✅ Supported</td><td>✅ Supported (RA3)</td></tr>
+            </tbody>
+          </table>
+          <p><strong>NBFC recommendation:</strong> Use Provisioned (RA3) for the production data warehouse with steady ETL + BI loads. Use Serverless for ad-hoc analytics, data science exploration, and dev/staging environments.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="qa-item">
+      <div class="qa-question">
+        <span class="qa-q-number">8</span>
+        <span class="qa-q-text">Explain how Concurrency Scaling works to handle sudden bursts of queries.</span>
+        <span class="qa-toggle-icon">▼</span>
+      </div>
+      <div class="qa-answer">
+        <div class="qa-answer-inner">
+          <p>When the main cluster's WLM queues are full and queries start waiting, Redshift automatically provisions <strong>transient clusters</strong> (replicas of the main cluster) to handle the overflow. These clusters:</p>
+          <ul>
+            <li>Have access to the same data (via Managed Storage/S3)</li>
+            <li>Handle <strong>read queries only</strong> (SELECT) — not writes</li>
+            <li>Spin up in seconds and auto-terminate when demand drops</li>
+            <li>Are invisible to the user — queries are routed seamlessly</li>
+          </ul>
+          <p><strong>Cost:</strong> 1 hour/day free per provisioned node. After that, billed per-second of concurrency scaling usage.</p>
+          <p><strong>Config:</strong> Enable via WLM config: <code>max_concurrency_scaling_clusters = 5</code>. Set per-queue with <code>concurrency_scaling = auto</code>.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="qa-item">
+      <div class="qa-question">
+        <span class="qa-q-number">9</span>
+        <span class="qa-q-text">What is Short Query Acceleration (SQA) and how does it prevent queue bottlenecks?</span>
+        <span class="qa-toggle-icon">▼</span>
+      </div>
+      <div class="qa-answer">
+        <div class="qa-answer-inner">
+          <p>SQA uses <strong>machine learning</strong> to predict the execution time of each query. If a query is expected to run quickly (e.g., under 5 seconds), Redshift routes it to a dedicated fast lane, bypassing the regular WLM queue.</p>
+          <p><strong>Problem it solves:</strong> Without SQA, a simple <code>SELECT COUNT(*) FROM dim_branch</code> (1 second query) could be stuck behind a 45-minute ETL aggregation in the same WLM queue. SQA ensures short queries get immediate execution.</p>
+          <p><strong>Configuration:</strong> Set the SQA maximum runtime threshold (e.g., 5 seconds). Redshift's ML model improves over time as it learns your workload patterns. Enabled by default in Auto WLM.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="qa-item">
+      <div class="qa-question">
+        <span class="qa-q-number">10</span>
+        <span class="qa-q-text">Describe the architecture and use cases for Amazon Redshift Spectrum.</span>
+        <span class="qa-toggle-icon">▼</span>
+      </div>
+      <div class="qa-answer">
+        <div class="qa-answer-inner">
+          <p>Spectrum extends Redshift to query data directly in <strong>S3 without loading it</strong>. It uses a dedicated fleet of AWS-managed Spectrum nodes (separate from your cluster) to scan S3 data.</p>
+          <p><strong>Architecture flow:</strong> Query → Leader Node → generates Spectrum scan request → Spectrum nodes read/filter S3 data → return filtered results to Compute Nodes → final JOIN/aggregation with local tables.</p>
+          <p><strong>Use cases:</strong></p>
+          <ul>
+            <li>Query historical data (archive) without paying for Redshift storage</li>
+            <li>JOIN local Redshift tables with external S3 data lakes</li>
+            <li>Run ad-hoc analysis on raw Parquet/ORC files without ETL</li>
+          </ul>
+          <p><strong>Requirement:</strong> External tables must be defined in the <strong>AWS Glue Data Catalog</strong> (or Hive metastore). S3 data should be in columnar format (Parquet) and partitioned for best performance.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="qa-item">
+      <div class="qa-question">
+        <span class="qa-q-number">11</span>
+        <span class="qa-q-text">How does Federated Querying work, and how does it integrate with Aurora or RDS PostgreSQL/MySQL?</span>
+        <span class="qa-toggle-icon">▼</span>
+      </div>
+      <div class="qa-answer">
+        <div class="qa-answer-inner">
+          <p>Federated Query allows Redshift to <strong>query live data in RDS/Aurora</strong> databases directly via SQL, without copying the data into Redshift first.</p>
+          <p><strong>How it works:</strong> You create an external schema pointing to an RDS/Aurora endpoint. Redshift opens a JDBC connection, pushes down filters and projections to the operational database, and fetches only the needed rows.</p>
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">SQL</span><button class="code-copy">Copy</button></div>
+            <pre><span class="token-keyword">CREATE EXTERNAL SCHEMA</span> live_los
+<span class="token-keyword">FROM</span> POSTGRES
+DATABASE <span class="token-string">'los_production'</span>
+SCHEMA <span class="token-string">'public'</span>
+URI <span class="token-string">'los-aurora-cluster.xxxxx.ap-south-1.rds.amazonaws.com'</span>
+IAM_ROLE <span class="token-string">'arn:aws:iam::123:role/FederatedQueryRole'</span>
+SECRET_ARN <span class="token-string">'arn:aws:secretsmanager:ap-south-1:123:secret:los-creds'</span>;
+
+<span class="token-comment">-- Query live LOS data joined with Redshift DWH</span>
+<span class="token-keyword">SELECT</span> d.branch_name, <span class="token-function">COUNT</span>(l.app_id)
+<span class="token-keyword">FROM</span> live_los.loan_applications l
+<span class="token-keyword">JOIN</span> dwh.dim_branch d <span class="token-keyword">ON</span> l.branch_id = d.branch_id
+<span class="token-keyword">WHERE</span> l.app_date >= <span class="token-string">'2024-01-01'</span>
+<span class="token-keyword">GROUP BY</span> d.branch_name;</pre>
+          </div>
+          <p><strong>Caution:</strong> Federated queries hit the operational database. For large datasets, this adds load to production RDS. Use it for small lookups, not full table scans.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="qa-item">
+      <div class="qa-question">
+        <span class="qa-q-number">12</span>
+        <span class="qa-q-text">What is the Commit Queue in Redshift, and how can it become a bottleneck?</span>
+        <span class="qa-toggle-icon">▼</span>
+      </div>
+      <div class="qa-answer">
+        <div class="qa-answer-inner">
+          <p>Redshift serializes all write operations (INSERT, UPDATE, DELETE, COPY) through a single <strong>commit queue</strong>. Only one transaction can commit at a time. This ensures ACID consistency but creates a bottleneck when many concurrent writes compete.</p>
+          <p><strong>Symptoms:</strong> Queries showing long <code>commit_queue_wait</code> time in <code>STL_COMMIT_STATS</code>. Typically caused by many small, frequent writes instead of batch operations.</p>
+          <p><strong>Fix:</strong></p>
+          <ul>
+            <li>Batch small INSERTs into large COPY commands (100K+ rows per transaction)</li>
+            <li>Avoid running multiple concurrent writers (serialize ETL jobs)</li>
+            <li>Use <code>BEGIN...COMMIT</code> blocks to group related DML into single transactions</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="qa-item">
+      <div class="qa-question">
+        <span class="qa-q-number">13</span>
+        <span class="qa-q-text">Contrast Elastic Resize with Classic Resize.</span>
+        <span class="qa-toggle-icon">▼</span>
+      </div>
+      <div class="qa-answer">
+        <div class="qa-answer-inner">
+          <table class="data-table">
+            <thead><tr><th>Feature</th><th>Elastic Resize</th><th>Classic Resize</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Speed</strong></td><td>10-15 minutes</td><td>Hours to days</td></tr>
+              <tr><td><strong>What changes</strong></td><td>Add/remove nodes of the SAME type</td><td>Change node type OR count</td></tr>
+              <tr><td><strong>Downtime</strong></td><td>Brief (connection drop during transfer)</td><td>Cluster unavailable during migration</td></tr>
+              <tr><td><strong>Data movement</strong></td><td>Minimal — redistributes existing slices</td><td>Full data copy to new cluster</td></tr>
+              <tr><td><strong>Use case</strong></td><td>Temporary surge (month-end reporting)</td><td>Permanent upgrade (dc2 → ra3 migration)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="qa-item">
+      <div class="qa-question">
+        <span class="qa-q-number">14</span>
+        <span class="qa-q-text">How does Cross-Cluster Data Sharing work, and what are its limitations?</span>
+        <span class="qa-toggle-icon">▼</span>
+      </div>
+      <div class="qa-answer">
+        <div class="qa-answer-inner">
+          <p>Data Sharing allows a <strong>producer cluster</strong> to grant live, read-only access to its tables/schemas/views to a <strong>consumer cluster</strong> — without copying data. Works across different AWS accounts.</p>
+          <p><strong>Limitations:</strong></p>
+          <ul>
+            <li>RA3 nodes only — not supported on DC2/DS2</li>
+            <li>Consumer gets read-only access (cannot write to shared objects)</li>
+            <li>Both clusters must be in the same AWS region</li>
+            <li>Materialized views on shared data have refresh limitations</li>
+            <li>Performance depends on the producer cluster's storage tier</li>
+          </ul>
+          <p><strong>NBFC use case:</strong> Production DWH (producer) shares data with a separate Analytics cluster (consumer) so data scientists can run heavy ML queries without impacting production dashboards.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="qa-item">
+      <div class="qa-question">
+        <span class="qa-q-number">15</span>
+        <span class="qa-q-text">What occurs technically during an automated Redshift cluster snapshot?</span>
+        <span class="qa-toggle-icon">▼</span>
+      </div>
+      <div class="qa-answer">
+        <div class="qa-answer-inner">
+          <p>Redshift takes <strong>incremental snapshots</strong> automatically every ~8 hours or after 5GB of data changes. The process:</p>
+          <ol>
+            <li>Redshift identifies blocks changed since the last snapshot</li>
+            <li>Only modified blocks are copied to S3 (not the entire cluster)</li>
+            <li>The snapshot is stored in a separate S3 bucket managed by AWS</li>
+            <li>The snapshot captures table definitions, data, users, schemas, and cluster configuration</li>
+          </ol>
+          <p><strong>Performance impact:</strong> Minimal — snapshots run in the background using spare I/O bandwidth. You can also create manual snapshots for pre-deployment safety nets. Snapshots can be cross-region copied for DR.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="qa-item">
+      <div class="qa-question">
+        <span class="qa-q-number">16</span>
+        <span class="qa-q-text">How does Redshift handle High Availability (HA) and Multi-AZ deployments?</span>
+        <span class="qa-toggle-icon">▼</span>
+      </div>
+      <div class="qa-answer">
+        <div class="qa-answer-inner">
+          <p><strong>Multi-AZ (GA since 2023):</strong> Redshift now supports Multi-AZ deployments for RA3 clusters. It maintains a standby cluster in a different AZ that automatically takes over if the primary fails — typically within 60 seconds.</p>
+          <p><strong>Single-AZ HA:</strong> Within a single AZ, Redshift automatically replicates data to other nodes. If a node fails, it's automatically replaced and data is restored from replicas. If the entire cluster fails, it's restored from the latest snapshot.</p>
+          <p><strong>RPO/RTO:</strong> Multi-AZ: RPO = 0 (synchronous replication), RTO = ~60 seconds. Single-AZ: RPO = last snapshot (~8 hours), RTO = proportional to data size.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="qa-item">
+      <div class="qa-question">
+        <span class="qa-q-number">17</span>
+        <span class="qa-q-text">Explain the concept and importance of Data Compaction.</span>
+        <span class="qa-toggle-icon">▼</span>
+      </div>
+      <div class="qa-answer">
+        <div class="qa-answer-inner">
+          <p>Data compaction is the process of merging many small 1MB blocks into fewer, optimally-filled blocks. Redshift's immutable block architecture means every INSERT creates new blocks without filling existing ones completely.</p>
+          <p><strong>Problem:</strong> After thousands of small inserts, you end up with millions of partially-filled blocks. Queries must scan more blocks than necessary, and zone maps become less effective (wider min/max ranges per block).</p>
+          <p><strong>Solution:</strong> <code>VACUUM SORT</code> re-sorts and compacts data. Alternatively, use the <code>DEEP COPY</code> technique (CREATE TABLE new AS SELECT * FROM old) which produces optimally packed blocks. Schedule compaction in maintenance windows after heavy ETL loads.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="qa-item">
+      <div class="qa-question">
+        <span class="qa-q-number">18</span>
+        <span class="qa-q-text">What is the difference between Redshift system tables and system views?</span>
+        <span class="qa-toggle-icon">▼</span>
+      </div>
+      <div class="qa-answer">
+        <div class="qa-answer-inner">
+          <table class="data-table">
+            <thead><tr><th>Type</th><th>Prefix</th><th>Scope</th><th>Example</th></tr></thead>
+            <tbody>
+              <tr><td><strong>STL (System Table Log)</strong></td><td>STL_</td><td>Node-level logs, retained 2-5 days</td><td><code>STL_QUERY</code>, <code>STL_LOAD_ERRORS</code></td></tr>
+              <tr><td><strong>STV (System Table View)</strong></td><td>STV_</td><td>Current snapshot (point-in-time state)</td><td><code>STV_BLOCKLIST</code>, <code>STV_SLICES</code></td></tr>
+              <tr><td><strong>SVV (System View)</strong></td><td>SVV_</td><td>Cluster-wide aggregated views</td><td><code>SVV_TABLE_INFO</code>, <code>SVV_COLUMNS</code></td></tr>
+              <tr><td><strong>SVL (System View Log)</strong></td><td>SVL_</td><td>Pre-joined log views for convenience</td><td><code>SVL_QUERY_SUMMARY</code></td></tr>
+            </tbody>
+          </table>
+          <p><strong>For interviews:</strong> Know <code>SVV_TABLE_INFO</code> (skew, unsorted %), <code>STL_QUERY</code> (query history), <code>STL_LOAD_ERRORS</code> (COPY failures), and <code>STL_ALERT_EVENT_LOG</code> (performance alerts).</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="qa-item">
+      <div class="qa-question">
+        <span class="qa-q-number">19</span>
+        <span class="qa-q-text">How is result caching handled at the Leader node?</span>
+        <span class="qa-toggle-icon">▼</span>
+      </div>
+      <div class="qa-answer">
+        <div class="qa-answer-inner">
+          <p>When a query executes, the Leader Node caches the result. If the <strong>exact same SQL text</strong> is submitted again and the underlying tables haven't been modified, Redshift returns the cached result instantly — zero compute node involvement.</p>
+          <p><strong>Cache invalidation:</strong> Any DML (INSERT, UPDATE, DELETE) on the referenced tables invalidates the cache for all queries touching those tables.</p>
+          <p><strong>Benefit for BI:</strong> If 50 Tableau users open the same MIS dashboard, only the first user's query hits compute nodes. The other 49 get cached results in milliseconds. This is why you see "sub-second" dashboard loads after the first render.</p>
+          <p><strong>Control:</strong> Disable with <code>SET enable_result_cache_for_session = off;</code> (useful during performance benchmarking).</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="qa-item">
+      <div class="qa-question">
+        <span class="qa-q-number">20</span>
+        <span class="qa-q-text">Explain the integration of AWS KMS for Redshift encryption at rest.</span>
+        <span class="qa-toggle-icon">▼</span>
+      </div>
+      <div class="qa-answer">
+        <div class="qa-answer-inner">
+          <p>Redshift supports encryption at rest using a <strong>4-tier key hierarchy:</strong></p>
+          <ol>
+            <li><strong>Master Key</strong> (stored in AWS KMS or CloudHSM)</li>
+            <li><strong>Cluster Encryption Key (CEK)</strong> — encrypts the DEKs</li>
+            <li><strong>Database Encryption Key (DEK)</strong> — unique per database</li>
+            <li><strong>Data encryption keys</strong> — per 1MB block</li>
+          </ol>
+          <p><strong>Key rotation:</strong> You can rotate the CEK without downtime. Redshift re-encrypts the DEKs in the background. This satisfies RBI's requirement for periodic key rotation on financial data.</p>
+          <p><strong>In-transit encryption:</strong> Enforced via SSL/TLS for JDBC/ODBC connections. Set <code>require_ssl = true</code> in the parameter group.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ================================================================ -->
+<!-- CATEGORY 2: QUERY OPTIMIZATION & PERFORMANCE TUNING              -->
+<!-- ================================================================ -->
+<div class="subsection animate-in" id="redshift-perf">
+  <div class="subsection-header">
+    <div class="subsection-icon aws-icon">⚡</div>
+    <h3>2. Query Optimization & Performance Tuning</h3>
+  </div>
+
+  <div class="qa-section">
+    <div class="qa-section-title">20 Questions — Performance Deep Dive</div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">1</span><span class="qa-q-text">Define Distribution Styles (EVEN, KEY, ALL, AUTO) and when to use each.</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><table class="data-table"><thead><tr><th>Style</th><th>Mechanism</th><th>Best For</th></tr></thead><tbody><tr><td><strong>KEY</strong></td><td>Hash on DISTKEY column → same values on same slice</td><td>Large fact tables frequently JOINed on that column</td></tr><tr><td><strong>ALL</strong></td><td>Full copy on every node</td><td>Small dimension tables (&lt;2M rows)</td></tr><tr><td><strong>EVEN</strong></td><td>Round-robin across all slices</td><td>Tables not used in JOINs; staging tables</td></tr><tr><td><strong>AUTO</strong></td><td>Redshift decides (starts ALL, switches to EVEN as table grows)</td><td>Default when unsure</td></tr></tbody></table></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">2</span><span class="qa-q-text">What factors dictate the choice of a DISTKEY?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><ul><li><strong>High cardinality:</strong> The DISTKEY column must have many distinct values for even distribution (e.g., <code>loan_id</code> not <code>status</code>).</li><li><strong>Most common JOIN column:</strong> Choose the column used in the most frequent and largest JOINs.</li><li><strong>Low NULL rate:</strong> All NULLs hash to the same slice, causing skew.</li><li><strong>Consistent with other tables:</strong> If <code>fact_payments</code> and <code>fact_disbursement</code> both frequently join to <code>dim_customer</code> on <code>customer_id</code>, use <code>customer_id</code> as DISTKEY for all three.</li></ul></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">3</span><span class="qa-q-text">How do you query system tables to detect Data Skew?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><div class="code-block"><div class="code-header"><span class="code-lang">SQL</span><button class="code-copy">Copy</button></div><pre><span class="token-keyword">SELECT</span> <span class="token-string">"table"</span>, diststyle, skew_rows, skew_sortkey1, unsorted, tbl_rows
+<span class="token-keyword">FROM</span> svv_table_info
+<span class="token-keyword">WHERE</span> <span class="token-string">"schema"</span> = <span class="token-string">'dwh'</span>
+<span class="token-keyword">ORDER BY</span> skew_rows <span class="token-keyword">DESC</span>;
+<span class="token-comment">-- skew_rows > 4.0 = severe skew, needs DISTKEY change</span></pre></div><p>Also check per-slice row counts: <code>SELECT slice, COUNT(*) FROM stv_blocklist WHERE tbl = TBL_ID GROUP BY slice;</code></p></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">4</span><span class="qa-q-text">Explain the difference between Compound Sort Keys and Interleaved Sort Keys.</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><p><strong>Compound:</strong> Hierarchical — optimized when queries filter on the leftmost prefix. Like a phone book sorted by Last Name then First Name. Fast VACUUM, low maintenance.</p><p><strong>Interleaved:</strong> Equal weight to all columns — any column can be independently filtered. Higher maintenance (VACUUM REINDEX required regularly).</p><p><strong>Rule of thumb:</strong> Compound for 90% of cases. Interleaved only for exploratory analytics tables with unpredictable filter patterns.</p></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">5</span><span class="qa-q-text">In what specific scenario is an Interleaved Sort Key strictly better than Compound?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><p>When users filter on <strong>any combination</strong> of columns without a predictable pattern. Example: An analytics team queries <code>fact_loan_application</code> sometimes by <code>app_date</code>, sometimes by <code>branch_id</code>, sometimes by <code>product_type</code>, and sometimes by combinations.</p><p>With COMPOUND(app_date, branch_id, product_type), filtering only on <code>branch_id</code> gets zero zone map benefit (it's not the leftmost column). With INTERLEAVED(app_date, branch_id, product_type), all three columns independently benefit from zone maps.</p><p><strong>Trade-off:</strong> VACUUM REINDEX on interleaved keys is 3-5x more expensive and must be run more frequently (every 10-15% unsorted data).</p></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">6</span><span class="qa-q-text">You see DS_BCAST_INNER in an EXPLAIN plan. How do you resolve this?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><p><code>DS_BCAST_INNER</code> means the inner table of a JOIN is being <strong>broadcast to every node</strong> — the entire table is copied across the network. This is catastrophic for large tables.</p><p><strong>Causes:</strong> Tables are not distributed on the join key.</p><p><strong>Fix:</strong></p><ol><li>If the inner table is small (&lt;2M rows) → Change to <code>DISTSTYLE ALL</code></li><li>If both tables are large → Set both to <code>DISTSTYLE KEY DISTKEY(join_column)</code> for a <strong>collocated join</strong></li><li>Verify fix: Re-run EXPLAIN → should show <code>DS_DIST_ALL_NONE</code> (collocated) instead</li></ol></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">7</span><span class="qa-q-text">How do you identify and fix a Nested Loop Join in Redshift?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><p>Nested Loop Joins appear in EXPLAIN plans and are <strong>almost always bad</strong> in Redshift. They indicate the optimizer couldn't find a hash or merge join strategy — usually due to inequality conditions or Cartesian products.</p><p><strong>Detection:</strong> Check <code>STL_ALERT_EVENT_LOG</code> for <code>Nested Loop Join</code> alerts, or look for <code>NL</code> in EXPLAIN output.</p><p><strong>Fix:</strong> Rewrite the query to use explicit equi-joins (<code>ON a.id = b.id</code>) instead of inequality/range joins. If unavoidable, add filters to reduce the cross-product size.</p></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">8</span><span class="qa-q-text">Explain VACUUM and its modes (FULL, SORT ONLY, DELETE ONLY, REINDEX).</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><table class="data-table"><thead><tr><th>Mode</th><th>What It Does</th><th>When to Use</th></tr></thead><tbody><tr><td><strong>FULL</strong></td><td>Reclaims space + re-sorts</td><td>After large DELETE + INSERT cycles</td></tr><tr><td><strong>SORT ONLY</strong></td><td>Re-sorts new rows into sorted regions</td><td>After bulk COPY loads</td></tr><tr><td><strong>DELETE ONLY</strong></td><td>Reclaims disk from deleted rows</td><td>After heavy UPDATE/DELETE operations</td></tr><tr><td><strong>REINDEX</strong></td><td>Re-analyzes interleaved sort keys</td><td>After 10%+ unsorted data on interleaved tables</td></tr></tbody></table></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">9</span><span class="qa-q-text">Why is running VACUUM DELETE ONLY critical for tables with heavy updates?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><p>Redshift UPDATEs are actually DELETE + INSERT (mark old row as deleted, insert new row). The old row still occupies disk space and is scanned during queries (ghost rows). Over time:</p><ul><li>Disk usage balloons (potentially hitting "Disk Full")</li><li>Query scans include deleted rows → slower performance</li><li>Zone map ranges widen → less effective block skipping</li></ul><p><code>VACUUM DELETE ONLY</code> physically removes ghost rows and reclaims the disk space. This is the lightest VACUUM mode — schedule it nightly after ETL on tables with frequent updates (like <code>dim_customer</code> SCD1).</p></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">10</span><span class="qa-q-text">What does ANALYZE do, and how does it affect the query planner?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><p><code>ANALYZE</code> collects column-level statistics (distinct values, most frequent values, histogram of value distribution) and stores them in the system catalog. The query optimizer uses these statistics to:</p><ul><li>Estimate the number of rows a filter will return (cardinality estimation)</li><li>Choose between Hash Join vs. Merge Join</li><li>Decide broadcast vs. redistribute strategies</li></ul><p><strong>If stats are stale:</strong> The optimizer makes bad decisions — e.g., broadcasting a 100M row table because it thinks it has 500 rows. <strong>Always run ANALYZE after large loads.</strong></p></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">11</span><span class="qa-q-text">Walk me through reading a complex Redshift EXPLAIN plan.</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><p><strong>Read bottom-up</strong> — the deepest indented operations execute first.</p><ol><li><strong>Scan:</strong> Look for <code>Seq Scan</code> (full table scan — check if SORTKEY filter is missing)</li><li><strong>Join type:</strong> <code>Hash Join</code> (normal), <code>Merge Join</code> (sorted data), <code>NL</code> (Nested Loop — bad!)</li><li><strong>Distribution:</strong> <code>DS_DIST_ALL_NONE</code> (collocated — best), <code>DS_BCAST_INNER</code> (broadcast — worst), <code>DS_DIST_BOTH</code> (both tables redistributed — bad)</li><li><strong>Cost:</strong> Look at <code>rows</code> estimate and <code>cost</code> — large discrepancies between estimated and actual rows indicate stale ANALYZE stats</li><li><strong>Sort:</strong> <code>Sort Key</code> operations forced mid-query mean data isn't pre-sorted (add/change SORTKEY)</li></ol></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">12</span><span class="qa-q-text">What compression encodings does Redshift support, and when would you use AZ64 vs. ZSTD?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><table class="data-table"><thead><tr><th>Encoding</th><th>Best For</th><th>Compression</th></tr></thead><tbody><tr><td><strong>AZ64</strong></td><td>Numeric types (INT, BIGINT, DECIMAL, DATE, TIMESTAMP)</td><td>Highest for numerics — AWS proprietary, SIMD-optimized</td></tr><tr><td><strong>ZSTD</strong></td><td>VARCHAR, CHAR, large strings, JSON</td><td>Best general-purpose ratio for text</td></tr><tr><td><strong>LZO</strong></td><td>Legacy default</td><td>Good but outperformed by AZ64/ZSTD</td></tr><tr><td><strong>BYTEDICT</strong></td><td>Low-cardinality columns (status, region)</td><td>Dictionary encoding — very efficient for &lt;256 distinct values</td></tr><tr><td><strong>RUNLENGTH</strong></td><td>Columns with long consecutive repeats</td><td>Ideal for sorted columns with low cardinality</td></tr></tbody></table><p><strong>Best practice:</strong> Use <code>ANALYZE COMPRESSION table_name;</code> to let Redshift recommend optimal encodings per column.</p></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">13</span><span class="qa-q-text">How does the ANALYZE COMPRESSION command work?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><p><code>ANALYZE COMPRESSION table_name;</code> samples existing data (100,000 rows by default) and tests all available encodings on each column. It outputs a recommendation table showing the encoding that achieves the best compression ratio per column.</p><p><strong>Important:</strong> This command does NOT automatically apply the encodings. You must recreate the table with the recommended encodings (ALTER COLUMN encoding is not supported). Use the DEEP COPY technique: CREATE new table with new encodings → INSERT INTO new SELECT * FROM old → rename.</p></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">14</span><span class="qa-q-text">Differentiate between Auto WLM and Manual WLM.</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><table class="data-table"><thead><tr><th>Feature</th><th>Auto WLM</th><th>Manual WLM</th></tr></thead><tbody><tr><td><strong>Memory</strong></td><td>Dynamically allocated per query</td><td>Fixed % per queue (e.g., ETL=60%, BI=40%)</td></tr><tr><td><strong>Concurrency</strong></td><td>Automatically adjusted based on workload</td><td>Fixed slots per queue</td></tr><tr><td><strong>Priority</strong></td><td>Set via priority labels (CRITICAL, HIGH, NORMAL, LOW)</td><td>Implicit via queue order and memory allocation</td></tr><tr><td><strong>Maintenance</strong></td><td>Low — Redshift optimizes for you</td><td>High — requires constant tuning</td></tr></tbody></table><p><strong>Recommendation:</strong> Start with Auto WLM. Switch to Manual only if you have very specific isolation requirements (e.g., guaranteed memory for regulatory reporting queries).</p></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">15</span><span class="qa-q-text">How do you configure WLM queues to prioritize executive dashboards over ad-hoc data science queries?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><p><strong>With Auto WLM:</strong> Use query priority. Assign the Tableau service account to <code>CRITICAL</code> priority and data science users to <code>LOW</code>:</p><div class="code-block"><div class="code-header"><span class="code-lang">SQL</span><button class="code-copy">Copy</button></div><pre><span class="token-keyword">CREATE USER</span> tableau_svc <span class="token-keyword">PASSWORD</span> <span class="token-string">'xxx'</span>;
+<span class="token-keyword">ALTER USER</span> tableau_svc <span class="token-keyword">SET</span> query_priority = <span class="token-string">'CRITICAL'</span>;
+
+<span class="token-keyword">CREATE USER</span> ds_analyst <span class="token-keyword">PASSWORD</span> <span class="token-string">'xxx'</span>;
+<span class="token-keyword">ALTER USER</span> ds_analyst <span class="token-keyword">SET</span> query_priority = <span class="token-string">'LOW'</span>;</pre></div><p><strong>With Manual WLM:</strong> Create two queues — one for the BI user group (60% memory, 10 slots) and one for data science (20% memory, 3 slots). Route users to queues based on their user group.</p></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">16</span><span class="qa-q-text">What is the performance impact of updating a column designated as a distribution key?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><p><strong>Catastrophic.</strong> Updating the DISTKEY column changes the hash value, which means the row should now live on a <em>different</em> slice. Redshift must delete the old row, rehash, and insert it on the correct slice. This is a cross-node operation for every updated row.</p><p><strong>Rule:</strong> Never UPDATE a DISTKEY column. If the value must change, DELETE the old row and INSERT a new one. Better yet, choose a DISTKEY that is immutable (like <code>loan_id</code>, not <code>branch_id</code> which might change during loan transfers).</p></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">17</span><span class="qa-q-text">How do you use STL_QUERY and SVL_QUERY_SUMMARY to pinpoint query bottlenecks?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><div class="code-block"><div class="code-header"><span class="code-lang">SQL</span><button class="code-copy">Copy</button></div><pre><span class="token-comment">-- Find slow queries (last 24 hours)</span>
+<span class="token-keyword">SELECT</span> query, elapsed/1000000 <span class="token-keyword">AS</span> secs, <span class="token-function">SUBSTRING</span>(querytxt,1,100)
+<span class="token-keyword">FROM</span> stl_query
+<span class="token-keyword">WHERE</span> starttime > <span class="token-function">DATEADD</span>(hour,-24,<span class="token-function">GETDATE</span>())
+<span class="token-keyword">ORDER BY</span> elapsed <span class="token-keyword">DESC LIMIT</span> <span class="token-number">10</span>;
+
+<span class="token-comment">-- Drill into a specific query's step breakdown</span>
+<span class="token-keyword">SELECT</span> label, rows, bytes, is_diskbased
+<span class="token-keyword">FROM</span> svl_query_summary
+<span class="token-keyword">WHERE</span> query = <span class="token-number">12345</span>
+<span class="token-keyword">ORDER BY</span> seg, step;</pre></div><p>Look for: <code>is_diskbased = true</code> (query spilled to disk — needs more memory), high <code>bytes</code> on network steps (data shuffling), and disproportionate <code>rows</code> (skew).</p></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">18</span><span class="qa-q-text">What are Materialized Views in Redshift, and how does auto-refresh work?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><p>MVs store pre-computed query results physically on disk. Redshift supports <strong>auto-refresh</strong> — when base tables change, Redshift incrementally updates the MV in the background. Set with <code>CREATE MATERIALIZED VIEW ... AUTO REFRESH YES;</code></p><p><strong>Limitations:</strong> MVs don't support CTEs, subqueries in FROM, certain window functions, or external (Spectrum) tables. Refresh has a small lag (not real-time).</p><p><strong>Query rewriting:</strong> Redshift can automatically rewrite queries to use an MV even if the user queries the base table — if the optimizer determines the MV can answer the query more efficiently.</p></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">19</span><span class="qa-q-text">How do you troubleshoot and resolve "Disk Full" errors mid-query?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><p><strong>Immediate triage:</strong></p><ol><li>Check disk usage: <code>SELECT owner, SUM(size)/1024 AS gb FROM svv_table_info GROUP BY owner ORDER BY gb DESC;</code></li><li>Check for ghost rows: <code>SELECT "table", tbl_rows, empty AS deleted_rows FROM svv_table_info WHERE empty > tbl_rows * 0.2;</code></li><li>Run <code>VACUUM DELETE ONLY</code> on tables with high ghost row counts</li><li>Drop temp tables: <code>SELECT * FROM svv_table_info WHERE "table" LIKE '#%';</code></li></ol><p><strong>Prevention:</strong> Monitor disk usage alerts in CloudWatch, schedule nightly VACUUM, and set WLM query timeouts to prevent runaway queries that spill massive temp data to disk.</p></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">20</span><span class="qa-q-text">What is the command sequence to identify and terminate a hung or long-running query?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><div class="code-block"><div class="code-header"><span class="code-lang">SQL</span><button class="code-copy">Copy</button></div><pre><span class="token-comment">-- Step 1: Find the stuck query</span>
+<span class="token-keyword">SELECT</span> pid, <span class="token-function">TRIM</span>(user_name) <span class="token-keyword">AS</span> user,
+       starttime, <span class="token-function">DATEDIFF</span>(min, starttime, <span class="token-function">GETDATE</span>()) <span class="token-keyword">AS</span> mins_running,
+       <span class="token-function">SUBSTRING</span>(query,1,80) <span class="token-keyword">AS</span> sql_text
+<span class="token-keyword">FROM</span> stv_recents
+<span class="token-keyword">WHERE</span> status = <span class="token-string">'Running'</span>
+<span class="token-keyword">ORDER BY</span> starttime;
+
+<span class="token-comment">-- Step 2: Cancel the query (graceful)</span>
+<span class="token-keyword">CANCEL</span> <span class="token-number">12345</span>; <span class="token-comment">-- PID from Step 1</span>
+
+<span class="token-comment">-- Step 3: If CANCEL doesn't work, terminate the session</span>
+<span class="token-keyword">SELECT</span> pg_terminate_backend(<span class="token-number">12345</span>);</pre></div></div></div></div>
+
+  </div>
+</div>
+
+<!-- ================================================================ -->
+<!-- CATEGORY 3: DATA WAREHOUSING & DIMENSIONAL MODELING              -->
+<!-- ================================================================ -->
+<div class="subsection animate-in" id="redshift-dwh">
+  <div class="subsection-header">
+    <div class="subsection-icon aws-icon">🗃️</div>
+    <h3>3. Data Warehousing & Dimensional Modeling</h3>
+  </div>
+  <div class="qa-section">
+    <div class="qa-section-title">15 Questions — DWH Design</div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">1</span><span class="qa-q-text">Explain the Medallion Architecture (Bronze, Silver, Gold) and how you implement it in S3/Redshift.</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><table class="data-table"><thead><tr><th>Layer</th><th>S3 Location</th><th>Redshift Schema</th><th>What It Contains</th></tr></thead><tbody><tr><td><strong>Bronze (Raw)</strong></td><td><code>s3://nbfc-data/raw/</code></td><td><code>staging</code></td><td>Raw, unprocessed data from source systems. No transformations. Schema mirrors source.</td></tr><tr><td><strong>Silver (Cleansed)</strong></td><td><code>s3://nbfc-data/curated/</code></td><td><code>cleansed</code></td><td>Deduplicated, validated, types cast. Business rules applied. Standardized column names.</td></tr><tr><td><strong>Gold (Analytics)</strong></td><td>N/A (lives in Redshift)</td><td><code>dwh</code> / <code>analytics</code></td><td>Star schema. Fact + Dimension tables. MVs for Tableau. This is what BI tools consume.</td></tr></tbody></table><p><strong>Data flow:</strong> Source → S3 Bronze → Glue ETL → S3 Silver → COPY → Redshift Staging → Stored Procedures → Redshift DWH (Gold)</p></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">2</span><span class="qa-q-text">Contrast a Snowflake schema with a Star schema.</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><p><strong>Star:</strong> Fact table at center with denormalized dimension tables directly connected. Fewer JOINs, simpler queries, best for Redshift MPP.</p><p><strong>Snowflake:</strong> Dimension tables are further normalized into sub-dimensions (e.g., <code>dim_customer</code> → <code>dim_city</code> → <code>dim_state</code>). More JOINs, saves storage, but worse performance in MPP systems.</p><p><strong>Recommendation for Redshift:</strong> Always prefer Star schema. The storage saved by snowflaking is negligible with columnar compression, but the extra JOINs cause cross-node data shuffling which tanks performance.</p></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">3</span><span class="qa-q-text">What are the trade-offs of using a Snowflake schema specifically within an MPP database like Redshift?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><p><strong>Negatives in MPP:</strong> Each extra JOIN potentially requires cross-node data redistribution. A 5-table snowflake join could trigger 4 separate broadcast/redistribute operations. The network overhead often exceeds the I/O savings from normalization.</p><p><strong>Positives (limited):</strong> Simplifies SCD management on granular dimensions, reduces data duplication for very large text columns.</p><p><strong>Bottom line:</strong> Denormalize dimensions in Redshift. Use DISTSTYLE ALL for small dimensions. The columnar compression already handles redundancy efficiently.</p></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">4</span><span class="qa-q-text">Explain SCD Types 1, 2, and 3. Walk through Type 2 implementation in Redshift.</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><table class="data-table"><thead><tr><th>Type</th><th>Strategy</th><th>History Preserved?</th><th>Example</th></tr></thead><tbody><tr><td><strong>Type 1</strong></td><td>Overwrite old value</td><td>No</td><td>Customer phone number update</td></tr><tr><td><strong>Type 2</strong></td><td>Add new row with version tracking</td><td>Yes (full history)</td><td>Customer address change: old row gets <code>end_date</code>, new row gets <code>start_date</code></td></tr><tr><td><strong>Type 3</strong></td><td>Add columns for current + previous value</td><td>Limited (one prior value)</td><td><code>current_city</code>, <code>previous_city</code></td></tr></tbody></table><div class="code-block"><div class="code-header"><span class="code-lang">SQL — SCD2 in Redshift</span><button class="code-copy">Copy</button></div><pre><span class="token-comment">-- Step 1: Close existing current records that have changed</span>
+<span class="token-keyword">UPDATE</span> dwh.dim_customer
+<span class="token-keyword">SET</span> is_current = <span class="token-keyword">FALSE</span>, end_date = <span class="token-function">CURRENT_DATE</span> - 1
+<span class="token-keyword">WHERE</span> customer_id <span class="token-keyword">IN</span> (
+  <span class="token-keyword">SELECT</span> s.customer_id <span class="token-keyword">FROM</span> staging.stg_customer s
+  <span class="token-keyword">JOIN</span> dwh.dim_customer d <span class="token-keyword">ON</span> s.customer_id = d.customer_id
+  <span class="token-keyword">WHERE</span> d.is_current = <span class="token-keyword">TRUE</span> <span class="token-keyword">AND</span> s.address != d.address
+);
+
+<span class="token-comment">-- Step 2: Insert new current version</span>
+<span class="token-keyword">INSERT INTO</span> dwh.dim_customer
+<span class="token-keyword">SELECT</span> customer_id, name, address, <span class="token-function">CURRENT_DATE</span>, <span class="token-string">'9999-12-31'</span>, <span class="token-keyword">TRUE</span>
+<span class="token-keyword">FROM</span> staging.stg_customer
+<span class="token-keyword">WHERE</span> customer_id <span class="token-keyword">IN</span> (...changed IDs...);</pre></div></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">5</span><span class="qa-q-text">What is a Factless Fact Table? How would it apply to tracking housing loan application statuses?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><p>A factless fact table records <strong>events</strong> without any numeric measure — just foreign keys and a timestamp. It captures "something happened" rather than "how much."</p><p><strong>NBFC example:</strong> <code>fact_loan_status_event</code> with columns: <code>loan_id, status_id, changed_by_user_id, event_date_id</code>. No amount column. This tracks every status change (Applied → Under Review → Sanctioned → Disbursed → etc.) and enables funnel analysis.</p><p><strong>Queries enabled:</strong> "How many loans moved from Sanctioned to Disbursed in March?", "What is the average time between Application and Sanction?"</p></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">6</span><span class="qa-q-text">Differentiate between Accumulating Snapshot and Periodic Snapshot fact tables.</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><table class="data-table"><thead><tr><th>Type</th><th>Grain</th><th>How It's Updated</th><th>NBFC Example</th></tr></thead><tbody><tr><td><strong>Periodic Snapshot</strong></td><td>One row per entity per time period</td><td>New row added each period</td><td>Monthly portfolio snapshot: <code>loan_id, month, outstanding_balance, dpd, npa_status</code></td></tr><tr><td><strong>Accumulating Snapshot</strong></td><td>One row per entity lifetime</td><td>Updated as milestones are reached</td><td>Loan lifecycle: <code>loan_id, app_date, sanction_date, disburse_date, closure_date</code> (dates filled as events occur)</td></tr></tbody></table></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">7</span><span class="qa-q-text">How do you architect your pipeline to handle late-arriving dimensions?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><p>A late-arriving dimension occurs when a fact record references a dimension key that doesn't exist yet (e.g., a loan payment arrives before the customer's profile is loaded).</p><p><strong>Strategy:</strong></p><ol><li>Insert a <strong>placeholder row</strong> in <code>dim_customer</code> with the known key and <code>'Unknown'</code> for all attributes</li><li>Load the fact record pointing to this placeholder</li><li>When the dimension data arrives, UPDATE the placeholder with real attributes</li></ol><p><strong>Alternative:</strong> Use a dedicated "Unknown" dimension member (surrogate key = -1) for all unresolved references, then run a periodic reconciliation job to re-link facts to the correct dimension keys.</p></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">8</span><span class="qa-q-text">Why is a dedicated Date/Time Dimension table critical in financial data warehouses?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><p>A <code>dim_date</code> table pre-computes all date attributes that are impossible or expensive to derive at query time:</p><ul><li><strong>Fiscal calendar:</strong> Financial year (April-March in India), fiscal quarter (Q1 = Apr-Jun)</li><li><strong>Working days:</strong> Is it a bank holiday? NACH processing dates depend on this</li><li><strong>Month-end flags:</strong> Last business day of month (critical for MIS cutoffs)</li><li><strong>Regulatory periods:</strong> NHB quarter boundaries, RBI reporting dates</li></ul><p>Without this, every report that says "Show me Q3 FY2026 data" would need complex inline date logic. With <code>dim_date</code>, it's a simple <code>JOIN ON date_id WHERE fiscal_quarter = 'Q3-FY2026'</code>.</p></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">9</span><span class="qa-q-text">How do you design tables to explicitly avoid row-by-row INSERT or UPDATE operations?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><p><strong>Redshift is optimized for bulk operations, not OLTP-style row-by-row DML.</strong></p><ul><li><strong>Instead of single INSERTs:</strong> Batch data into files (CSV/Parquet) on S3, use COPY command</li><li><strong>Instead of row-by-row UPDATEs:</strong> Stage changes in a temp table, then do bulk DELETE+INSERT or MERGE</li><li><strong>Instead of cursor-based processing:</strong> Use set-based SQL (CTEs, window functions) to process all rows at once</li><li><strong>CREATE TABLE AS SELECT (CTAS):</strong> For large transformations, create a new table from a SELECT — faster than updating in-place</li></ul></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">10</span><span class="qa-q-text">Define Conformed Dimensions and provide an NBFC example.</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><p>A <strong>conformed dimension</strong> has consistent keys, attributes, and definitions across all fact tables. It enables cross-fact analysis without ambiguity.</p><p><strong>NBFC example:</strong> <code>dim_branch</code> is conformed — it uses the same <code>branch_id</code>, <code>branch_name</code>, <code>region</code>, <code>zone</code> definition whether referenced from <code>fact_disbursement</code>, <code>fact_collection</code>, or <code>fact_repayment</code>. This allows a single Tableau dashboard to show "Branch X disbursed ₹50Cr but collected only ₹30Cr" — joining across two fact tables through one conformed dimension.</p></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">11</span><span class="qa-q-text">How do you handle deeply hierarchical data (complex corporate customer structures)?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><p><strong>Bridge table approach:</strong> Create a <code>bridge_customer_hierarchy</code> table that flattens the parent-child chain. Each row maps a child to every ancestor with the level depth. This avoids recursive CTEs at query time (which Redshift supports but performs poorly on large hierarchies).</p><p><strong>Materialized path:</strong> Store the full path as a string: <code>'/holding_co/subsidiary/branch/customer'</code>. Filter with LIKE for subtree queries.</p><p><strong>For NBFC:</strong> Group companies where the same promoter has multiple loans across entities. The bridge table enables exposure analysis: "Total outstanding to the XYZ Group across all subsidiaries."</p></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">12</span><span class="qa-q-text">Why is an ELT approach generally preferred over ETL when working with Redshift?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><p>With ELT, you load raw data into Redshift first (the "L"), then transform using Redshift's MPP engine (the "T"). This leverages Redshift's parallel processing power instead of paying for separate Glue/Spark compute.</p><p><strong>Why it's better for Redshift:</strong></p><ul><li>COPY is the fastest ingestion method — gets data in quickly</li><li>SQL-based transformations in Redshift run in parallel across all nodes</li><li>No data serialization/deserialization between systems</li><li>dbt + Redshift SQL = version-controlled, testable transformations</li></ul><p><strong>When to still use ETL:</strong> When source data needs format conversion (JSON→Parquet), heavy cleansing (regex, fuzzy matching), or enrichment from external APIs — do this in Glue/Spark before loading.</p></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">13</span><span class="qa-q-text">How do distribution and sort key strategies differ between staging and reporting tables?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><table class="data-table"><thead><tr><th>Property</th><th>Staging (Bronze)</th><th>Reporting (Gold)</th></tr></thead><tbody><tr><td><strong>DISTSTYLE</strong></td><td>EVEN (no JOINs, just landing data)</td><td>KEY (optimized for frequent JOINs)</td></tr><tr><td><strong>SORTKEY</strong></td><td>None or load_date (for partition pruning)</td><td>Business query columns (payment_date, loan_id)</td></tr><tr><td><strong>Compression</strong></td><td>Auto/default</td><td>ANALYZE COMPRESSION optimized</td></tr><tr><td><strong>Lifecycle</strong></td><td>Truncated after each ETL run</td><td>Persisted, VACUUMed regularly</td></tr></tbody></table></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">14</span><span class="qa-q-text">How do you establish and track data lineage across PySpark, Glue, and Redshift?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><ul><li><strong>AWS Glue Data Catalog:</strong> Automatically tracks table-level lineage (which Glue jobs read/write which tables)</li><li><strong>ETL audit tables:</strong> Every pipeline step logs source_table, target_table, row_count, timestamp, job_id to <code>etl_audit.pipeline_log</code></li><li><strong>Column-level lineage:</strong> Document in a metadata layer (e.g., dbt docs, DataHub, or a simple spreadsheet) which source columns map to which target columns through which transformations</li><li><strong>SQL comments:</strong> Add <code>/* source: los.loan_applications, transform: glue_job_23 */</code> comments in views and MVs</li></ul></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">15</span><span class="qa-q-text">What is the difference between Surrogate Keys and Natural Keys in dimensional modeling?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><p><strong>Natural key:</strong> The business identifier from the source system (e.g., <code>loan_id = 'HL2024001234'</code>). Meaningful, but can change format, collide across systems, or be non-numeric (slow for JOINs).</p><p><strong>Surrogate key:</strong> A system-generated integer (e.g., <code>IDENTITY(1,1)</code>). Meaningless to business, but guarantees uniqueness, is compact, and enables SCD Type 2 (same natural key, multiple surrogate keys for versions).</p><p><strong>Best practice:</strong> Use surrogate keys as the primary/foreign key in the star schema. Keep the natural key as a descriptive column for lookups and reconciliation.</p></div></div></div>
+
+  </div>
+</div>
+
+<!-- ================================================================ -->
+<!-- CATEGORY 4: ETL PIPELINE & AWS INGESTION                        -->
+<!-- ================================================================ -->
+<div class="subsection animate-in" id="redshift-etl">
+  <div class="subsection-header">
+    <div class="subsection-icon aws-icon">⚙️</div>
+    <h3>4. ETL Pipeline & AWS Ingestion (CDC, S3, Glue)</h3>
+  </div>
+  <div class="qa-section">
+    <div class="qa-section-title">15 Questions — Ingestion & CDC</div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">1</span><span class="qa-q-text">Explain the mechanics of the COPY command. Why is it exponentially faster than INSERT statements?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><p>COPY leverages MPP: each compute node slice reads a portion of the S3 files in parallel. With a 16-slice cluster and 16 files, all slices load simultaneously — true O(1) parallelism. INSERT is single-threaded through the Leader Node, one row at a time, through the commit queue — O(N).</p><p><strong>Numbers:</strong> COPY loads 100M rows in minutes. INSERT of 100M rows takes hours. The difference is 50-100x.</p></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">2</span><span class="qa-q-text">Why must you split large flat files before COPY?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><p>A single file can only be read by a single slice. With a 150GB file and 16 slices, one slice does 100% of the work while 15 sit idle — completely negating MPP.</p><p><strong>Rule:</strong> Split into files that are multiples of the number of slices. 16 slices → 16, 32, or 64 files. Compress with gzip. Each file should be 1MB-1GB.</p></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">3</span><span class="qa-q-text">What is a Manifest file, and how is it used during ingestion?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><p>A manifest is a JSON file listing the exact S3 paths to load. Without it, COPY loads ALL files matching a prefix — risky if old files exist. With a manifest, COPY loads <strong>only</strong> the specified files, preventing accidental reloads.</p><div class="code-block"><div class="code-header"><span class="code-lang">JSON — Manifest File</span><button class="code-copy">Copy</button></div><pre>{
+  "entries": [
+    {"url": "s3://nbfc-data/2024-03-15/part-001.gz", "mandatory": true},
+    {"url": "s3://nbfc-data/2024-03-15/part-002.gz", "mandatory": true}
+  ]
+}</pre></div><p><code>mandatory: true</code> means COPY fails if the file is missing — preventing silent data loss.</p></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">4</span><span class="qa-q-text">How do you troubleshoot failed loads using STL_LOAD_ERRORS?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><div class="code-block"><div class="code-header"><span class="code-lang">SQL</span><button class="code-copy">Copy</button></div><pre><span class="token-keyword">SELECT</span> query, <span class="token-function">SUBSTRING</span>(filename,1,60), line_number, colname,
+       <span class="token-function">TRIM</span>(err_reason) <span class="token-keyword">AS</span> error, <span class="token-function">TRIM</span>(raw_line) <span class="token-keyword">AS</span> bad_data
+<span class="token-keyword">FROM</span> stl_load_errors
+<span class="token-keyword">ORDER BY</span> starttime <span class="token-keyword">DESC LIMIT</span> <span class="token-number">20</span>;</pre></div><p><strong>Common errors:</strong> Delimiter mismatch, date format issues, numeric overflow, extra columns in source file, encoding issues (UTF-8 BOM). Use <code>MAXERROR 100</code> in COPY to allow up to 100 bad rows (logged but skipped) instead of failing on the first error.</p></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">5</span><span class="qa-q-text">Explain UNLOAD and best practices for exporting data to S3.</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><p><code>UNLOAD</code> writes query results to S3 in parallel across all nodes. Best practices:</p><ul><li>Use <strong>Parquet</strong> format: <code>UNLOAD ('SELECT ...') TO 's3://...' FORMAT PARQUET;</code></li><li>Add <code>PARALLEL ON</code> (default) for multiple output files — faster writes</li><li>Use <code>PARTITION BY (year, month)</code> to create Hive-style partitioned output for downstream Athena/Spectrum queries</li><li>Add <code>MAXFILESIZE 512 MB</code> to control file sizes</li></ul></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">6</span><span class="qa-q-text">What are the architectural patterns for implementing CDC into Redshift?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><ol><li><strong>Timestamp-based:</strong> Query source for <code>WHERE updated_at > last_run_timestamp</code>. Simple but misses deletes.</li><li><strong>Log-based (AWS DMS):</strong> Read MySQL binlog/PostgreSQL WAL. Captures all changes including deletes. Lowest impact on source.</li><li><strong>Trigger-based:</strong> Source DB triggers write changes to an audit table. Intrusive and high overhead — avoid in production.</li></ol><p><strong>Recommended for NBFC:</strong> AWS DMS with log-based CDC → writes change events to S3 in Parquet → COPY into Redshift staging → MERGE into target tables.</p></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">7</span><span class="qa-q-text">How does AWS DMS handle incremental replication to Redshift?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><p>DMS reads the source database's transaction log (binlog for MySQL) continuously. It captures INSERT/UPDATE/DELETE events and batches them. For Redshift targets, DMS writes change files to an intermediate S3 bucket, then applies them to Redshift via COPY commands in micro-batches.</p><p><strong>Key settings:</strong> <code>BatchApplyEnabled = true</code> (batches changes for efficiency), <code>cdcInsertsAndUpdates = true</code>. DMS adds metadata columns: <code>Op</code> (I/U/D) and <code>cdc_timestamp</code> for downstream merge logic.</p></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">8</span><span class="qa-q-text">How do you integrate AWS Glue Data Catalog to query S3 data via Athena and Redshift Spectrum simultaneously?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><p>The Glue Data Catalog serves as a <strong>shared metastore</strong>. Register your S3 data (via Glue Crawlers or manual DDL) in the catalog. Both Athena and Redshift Spectrum reference the SAME catalog database/table definitions.</p><p>In Redshift: <code>CREATE EXTERNAL SCHEMA FROM DATA CATALOG DATABASE 'my_catalog_db';</code><br>In Athena: Simply select the same database in the Athena console.</p><p><strong>Benefit:</strong> Define schema once, query from two engines. Use Athena for serverless ad-hoc queries. Use Spectrum when you need to JOIN S3 data with local Redshift tables.</p></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">9</span><span class="qa-q-text">Describe orchestrating Redshift SQL scripts using Apache Airflow or AWS Step Functions.</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><p><strong>Airflow approach:</strong> Use <code>RedshiftSQLOperator</code> (or <code>RedshiftDataOperator</code> for the Data API). Chain tasks as: <code>copy_staging >> run_dq_checks >> merge_into_dwh >> refresh_mvs >> notify_team</code>.</p><p><strong>Step Functions approach:</strong> Use the <code>redshift-data:ExecuteStatement</code> API action in each Task state. Poll with <code>redshift-data:DescribeStatement</code> until complete. Use Choice states for DQ gates.</p><p><strong>Airflow advantage:</strong> Better for complex dependencies, backfilling, and cross-system orchestration. Step Functions advantage: Fully serverless, tighter AWS integration, visual workflow editor.</p></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">10</span><span class="qa-q-text">What is the most efficient way to write a transformed PySpark DataFrame into Redshift?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><p>Use the <strong>spark-redshift connector</strong>. It writes the DataFrame to S3 as intermediate files (using Spark parallelism), then automatically issues a COPY command to Redshift.</p><p><strong>Key config:</strong> Set <code>tempdir</code> to an S3 path, provide an IAM role for Redshift S3 access. The connector handles cleanup of temp files. This bypasses the painfully slow JDBC row-by-row insert.</p></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">11</span><span class="qa-q-text">Explain the role of the temporary S3 bucket when using the Spark-Redshift connector.</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><p>The connector uses S3 as a <strong>staging area</strong>. Spark worker nodes write DataFrame partitions to S3 in parallel (e.g., 200 partitions = 200 files). Then the connector issues a single <code>COPY</code> command pointing Redshift to those S3 files. Redshift's MPP reads all 200 files in parallel.</p><p><strong>Without the temp bucket:</strong> Data would flow through a single JDBC connection — serial, slow, and a bottleneck. The S3 intermediary converts a serial operation into a fully parallel one on both the Spark and Redshift sides.</p></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">12</span><span class="qa-q-text">How do you use AWS Lambda for event-driven ETL?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><p><strong>Pattern:</strong> S3 Event Notification (ObjectCreated) → triggers Lambda function → Lambda validates the file (size, naming convention) → starts the ETL pipeline (triggers Glue job or Airflow DAG via API).</p><p><strong>NBFC example:</strong> When the LMS system drops the daily repayment CSV on <code>s3://nbfc-raw/lms/repayments/</code>, Lambda checks file size > 0 bytes, verifies filename contains today's date, then triggers the <code>daily_repayment_etl</code> Airflow DAG via the Airflow REST API.</p></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">13</span><span class="qa-q-text">What is the standard two-step "Upsert" method using a staging table?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><div class="code-block"><div class="code-header"><span class="code-lang">SQL — Classic Upsert Pattern</span><button class="code-copy">Copy</button></div><pre><span class="token-keyword">BEGIN TRANSACTION</span>;
+
+<span class="token-comment">-- Step 1: Delete matching rows from target</span>
+<span class="token-keyword">DELETE FROM</span> dwh.dim_customer
+<span class="token-keyword">USING</span> staging.stg_customer
+<span class="token-keyword">WHERE</span> dwh.dim_customer.customer_id = staging.stg_customer.customer_id;
+
+<span class="token-comment">-- Step 2: Insert all rows from staging (new + updated)</span>
+<span class="token-keyword">INSERT INTO</span> dwh.dim_customer
+<span class="token-keyword">SELECT</span> * <span class="token-keyword">FROM</span> staging.stg_customer;
+
+<span class="token-keyword">COMMIT</span>;</pre></div><p>The transaction ensures atomicity — if INSERT fails, the DELETE is rolled back.</p></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">14</span><span class="qa-q-text">How does the newer MERGE command work, and what are its prerequisites?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><div class="code-block"><div class="code-header"><span class="code-lang">SQL — Redshift MERGE</span><button class="code-copy">Copy</button></div><pre><span class="token-keyword">MERGE INTO</span> dwh.dim_customer <span class="token-keyword">USING</span> staging.stg_customer
+<span class="token-keyword">ON</span> dwh.dim_customer.customer_id = staging.stg_customer.customer_id
+<span class="token-keyword">WHEN MATCHED THEN UPDATE SET</span>
+    name = stg_customer.name, address = stg_customer.address
+<span class="token-keyword">WHEN NOT MATCHED THEN INSERT</span>
+    <span class="token-keyword">VALUES</span> (stg_customer.customer_id, stg_customer.name, stg_customer.address);</pre></div><p><strong>Prerequisites:</strong> Join condition must be on the target table's primary key or a unique column. The staging table must not have duplicates on the join key. Available in Redshift since late 2022.</p></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">15</span><span class="qa-q-text">How do you manage AWS IAM roles to securely grant Redshift access to S3 and Glue?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><p><strong>Never use access keys.</strong> Create an IAM Role with the minimum required policies (e.g., <code>AmazonS3ReadOnlyAccess</code> scoped to specific bucket ARNs). Attach the role to the Redshift cluster.</p><p>Reference the role in COPY/UNLOAD: <code>IAM_ROLE 'arn:aws:iam::123:role/RedshiftS3Role'</code></p><p><strong>For Spectrum/Glue:</strong> The role needs <code>AWSGlueConsoleFullAccess</code> (or a scoped-down policy for specific catalog databases). For DMS: separate role with source DB read access.</p><p><strong>Principle of least privilege:</strong> Create separate roles for different functions — one for COPY (S3 read), one for UNLOAD (S3 write), one for Spectrum (Glue catalog read).</p></div></div></div>
+
+  </div>
+</div>
+
+<!-- ================================================================ -->
+<!-- CATEGORY 5: ADVANCED SQL & DATABASE NUANCES                     -->
+<!-- ================================================================ -->
+<div class="subsection animate-in" id="redshift-sql">
+  <div class="subsection-header">
+    <div class="subsection-icon aws-icon">📝</div>
+    <h3>5. Advanced SQL & Database Nuances</h3>
+  </div>
+  <div class="qa-section">
+    <div class="qa-section-title">15 Questions — SQL Mastery</div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">1</span><span class="qa-q-text">Explain Window Functions (ROW_NUMBER, RANK, DENSE_RANK) with examples.</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><table class="data-table"><thead><tr><th>Function</th><th>Behavior on Ties</th><th>Example Output (scores: 100, 90, 90, 80)</th></tr></thead><tbody><tr><td><strong>ROW_NUMBER</strong></td><td>Arbitrary unique number</td><td>1, 2, 3, 4</td></tr><tr><td><strong>RANK</strong></td><td>Same rank, skips next</td><td>1, 2, 2, 4 (skips 3)</td></tr><tr><td><strong>DENSE_RANK</strong></td><td>Same rank, no skip</td><td>1, 2, 2, 3 (no skip)</td></tr></tbody></table><p><strong>When to use:</strong> ROW_NUMBER for deduplication (pick latest row per group). RANK for competition-style rankings. DENSE_RANK for contiguous rank labels.</p></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">2</span><span class="qa-q-text">Write SQL for a 30-day moving average of loan disbursements.</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><div class="code-block"><div class="code-header"><span class="code-lang">SQL</span><button class="code-copy">Copy</button></div><pre><span class="token-keyword">SELECT</span> disbursement_date,
+       daily_amount,
+       <span class="token-function">AVG</span>(daily_amount) <span class="token-keyword">OVER</span> (
+           <span class="token-keyword">ORDER BY</span> disbursement_date
+           <span class="token-keyword">ROWS BETWEEN</span> <span class="token-number">29</span> <span class="token-keyword">PRECEDING AND CURRENT ROW</span>
+       ) <span class="token-keyword">AS</span> moving_avg_30d
+<span class="token-keyword">FROM</span> daily_disbursement_summary;</pre></div></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">3</span><span class="qa-q-text">Explain LEAD and LAG functions.</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><p><strong>LAG:</strong> Access a value from a <em>previous</em> row. <strong>LEAD:</strong> Access a value from a <em>following</em> row.</p><p><strong>NBFC use case:</strong> Calculate month-over-month AUM change:</p><div class="code-block"><div class="code-header"><span class="code-lang">SQL</span><button class="code-copy">Copy</button></div><pre><span class="token-keyword">SELECT</span> month, aum,
+       aum - <span class="token-function">LAG</span>(aum) <span class="token-keyword">OVER</span> (<span class="token-keyword">ORDER BY</span> month) <span class="token-keyword">AS</span> mom_change,
+       <span class="token-function">ROUND</span>((aum - <span class="token-function">LAG</span>(aum) <span class="token-keyword">OVER</span> (<span class="token-keyword">ORDER BY</span> month)) * 100.0 / 
+             <span class="token-function">LAG</span>(aum) <span class="token-keyword">OVER</span> (<span class="token-keyword">ORDER BY</span> month), 2) <span class="token-keyword">AS</span> mom_pct
+<span class="token-keyword">FROM</span> monthly_portfolio_snapshot;</pre></div></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">4</span><span class="qa-q-text">What are CTEs, and how does Redshift optimize them compared to subqueries?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><p>CTEs (WITH clauses) are inline named result sets. In Redshift, CTEs are <strong>inlined</strong> (not materialized) — the optimizer substitutes the CTE definition into each reference, then optimizes the combined query. This means a CTE referenced 3 times is executed 3 times.</p><p><strong>Implication:</strong> For expensive CTEs referenced multiple times, use a <strong>temp table</strong> instead: <code>CREATE TEMP TABLE t AS SELECT ...;</code> This materializes the result once.</p></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">5</span><span class="qa-q-text">How do you rewrite a query to eliminate correlated subqueries?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><p>Convert correlated subqueries to <strong>JOINs or window functions</strong>.</p><p><strong>Before (correlated — runs once per outer row):</strong></p><pre>SELECT loan_id FROM loans l WHERE emi > (SELECT AVG(emi) FROM loans WHERE branch = l.branch)</pre><p><strong>After (set-based — single pass):</strong></p><div class="code-block"><div class="code-header"><span class="code-lang">SQL</span><button class="code-copy">Copy</button></div><pre><span class="token-keyword">SELECT</span> loan_id <span class="token-keyword">FROM</span> (
+  <span class="token-keyword">SELECT</span> loan_id, emi, <span class="token-function">AVG</span>(emi) <span class="token-keyword">OVER</span> (<span class="token-keyword">PARTITION BY</span> branch) <span class="token-keyword">AS</span> avg_emi
+  <span class="token-keyword">FROM</span> loans
+) <span class="token-keyword">WHERE</span> emi > avg_emi;</pre></div></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">6</span><span class="qa-q-text">Explain UNION vs. UNION ALL performance difference.</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><p><strong>UNION ALL:</strong> Simply concatenates results. O(N). No deduplication.</p><p><strong>UNION:</strong> Concatenates + sorts + deduplicates. O(N log N). Requires a full sort of the combined result set.</p><p><strong>Rule:</strong> Always use UNION ALL unless you specifically need deduplication. In ETL pipelines combining data from multiple sources, UNION adds unnecessary overhead — handle deduplication explicitly with ROW_NUMBER or DISTINCT on specific columns.</p></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">7</span><span class="qa-q-text">How does Redshift handle NULL values in sorting and JOIN conditions?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><p><strong>Sorting:</strong> NULLs sort LAST by default in ascending order (opposite of PostgreSQL which sorts NULLs FIRST). Use <code>NULLS FIRST</code> or <code>NULLS LAST</code> to control.</p><p><strong>JOINs:</strong> <code>NULL = NULL</code> evaluates to <code>NULL</code> (not TRUE). So two rows with NULL join keys will NOT match in an equi-join. If you need NULL-to-NULL matching, use <code>IS NOT DISTINCT FROM</code> instead of <code>=</code>.</p><p><strong>DISTKEY:</strong> All NULL values hash to the SAME slice → causes data skew. Avoid NULLable columns as DISTKEY.</p></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">8</span><span class="qa-q-text">Contrast Hash Joins, Merge Joins, and Nested Loop Joins.</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><table class="data-table"><thead><tr><th>Join Type</th><th>Mechanism</th><th>When Redshift Uses It</th></tr></thead><tbody><tr><td><strong>Hash Join</strong></td><td>Builds hash table from smaller table, probes with larger</td><td>Most common — default for equi-joins on unsorted data</td></tr><tr><td><strong>Merge Join</strong></td><td>Zips through two pre-sorted inputs</td><td>When both inputs are already sorted on the join key (SORTKEY match)</td></tr><tr><td><strong>Nested Loop</strong></td><td>For each row in outer, scan entire inner table</td><td>Inequality joins, cross joins — avoid at all costs</td></tr></tbody></table></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">9</span><span class="qa-q-text">How do you pivot and unpivot data natively in Redshift?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><p><strong>Pivot (rows → columns):</strong> Use conditional aggregation:</p><div class="code-block"><div class="code-header"><span class="code-lang">SQL</span><button class="code-copy">Copy</button></div><pre><span class="token-keyword">SELECT</span> branch_id,
+  <span class="token-function">SUM</span>(<span class="token-keyword">CASE WHEN</span> product = <span class="token-string">'HL'</span> <span class="token-keyword">THEN</span> amount <span class="token-keyword">END</span>) <span class="token-keyword">AS</span> hl_amount,
+  <span class="token-function">SUM</span>(<span class="token-keyword">CASE WHEN</span> product = <span class="token-string">'LAP'</span> <span class="token-keyword">THEN</span> amount <span class="token-keyword">END</span>) <span class="token-keyword">AS</span> lap_amount
+<span class="token-keyword">FROM</span> fact_disbursement <span class="token-keyword">GROUP BY</span> branch_id;</pre></div><p><strong>Unpivot (columns → rows):</strong> Use UNION ALL or CROSS JOIN with a values list to expand columns into rows.</p></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">10</span><span class="qa-q-text">What are the major SQL dialect differences between PostgreSQL and Redshift?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><ul><li><strong>No unique constraints enforcement</strong> (declared but not enforced — optimizer hint only)</li><li><strong>No triggers or stored functions</strong> (only stored procedures via PL/pgSQL)</li><li><strong>No indexes</strong> (sort keys serve the purpose instead)</li><li><strong>Limited ALTER TABLE</strong> (can't change column type or encoding in-place)</li><li><strong>No RETURNING clause</strong> on INSERT/UPDATE</li><li><strong>SERIAL/IDENTITY</strong> can have gaps (due to parallel insert across slices)</li><li><strong>Different date functions:</strong> <code>CONVERT_TIMEZONE</code> instead of <code>AT TIME ZONE</code></li></ul></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">11</span><span class="qa-q-text">How does MySQL B-Tree indexing differ from Redshift's Sort Keys?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><p><strong>MySQL B-Tree:</strong> Separate data structure (index pages) pointing to row locations. Multiple indexes per table. Maintenance overhead on writes. Enables point lookups in O(log N).</p><p><strong>Redshift Sort Keys:</strong> NOT a separate data structure. Data is physically pre-sorted on disk. Enables zone map-based block skipping (O(1) for range scans). Only one sort key definition per table. No overhead for bulk loads (data sorted during VACUUM).</p><p><strong>Key difference:</strong> MySQL indexes enable fast single-row OLTP lookups. Redshift sort keys enable fast analytical range scans over billions of rows. Different tools for different workloads.</p></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">12</span><span class="qa-q-text">How do you parse and query nested JSON data in Redshift?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><div class="code-block"><div class="code-header"><span class="code-lang">SQL</span><button class="code-copy">Copy</button></div><pre><span class="token-comment">-- Extract from a JSON column</span>
+<span class="token-keyword">SELECT</span>
+  <span class="token-function">JSON_EXTRACT_PATH_TEXT</span>(payload, <span class="token-string">'customer'</span>, <span class="token-string">'name'</span>) <span class="token-keyword">AS</span> name,
+  <span class="token-function">JSON_EXTRACT_PATH_TEXT</span>(payload, <span class="token-string">'loan'</span>, <span class="token-string">'amount'</span>)::<span class="token-function">DECIMAL</span>(15,2) <span class="token-keyword">AS</span> amount
+<span class="token-keyword">FROM</span> raw_events;</pre></div><p><strong>Best practice:</strong> Don't query JSON at scale in production. Use ELT to extract JSON fields into proper typed columns during the Bronze → Silver transformation. JSON parsing in Redshift is slow because it can't leverage columnar compression or zone maps.</p></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">13</span><span class="qa-q-text">What is APPROXIMATE COUNT DISTINCT, and when is it acceptable in finance?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><p><code>APPROXIMATE COUNT(DISTINCT column)</code> uses HyperLogLog algorithm — ~2% error margin but 10-50x faster than exact COUNT DISTINCT on large datasets.</p><p><strong>Acceptable in NBFC:</strong> Dashboard showing "approximate unique customers per region" for trend visualization. Not acceptable for regulatory reports, reconciliation counts, or financial statements where exact numbers are legally required.</p></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">14</span><span class="qa-q-text">Write SQL to identify duplicate transaction records without deleting them.</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><div class="code-block"><div class="code-header"><span class="code-lang">SQL</span><button class="code-copy">Copy</button></div><pre><span class="token-keyword">WITH</span> ranked <span class="token-keyword">AS</span> (
+  <span class="token-keyword">SELECT</span> *, <span class="token-function">ROW_NUMBER</span>() <span class="token-keyword">OVER</span> (
+    <span class="token-keyword">PARTITION BY</span> loan_id, payment_date, emi_amount
+    <span class="token-keyword">ORDER BY</span> etl_load_date <span class="token-keyword">DESC</span>
+  ) <span class="token-keyword">AS</span> rn
+  <span class="token-keyword">FROM</span> fact_repayment
+)
+<span class="token-keyword">SELECT</span> * <span class="token-keyword">FROM</span> ranked <span class="token-keyword">WHERE</span> rn > <span class="token-number">1</span>; <span class="token-comment">-- These are duplicates</span></pre></div></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">15</span><span class="qa-q-text">Write a query to find the second-highest loan amount in each geographical region.</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><div class="code-block"><div class="code-header"><span class="code-lang">SQL</span><button class="code-copy">Copy</button></div><pre><span class="token-keyword">WITH</span> ranked <span class="token-keyword">AS</span> (
+  <span class="token-keyword">SELECT</span> region, loan_id, sanctioned_amount,
+         <span class="token-function">DENSE_RANK</span>() <span class="token-keyword">OVER</span> (
+           <span class="token-keyword">PARTITION BY</span> region <span class="token-keyword">ORDER BY</span> sanctioned_amount <span class="token-keyword">DESC</span>
+         ) <span class="token-keyword">AS</span> rnk
+  <span class="token-keyword">FROM</span> fact_sanction s
+  <span class="token-keyword">JOIN</span> dim_branch b <span class="token-keyword">ON</span> s.branch_id = b.branch_id
+)
+<span class="token-keyword">SELECT</span> region, loan_id, sanctioned_amount
+<span class="token-keyword">FROM</span> ranked <span class="token-keyword">WHERE</span> rnk = <span class="token-number">2</span>;</pre></div></div></div></div>
+
+  </div>
+</div>
+
+<!-- ================================================================ -->
+<!-- CATEGORY 6: NBFC DOMAIN, SECURITY & BI INTEGRATION              -->
+<!-- ================================================================ -->
+<div class="subsection animate-in" id="redshift-nbfc">
+  <div class="subsection-header">
+    <div class="subsection-icon aws-icon">🏦</div>
+    <h3>6. NBFC Domain, Security & BI Integration</h3>
+  </div>
+  <div class="qa-section">
+    <div class="qa-section-title">15 Questions — Domain & Security</div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">1</span><span class="qa-q-text">How would you design data models to track the full housing loan lifecycle (Application → Closure)?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><p>Use a combination of <strong>transactional facts</strong> and an <strong>accumulating snapshot fact</strong>:</p><ul><li><code>fact_loan_application</code> — one row per application (status, CIBIL, FOIR)</li><li><code>fact_sanction</code> — one row per sanction (terms, rate, amount)</li><li><code>fact_disbursement</code> — one row per tranche (can be multiple per loan)</li><li><code>fact_repayment</code> — one row per EMI event (paid/unpaid, DPD)</li><li><code>fact_loan_lifecycle</code> — accumulating snapshot: one row per loan with milestone date columns (app_date, sanction_date, disburse_date, first_emi_date, closure_date) filled progressively</li></ul><p>Dimensions: <code>dim_customer</code> (SCD2), <code>dim_branch</code>, <code>dim_product</code>, <code>dim_date</code></p></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">2</span><span class="qa-q-text">How do you calculate DPD dynamically in Redshift based on EMI schedules?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><div class="code-block"><div class="code-header"><span class="code-lang">SQL</span><button class="code-copy">Copy</button></div><pre><span class="token-keyword">SELECT</span> loan_id,
+  <span class="token-keyword">CASE</span>
+    <span class="token-keyword">WHEN</span> payment_date <span class="token-keyword">IS NOT NULL</span>
+      <span class="token-keyword">THEN</span> <span class="token-function">GREATEST</span>(<span class="token-number">0</span>, <span class="token-function">DATEDIFF</span>(<span class="token-string">'day'</span>, emi_due_date, payment_date))
+    <span class="token-keyword">ELSE</span> <span class="token-function">DATEDIFF</span>(<span class="token-string">'day'</span>, emi_due_date, <span class="token-function">CURRENT_DATE</span>)
+  <span class="token-keyword">END</span> <span class="token-keyword">AS</span> dpd,
+  <span class="token-keyword">CASE</span>
+    <span class="token-keyword">WHEN</span> dpd = <span class="token-number">0</span> <span class="token-keyword">THEN</span> <span class="token-string">'Current'</span>
+    <span class="token-keyword">WHEN</span> dpd <span class="token-keyword">BETWEEN</span> <span class="token-number">1</span> <span class="token-keyword">AND</span> <span class="token-number">30</span> <span class="token-keyword">THEN</span> <span class="token-string">'SMA-0'</span>
+    <span class="token-keyword">WHEN</span> dpd <span class="token-keyword">BETWEEN</span> <span class="token-number">31</span> <span class="token-keyword">AND</span> <span class="token-number">60</span> <span class="token-keyword">THEN</span> <span class="token-string">'SMA-1'</span>
+    <span class="token-keyword">WHEN</span> dpd <span class="token-keyword">BETWEEN</span> <span class="token-number">61</span> <span class="token-keyword">AND</span> <span class="token-number">90</span> <span class="token-keyword">THEN</span> <span class="token-string">'SMA-2'</span>
+    <span class="token-keyword">WHEN</span> dpd > <span class="token-number">90</span> <span class="token-keyword">THEN</span> <span class="token-string">'NPA'</span>
+  <span class="token-keyword">END</span> <span class="token-keyword">AS</span> asset_class
+<span class="token-keyword">FROM</span> fact_repayment;</pre></div><p><strong>Key rule:</strong> DPD is always counted from the <strong>oldest unpaid EMI due date</strong>, not the most recent.</p></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">3</span><span class="qa-q-text">How would you architect a daily batch pipeline to flag NPA based on RBI guidelines?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><ol><li><strong>Daily trigger:</strong> Airflow DAG runs at 6 AM after repayment data is loaded</li><li><strong>DPD calculation:</strong> For each active loan, calculate current DPD from the oldest unpaid EMI</li><li><strong>NPA flag:</strong> <code>UPDATE dim_loan SET npa_flag = TRUE, npa_date = CURRENT_DATE WHERE dpd > 90 AND npa_flag = FALSE</code></li><li><strong>NPA upgrade:</strong> If all overdue cleared, <code>SET npa_flag = FALSE, upgrade_date = CURRENT_DATE</code></li><li><strong>Snapshot:</strong> Insert a daily snapshot into <code>fact_npa_daily_snapshot</code> for historical tracking</li><li><strong>Alert:</strong> If new NPA count exceeds threshold, trigger SNS alert to Risk team</li></ol></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">4</span><span class="qa-q-text">How do you implement Row-Level Security (RLS) in Redshift?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><div class="code-block"><div class="code-header"><span class="code-lang">SQL — Redshift RLS Policy</span><button class="code-copy">Copy</button></div><pre><span class="token-keyword">CREATE RLS POLICY</span> branch_filter
+<span class="token-keyword">USING</span> (branch_id = <span class="token-function">current_setting</span>(<span class="token-string">'app.branch_id'</span>)::<span class="token-function">INT</span>);
+
+<span class="token-keyword">ATTACH RLS POLICY</span> branch_filter <span class="token-keyword">ON</span> fact_loan_account
+<span class="token-keyword">TO ROLE</span> branch_manager;
+
+<span class="token-comment">-- When a branch manager queries, they only see their branch</span>
+<span class="token-keyword">SET</span> app.branch_id = <span class="token-string">'42'</span>;
+<span class="token-keyword">SELECT</span> * <span class="token-keyword">FROM</span> fact_loan_account; <span class="token-comment">-- Only branch 42 rows</span></pre></div></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">5</span><span class="qa-q-text">How do you implement Column-Level Security (CLS) to hide PII?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><p><strong>Method 1 — Selective GRANT:</strong></p><pre>GRANT SELECT (loan_id, name, balance) ON dim_customer TO junior_analyst;
+-- They cannot access: pan_number, phone, aadhar columns</pre><p><strong>Method 2 — Secure view with masking:</strong></p><pre>CREATE VIEW secure.vw_customer AS
+SELECT customer_id, name, 'XXXXX' || RIGHT(pan_number, 4) AS masked_pan
+FROM dwh.dim_customer;</pre><p>REVOKE access to the base table, GRANT access only to the secure view.</p></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">6</span><span class="qa-q-text">Best practices for handling sensitive financial data in the AWS ecosystem?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><ul><li><strong>Encryption at rest:</strong> KMS encryption on Redshift cluster, S3 bucket encryption (SSE-KMS)</li><li><strong>Encryption in transit:</strong> SSL/TLS enforced on all JDBC/ODBC connections</li><li><strong>Network isolation:</strong> Redshift in private VPC subnet, no public IP. Access only via Bastion Host or VPN.</li><li><strong>Enhanced VPC routing:</strong> All COPY/UNLOAD traffic routes through VPC endpoints (never public internet)</li><li><strong>Audit logging:</strong> Enable Redshift audit logging to S3. Log all connections, queries, and user activity.</li><li><strong>Data masking:</strong> PAN, Aadhar, phone masked in analytics layer via secure views</li></ul></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">7</span><span class="qa-q-text">How do you configure audit logging for NBFC compliance?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><p>Enable in Redshift parameter group: <code>enable_user_activity_logging = true</code>. Logs are written to S3 automatically. Three log types:</p><ul><li><strong>Connection log:</strong> Who connected, when, from which IP</li><li><strong>User activity log:</strong> Every SQL query executed (full text)</li><li><strong>User log:</strong> User creation/deletion/privilege changes</li></ul><p>For compliance: Retain logs for 7+ years (S3 lifecycle policy to Glacier). Use Athena to query audit logs for investigation (e.g., "who accessed PAN data last month?").</p></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">8</span><span class="qa-q-text">How do you optimize Redshift table structures to accelerate Tableau dashboards?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><ul><li><strong>Pre-aggregate:</strong> Create MVs at the grain Tableau needs (e.g., daily by branch by product)</li><li><strong>SORTKEY on filter columns:</strong> Tableau generates WHERE clauses from filters — SORTKEY on those columns enables zone map skipping</li><li><strong>DISTSTYLE ALL for small dimensions:</strong> Eliminates broadcasts during Tableau-generated JOINs</li><li><strong>Minimize column width:</strong> VARCHAR(100) instead of VARCHAR(MAX) reduces I/O</li><li><strong>Use DECIMAL not FLOAT:</strong> Exact arithmetic for financial calculations</li></ul></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">9</span><span class="qa-q-text">Tableau Live vs. Extract: what dictates the choice?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><table class="data-table"><thead><tr><th>Factor</th><th>Use Live</th><th>Use Extract</th></tr></thead><tbody><tr><td>Data freshness needed</td><td>Real-time / intraday</td><td>Daily refresh acceptable</td></tr><tr><td>User count</td><td>1-5 power users</td><td>50+ concurrent users</td></tr><tr><td>Query complexity</td><td>Simple, pre-optimized views</td><td>Complex multi-join dashboards</td></tr><tr><td>Redshift WLM impact</td><td>High (every interaction = SQL query)</td><td>Low (one query at extract time)</td></tr></tbody></table></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">10</span><span class="qa-q-text">How do you structure geographic data for Tableau region-level bifurcation?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><p>Build a <code>dim_geography</code> hierarchy: <code>branch → city → district → state → zone → region → country</code>. Store all levels as columns in a single denormalized dimension (not a snowflake chain).</p><p>Tableau maps directly to these hierarchy levels — users can drill from Region → Zone → State → Branch seamlessly. Ensure geographic names match Tableau's built-in geocoding (standard state names, not abbreviations).</p></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">11</span><span class="qa-q-text">Describe a robust daily reconciliation framework between source systems and Redshift.</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><ol><li><strong>Count check:</strong> Source row count = staging row count = target row count</li><li><strong>Checksum check:</strong> <code>SUM(amount)</code> in source = <code>SUM(amount)</code> in target</li><li><strong>Key uniqueness:</strong> No duplicate primary keys in target</li><li><strong>Freshness check:</strong> <code>MAX(etl_load_date) = CURRENT_DATE</code></li><li><strong>Results:</strong> Log all checks to <code>etl_audit.reconciliation_log</code> with pass/fail status</li><li><strong>Alert:</strong> Any failure → block downstream consumers + send SNS alert</li></ol></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">12</span><span class="qa-q-text">How do you build automated DQ checks (negative balances, missing IDs) into the pipeline?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><p>Add a <strong>PythonOperator or RedshiftSQLOperator</strong> in the Airflow DAG immediately after the COPY step. Run validation queries and use XCom to pass results to a BranchOperator:</p><ul><li><strong>Pass:</strong> Continue to the MERGE/promotion step</li><li><strong>Fail:</strong> Skip promotion, log failures to <code>dq_failures</code> table, trigger alert</li></ul><p><strong>Checks:</strong> <code>WHERE outstanding_balance < 0</code> (business impossible), <code>WHERE customer_id IS NULL</code> (data integrity), <code>WHERE interest_rate > 25 OR interest_rate < 1</code> (range validation).</p></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">13</span><span class="qa-q-text">How do you manage schema evolution when the source adds 3 new columns?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><ol><li><strong>Detection:</strong> Glue Crawler detects new columns → SNS alert to data team</li><li><strong>Impact analysis:</strong> Determine if new columns affect staging, DWH, or analytics layer</li><li><strong>Staging:</strong> <code>ALTER TABLE staging.stg_table ADD COLUMN col1 VARCHAR(100);</code></li><li><strong>DWH:</strong> Add columns to target tables if needed for reporting</li><li><strong>Backfill:</strong> Populate historical values if available (often NULL for old data)</li><li><strong>Downstream:</strong> Update relevant views, MVs, and Tableau data sources</li></ol><p><strong>Prevention:</strong> Use explicit column lists in COPY/SELECT (never <code>SELECT *</code>) so new columns don't break existing pipelines.</p></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">14</span><span class="qa-q-text">How do you ensure clear documentation when collaborating with Risk, Compliance, and Finance?</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><ul><li><strong>Data Dictionary:</strong> Every table/column documented with business definition, source system, owner, refresh frequency</li><li><strong>Lineage Map:</strong> Visual diagram showing Source → ETL → Staging → DWH → Dashboard for each business metric</li><li><strong>Glossary:</strong> Business terms mapped to technical columns (e.g., "AUM" = <code>SUM(outstanding_balance) FROM fact_loan_account WHERE is_active = TRUE</code>)</li><li><strong>Change Log:</strong> Every schema change documented with date, reason, impact, and approver</li><li><strong>Tools:</strong> Confluence wiki, dbt docs (auto-generated), or AWS Glue Data Catalog descriptions</li></ul></div></div></div>
+
+    <div class="qa-item"><div class="qa-question"><span class="qa-q-number">15</span><span class="qa-q-text">Walk me through optimizing pgSQL stored procedures by 70% and applying that mindset to Redshift.</span><span class="qa-toggle-icon">▼</span></div><div class="qa-answer"><div class="qa-answer-inner"><p><strong>Common pgSQL anti-patterns that cause 70% slowdown:</strong></p><ol><li><strong>Cursor-based processing:</strong> Looping row-by-row instead of set-based SQL. Fix: Replace cursors with CTEs + window functions that process all rows in one pass.</li><li><strong>Excessive temp tables:</strong> Creating/dropping 15 temp tables per procedure. Fix: Chain CTEs or use a single staging table with status flags.</li><li><strong>Correlated subqueries:</strong> Subquery executed once per outer row. Fix: Rewrite as JOINs or window functions.</li><li><strong>Missing statistics:</strong> Optimizer making wrong join strategies. Fix: Run ANALYZE on tables referenced in the procedure.</li></ol><p><strong>Redshift application:</strong> The same principles apply — always favor set-based SQL over procedural logic. Use EXPLAIN to validate each step. Batch DML into large operations. Pre-sort data to enable merge joins instead of hash joins.</p></div></div></div>
+
+  </div>
+</div>
+
+</section>
+
+<div class="page-navigation animate-in" style="display:flex; justify-content:space-between; margin-top:40px; padding-top:20px; border-top:1px solid rgba(255,255,255,0.1);"><a href="behavioral.html" class="btn btn-secondary">← Resume Defense</a><a href="aws.html" class="btn btn-primary">Study Modules →</a></div>
+</main>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <p>Built for Lakhbeer Shah's Senior Data Engineer Interview Preparation</p>
+  <div class="footer-links">
+    <a href="../index.html">Dashboard</a>
+    <a href="aws.html">AWS</a>
+    <a href="domain.html">NBFC</a>
+    <a href="sql.html">SQL</a>
+    <a href="airflow.html">Airflow</a>
+    <a href="tableau.html">Tableau</a>
+    <a href="behavioral.html">Behaviour</a>
+    <a href="interview.html">Q&amp;A</a>
+  </div>
+</footer>
+
+<script src="../assets/js/script.js"></script>
+</body>
+</html>

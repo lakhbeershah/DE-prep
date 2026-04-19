@@ -1,0 +1,666 @@
+================================================================================
+ NBFC SENIOR DATA ENGINEER — COMPLETE TOPIC MAP
+ Interview Preparation Portal — Master Reference
+ Generated: 2026-04-19
+================================================================================
+
+This file contains EVERY topic, subtopic, and learning point across the entire
+Interview Prep Portal. Use it as a checklist and reference index.
+
+Legend:
+  [L] = Learning / Concept            [Q] = Interview Question
+  [S] = SQL Scenario with solution     [C] = Code example provided
+  [T] = Table / comparison chart       [F] = Formula / calculation
+
+
+================================================================================
+ MODULE 1: AWS & DATA ENGINEERING CORE  (aws.html)
+================================================================================
+
+A. AWS Redshift Architecture & Optimization
+├── [L] Redshift Core Architecture
+│   ├── MPP (Massively Parallel Processing) architecture
+│   ├── Leader Node — SQL parsing, query plan, result aggregation, caching
+│   ├── Compute Nodes — columnar data storage, parallel execution
+│   ├── Node Slices — virtual CPUs with dedicated memory/disk
+│   │   ├── dc2.large: 2 slices
+│   │   ├── ra3.xlplus: 2 slices
+│   │   ├── ra3.4xlarge: 4 slices
+│   │   └── ra3.16xlarge: 16 slices
+│   ├── Columnar Storage — column-by-column vs row-by-row
+│   └── Zone Maps — min/max metadata per 1MB block for block skipping
+│
+├── [L] Distribution Styles
+│   ├── [T] KEY — hash distribution on a column (large fact tables)
+│   ├── [T] ALL — full replication on every node (small dimensions <2-3M rows)
+│   ├── [T] EVEN — round-robin (staging tables, no JOINs)
+│   ├── [T] AUTO — Redshift auto-decides (starts ALL, switches to EVEN)
+│   └── Co-located JOINs — same DISTKEY on both tables = zero network transfer
+│
+├── [L] Sort Keys
+│   ├── COMPOUND Sort Key — hierarchical, leftmost prefix optimization
+│   ├── INTERLEAVED Sort Key — equal weight all columns, higher VACUUM cost
+│   └── Impact on zone map effectiveness
+│
+├── [L] Data Compression & Ingestion
+│   ├── Compression encodings: LZO, AZ64, ZSTD, BYTEDICT, RUNLENGTH
+│   ├── [C] COPY command — parallel loading from S3
+│   ├── UNLOAD command — parallel extraction to S3
+│   ├── Manifest files — explicit file listing for controlled loads
+│   ├── STL_LOAD_ERRORS — debugging failed COPY commands
+│   └── ENCODE AUTO / ANALYZE COMPRESSION
+│
+├── [L] VACUUM and ANALYZE
+│   ├── VACUUM DELETE — reclaim space from soft-deleted rows
+│   ├── VACUUM SORT ONLY — re-sort unsorted rows
+│   ├── VACUUM FULL — delete + sort combined
+│   ├── VACUUM REINDEX — re-analyze interleaved sort keys
+│   └── ANALYZE — update table statistics for query optimizer
+│
+├── [C] DDL Example — fact_loan_payments with DISTKEY/SORTKEY
+│
+├── [Q] Q1: 500M fact + 200-row dim — choose distribution styles
+├── [Q] Q2: COMPOUND vs INTERLEAVED sort keys for housing finance
+├── [Q] Q3: Query degradation diagnostics (unsorted %, stale stats, EXPLAIN)
+├── [Q] Q4: Loading 150GB CSV efficiently (split files, gzip, COPY)
+├── [Q] Q5: Heavy UPDATE/DELETE causing slowness (VACUUM + ANALYZE)
+├── [Q] Q6: Data skew detection and resolution (svv_table_info, skew_rows)
+├── [Q] Q7: DELETE+INSERT vs MERGE (UPSERT) — when to use each
+├── [Q] Q8: Staging-to-production atomic promotion pattern (BEGIN/COMMIT)
+├── [Q] Q9: Concurrency Scaling — transient clusters, 1hr/day free
+└── [Q] Q10: Stored Procedures vs dbt models — comparison table
+
+A2. Advanced Redshift & Data Lake Ecosystem (6 YOE)
+├── [L] Modern Architecture & Scaling
+│   ├── RA3 Nodes & Managed Storage — decoupled compute/storage
+│   ├── Redshift Serverless — auto-scaling, pay-per-query
+│   ├── Concurrency Scaling — transient cluster burst handling
+│   └── Elastic Resize vs Classic Resize
+│
+├── [L] Query Optimization & WLM
+│   ├── Auto WLM vs Manual WLM — dynamic vs static memory allocation
+│   ├── Short Query Acceleration (SQA) — ML-based fast-lane routing
+│   ├── System tables: SVV_TABLE_INFO, STL_QUERY, STL_ALERT_EVENT_LOG
+│   └── Reading EXPLAIN plans — nested loops, broadcasts, hash joins
+│
+├── [L] Advanced Integrations
+│   ├── Redshift Spectrum — query S3 data via external schemas
+│   ├── Federated Queries — query live RDS/Aurora from Redshift
+│   ├── Aurora Zero-ETL — automatic replication to Redshift
+│   └── Amazon Redshift ML — train SageMaker models via SQL
+│
+├── [L] Security & Administration
+│   ├── Cross-cluster Data Sharing (RA3 only)
+│   ├── Row-Level Security (RLS) & Column-Level Security (CLS)
+│   └── KMS Encryption & Enhanced VPC Routing
+│
+├── [Q] Q1: Fixing DS_BCAST_INNER in EXPLAIN plans (collocated joins)
+├── [Q] Q2: Redshift Spectrum for S3 historical data analysis
+└── [Q] Q3: Data masking with Column-Level Security
+
+A3. Core AWS Ecosystem & Data Lakes
+├── [L] Amazon S3 — data lake backbone, partitioning strategies
+├── [L] IAM Access Controls — roles vs policies, least privilege
+├── [L] Amazon EC2 — bastion hosts, DMS replication instances
+└── [L] AWS Lambda — S3 event triggers for ETL pipelines
+
+B. ETL vs. ELT & Pipeline Orchestration
+├── [L] ETL vs ELT — Core Differences
+│   ├── [T] Transform location, scalability, latency, cost comparison
+│   └── Hybrid approach for NBFC — ETL for cleansing, ELT for aggregations
+│
+├── [L] Scripting & Orchestration
+│   ├── Python scripting — Glue PySpark, Boto3 APIs, Airflow DAGs
+│   └── Shell scripting (Bash) — file operations, cron jobs
+│
+├── [L] AWS Glue — Serverless ETL
+│   ├── Glue Jobs — PySpark/Scala, DPU billing, job bookmarks
+│   ├── Glue Crawlers — auto schema discovery
+│   ├── Glue Data Catalog — centralized metadata (Athena/Spectrum compatible)
+│   ├── Glue Workflows — DAG orchestration for simple pipelines
+│   └── [C] Job Bookmarks — incremental processing state tracking
+│
+├── [C] Glue ETL Job code — PySpark with ApplyMapping
+│
+├── [L] AWS Step Functions — Orchestration
+│   ├── States: Task, Choice, Wait, Parallel, Map, Pass, Fail/Succeed
+│   ├── Error handling: Retry with backoff, Catch with fallback
+│   └── Use case: nightly pipeline flow diagram
+│
+├── [L] Pipeline Flow: S3 Event → Lambda → Glue Crawler → Glue ETL → DQ → Redshift COPY → Tableau Refresh
+│
+├── [Q] Q1: Design NBFC ETL architecture (LOS JSON, LMS CSV, CRM DB)
+│   └── Ingestion layer, Processing layer, Loading layer, Orchestration
+├── [Q] Q2: Glue Job Bookmarks — S3 vs JDBC sources, financial data importance
+├── [Q] Q3: Step Functions error handling — retry, catch, DQ gates, DLQ
+└── [Q] Q4: PySpark → Redshift loading via spark-redshift connector
+
+C. Change Data Capture (CDC) using AWS DMS
+├── [L] What is CDC — incremental change tracking
+├── [L] CDC Methods
+│   ├── [T] Timestamp-Based — simple, misses deletes
+│   ├── [T] Log-Based (WAL/Binlog) — captures all, low source impact
+│   └── [T] Trigger-Based — precise but intrusive
+│
+├── [L] AWS DMS (Database Migration Service)
+│   ├── Replication Instance — EC2-based
+│   ├── Source/Target Endpoints
+│   ├── Full Load + CDC vs CDC Only modes
+│   └── CDC Output format in S3 (Op column: I/U/D)
+│
+├── [L] Pipeline Flow: MySQL → DMS (binlog) → S3 (CDC files) → Glue (merge) → Redshift
+│
+├── [C] CDC output CSV example with I/U/D operations
+├── [C] Redshift MERGE pattern — staging COPY + BEGIN/DELETE/INSERT/COMMIT
+│
+├── [Q] Q1: Optimize 10M full dump to CDC — 50K daily changes via DMS
+├── [Q] Q2: Timestamp-based vs Log-based CDC for financial data
+└── [Q] Q3: MERGE (upsert) pattern in Redshift with atomicity
+
+D. Dimensional Modeling (Star Schema, SCD)
+├── [L] Star Schema Foundation
+│   ├── Fact tables (central) vs Dimension tables (context)
+│   └── [C] NBFC Star Schema diagram — fact_loan_account + 4 dimensions
+│
+├── [L] Types of Fact Tables
+│   ├── Transactional Fact — one row per event (fact_repayment)
+│   ├── Accumulating Snapshot Fact — multi-step process (fact_loan_application)
+│   └── Periodic Snapshot Fact — regular interval state (fact_monthly_balances)
+│
+├── [L] Types of Dimension Tables
+│   ├── Conformed Dimension — shared across multiple facts
+│   └── Role-playing Dimension — same dim used for different dates
+│
+├── [L] Slowly Changing Dimensions (SCD)
+│   ├── [T] Type 0 — never update (PAN, DOB)
+│   ├── [T] Type 1 — overwrite (phone, email)
+│   ├── [T] Type 2 — add new row with version tracking (address, status)
+│   ├── [T] Type 3 — add column for previous value (credit score)
+│   └── [C] SCD Type 2 implementation SQL — expire + insert pattern
+│
+├── [Q] Q1: Design star schema for housing loan disbursements (grain, fact, dims)
+├── [Q] Q2: Snowflake vs Star schema — when to choose each
+└── [Q] Q3: SCD Type 2 handling for customer address change (Delhi → Mumbai)
+
+
+================================================================================
+ MODULE 2: NBFC & HOUSING FINANCE DOMAIN  (domain.html)
+================================================================================
+
+A. The Housing Loan Lifecycle (Origination to Closure)
+├── [L] NBFC Basics — non-banking, NHB/RBI regulation
+├── [L] Housing Loan Products
+│   ├── [T] HL — Home Loan (LTV 75-90%)
+│   ├── [T] LAP — Loan Against Property (LTV 50-70%)
+│   ├── [T] AHL — Affordable Housing Loan (PMAY, ≤₹35L)
+│   ├── [T] BT — Balance Transfer
+│   ├── [T] Top-Up Loan
+│   └── [T] CL-HL — Construction-Linked Home Loan (tranche disbursement)
+│
+├── [L] 8-Stage Loan Lifecycle
+│   ├── 1. Lead Generation (DSA, digital, referral)
+│   ├── 2. Application & KYC (PAN, Aadhaar, CKYC)
+│   ├── 3. Credit Appraisal (CIBIL ≥650-700, FOIR, exposure)
+│   ├── 4. Sanction (amount, rate, tenure, processing fee)
+│   ├── 5. Legal & Technical (title verification, property valuation)
+│   ├── 6. Disbursement (full or tranche-based)
+│   ├── 7. Repayment & Servicing (NACH/ECS, rate resets, pre-payment)
+│   └── 8. Closure / Foreclosure (NOC, document return)
+│
+├── [L] Source Systems: LOS (stages 1-5), LMS (stages 6-8), CRM (all)
+│
+├── [Q] Q1: DW tables for complete loan lifecycle (5+ fact/dim tables)
+├── [Q] Q2: Login vs Sanction vs Disbursement — conversion funnel KPIs
+└── [Q] Q3: Construction-linked disbursement — tranche data model design
+
+B. Key Financial Metrics (EMI, LTV, FOIR)
+├── [L] EMI (Equated Monthly Installment)
+│   ├── [F] EMI = P × r × (1+r)^n / ((1+r)^n - 1)
+│   ├── Principal component (increases over time)
+│   └── Interest component (decreases over time)
+│
+├── [L] LTV (Loan to Value Ratio)
+│   ├── [F] LTV = (Loan Amount / Property Value) × 100
+│   └── RBI/NHB guidelines: ≤₹30L=90%, ₹30-75L=80%, >₹75L=75%
+│
+├── [L] FOIR (Fixed Obligations to Income Ratio)
+│   ├── [F] FOIR = (All existing EMIs + proposed EMI) / Monthly Income × 100
+│   └── Thresholds: 40-60% salaried, 35-50% self-employed
+│
+├── [L] Other Critical Metrics
+│   ├── [T] AUM — Assets Under Management (total outstanding)
+│   ├── [T] Yield — interest income / avg AUM
+│   ├── [T] NIM — Net Interest Margin (yield - cost of funds)
+│   ├── [T] GNPA% — Gross NPA / Total Outstanding
+│   ├── [T] NNPA% — Net NPA after provisions
+│   └── [T] PCR — Provision Coverage Ratio
+│
+├── [Q] Q1: [S] EMI amortization schedule using recursive CTE
+├── [Q] Q2: FOIR calculation — max affordable EMI for given income
+└── [Q] Q3: GNPA% vs NNPA% — why track both, regulatory requirement
+
+C. Delinquency Management (DPD, NPA Classification)
+├── [L] DPD (Days Past Due) — CURRENT_DATE - EMI_DUE_DATE
+├── [L] DPD Buckets
+│   ├── [T] X: 0 days (Current) — no action
+│   ├── [T] SMA-0: 1-30 days — SMS/email
+│   ├── [T] SMA-1: 31-60 days — phone calls
+│   ├── [T] SMA-2: 61-90 days — field visits
+│   ├── [T] NPA: 90+ days — legal notice, SARFAESI
+│   ├── [T] D1: 91-180 (Sub-Standard, 15% provision)
+│   ├── [T] D2: 181-365 (Doubtful-1, 25% provision)
+│   ├── [T] D3: 366-1095 (Doubtful-2, 40% provision)
+│   └── [T] Loss: 1095+ (100% provision/write-off)
+│
+├── [L] NPA Classification Rules (RBI)
+│   ├── Standard → NPA: auto-classify at DPD >90
+│   ├── NPA → Standard (Upgrade): all overdue cleared
+│   └── Provisioning requirements by asset class
+│
+├── [C] DPD & NPA classification SQL logic
+│
+├── [L] Collections Process
+│   ├── Soft Collection (1-30 DPD) — automated SMS/email/IVR
+│   ├── Tele-calling (31-60 DPD) — PTP tracking
+│   ├── Field Collection (61-90 DPD) — visit reports
+│   └── Legal Action (90+ DPD) — SARFAESI Act
+│
+├── [Q] Q1: [S] DPD bucket distribution report with loan count & outstanding
+├── [Q] Q2: Roll-rate analysis — transition matrix between buckets
+│   └── [T] Roll-rate matrix example (March → April)
+└── [Q] Q3: DPD calculation walkthrough with payment history scenario
+
+D. Data Governance, Quality & Regulatory MIS
+├── [L] Data Governance Framework
+│   ├── Data Ownership — business owner per table
+│   ├── Data Lineage — source-to-dashboard traceability
+│   └── Access Controls — schema-level GRANT/REVOKE
+│
+├── [L] Data Quality Framework — 6 Dimensions
+│   ├── [T] Completeness — no unexpected NULLs
+│   ├── [T] Uniqueness — no duplicate PKs
+│   ├── [T] Referential Integrity — FK exists in parent
+│   ├── [T] Range/Threshold — values within business limits
+│   ├── [T] Freshness — data arrived on time
+│   └── [T] Reconciliation — source count = target count
+│
+├── [L] Regulatory MIS & NHB/RBI Reporting
+│   ├── NHB Quarterly Returns (portfolio, NPA movement, asset classification)
+│   ├── RBI Monthly Returns (ALM, exposure, large loans)
+│   └── Audit requirements (ETL audit trail, IAM role logging)
+│
+├── [C] Python Boto3 DQ check script (null, duplicate, freshness)
+│
+├── [Q] Q1: Investigating 50,000 vs 50,012 row discrepancy
+├── [Q] Q2: Handling source schema changes (new/renamed columns)
+├── [Q] Q3: [T] Data Quality vs Data Governance — definitions & examples
+├── [Q] Q4: [S] NPA movement report for NHB quarterly return
+└── [Q] Q5: Gate-based DQ alerting system architecture
+
+
+================================================================================
+ MODULE 3: SQL MASTERY & OPTIMIZATION  (sql.html)
+================================================================================
+
+A. Window Functions for Financial Data
+├── [L] Why Window Functions — calculations across row sets without GROUP BY
+├── [L] Key Window Functions Cheat Sheet
+│   ├── [T] ROW_NUMBER() — unique sequential, find latest per group
+│   ├── [T] RANK() / DENSE_RANK() — rank with/without gaps
+│   ├── [T] LAG() — access previous row (MoM comparison)
+│   ├── [T] LEAD() — access next row
+│   ├── [T] SUM() OVER() — running/cumulative totals
+│   ├── [T] AVG() OVER() — moving averages
+│   ├── [T] NTILE() — divide into N groups (quartiles)
+│   └── [T] FIRST_VALUE() — first value in window frame
+│
+├── [S] Scenario 1: Find latest payment per loan (ROW_NUMBER + PARTITION BY)
+├── [S] Scenario 2: Running total of disbursements by branch (SUM OVER + ROWS BETWEEN)
+└── [S] Scenario 3: Month-over-Month payment comparison (LAG + change_pct)
+
+B. Common Table Expressions (CTEs) for Complex Logic
+├── [L] Why CTEs — readability, reusability, Redshift materialization
+├── [S] Scenario 4: Portfolio analysis — product-wise + region-wise (multiple CTEs + UNION ALL)
+├── [S] Scenario 5: Vintage analysis — NPA rate by origination month
+└── [S] Scenario 6: Data reconciliation — source vs warehouse count/checksum
+
+C. Performance Tuning (70% Achievement)
+├── [L] SQL Optimization Techniques
+│   ├── 1. Indexing Strategy (MySQL)
+│   │   ├── B-Tree Index — equality, range, ORDER BY
+│   │   ├── Composite Index — leftmost prefix rule
+│   │   ├── Covering Index — index-only scan
+│   │   └── EXPLAIN ANALYZE — execution plan reading
+│   │
+│   ├── 2. Query Rewriting
+│   │   ├── [T] SELECT * → specific columns
+│   │   ├── [T] YEAR(date_col) → range filter (sargable)
+│   │   ├── [T] IN (subquery) → EXISTS
+│   │   ├── [T] NOT IN (nullable) → NOT EXISTS
+│   │   └── [T] Correlated subquery → JOIN or CTE
+│   │
+│   └── 3. Redshift-Specific Tuning
+│       ├── COPY command for bulk loading
+│       ├── SORTKEY alignment with WHERE clauses
+│       ├── DISTKEY for co-located JOINs
+│       ├── Compression encoding (ENCODE AUTO, ANALYZE COMPRESSION)
+│       └── WLM — separate ETL and BI queues
+│
+├── [S] Scenario 7: Optimize slow NPA report (45s → 5s)
+│   ├── Problem: SELECT *, correlated subquery, DATEDIFF on computed result
+│   └── Fix: CTE + JOIN, specific columns, push filter into CTE
+├── [S] Scenario 8: Top 5 highest outstanding loans per branch (Top-N per group)
+├── [S] Scenario 9: YoY disbursement growth (LAG with PARTITION BY month, ORDER BY year)
+└── [S] Scenario 13: Anti-join — LEFT JOIN + IS NULL, EXPLAIN plan reading
+
+D. Advanced SQL for Data Engineering (5+ YOE)
+├── [L] Senior-Level SQL Concepts
+│   ├── ROLLUP & CUBE — multi-dimensional subtotals
+│   ├── APPROXIMATE COUNT DISTINCT — HyperLogLog (2% error, 10-50x faster)
+│   └── Semi-structured data — JSON_EXTRACT_PATH_TEXT, SUPER type
+│
+├── [S] Scenario 10: Multi-dimensional subtotals using GROUP BY ROLLUP
+├── [S] Scenario 11: Parsing JSON logs from LOS (JSON_EXTRACT_PATH_TEXT)
+└── [S] Scenario 12: Recursive CTE for employee hierarchy (Regional Manager tree)
+
+
+================================================================================
+ MODULE 4: AIRFLOW ORCHESTRATION  (airflow.html)
+================================================================================
+
+├── [L] Apache Airflow Architecture
+│   ├── Scheduler — triggers DAGs based on schedule
+│   ├── Worker — executes tasks
+│   ├── Webserver — UI for monitoring
+│   └── Metadata DB — stores state (PostgreSQL/MySQL)
+│
+├── [L] Core Concepts
+│   ├── DAG (Directed Acyclic Graph) — pipeline as code
+│   ├── Operators — task types (PythonOperator, BashOperator, etc.)
+│   ├── Sensors — wait for external events (S3KeySensor, ExternalTaskSensor)
+│   ├── XComs — cross-task communication (push/pull data)
+│   ├── Connections & Hooks — external system credentials
+│   └── Variables — configuration store
+│
+├── [L] Scheduling & Execution
+│   ├── Cron expressions for schedule_interval
+│   ├── Catchup & backfill behavior
+│   ├── Execution date vs logical date
+│   └── Task dependencies (>> operator, trigger rules)
+│
+├── [L] Error Handling & Monitoring
+│   ├── Retries with exponential backoff
+│   ├── on_failure_callback — Slack/email alerts
+│   ├── SLA monitoring
+│   └── Task instance states (success, failed, up_for_retry, skipped)
+│
+├── [L] Airflow for NBFC Pipelines
+│   ├── Daily ETL DAG: COPY → DQ → MERGE → MV refresh → alert
+│   ├── BranchOperator for DQ gate (pass → promote, fail → halt)
+│   ├── RedshiftSQLOperator / RedshiftDataOperator
+│   └── Integration with Step Functions and Glue
+│
+└── [Q] Key Interview Questions
+    ├── Airflow vs Step Functions — when to use each
+    ├── How XComs work for inter-task data passing
+    ├── Backfill strategy for reprocessing historical data
+    └── DAG design best practices (idempotency, modularity)
+
+
+================================================================================
+ MODULE 5: TABLEAU BI & DASHBOARDS  (tableau.html)
+================================================================================
+
+├── [L] Tableau for NBFC Data Engineering
+│   ├── Tableau Server vs Tableau Online
+│   ├── Data sources: Live connection vs Extract
+│   └── Published data sources and governance
+│
+├── [L] Redshift + Tableau Optimization
+│   ├── Materialized Views for pre-aggregation
+│   ├── SORTKEY on filter columns (Tableau WHERE → zone map skipping)
+│   ├── DISTSTYLE ALL for small dimension tables
+│   ├── VARCHAR width optimization (100 vs MAX)
+│   └── DECIMAL not FLOAT for financial calculations
+│
+├── [L] Dashboard Design for NBFC
+│   ├── Portfolio MIS dashboard
+│   ├── Collections efficiency dashboard
+│   ├── NPA movement dashboard
+│   ├── Branch performance tracker
+│   └── Geographic drill-down (dim_geography hierarchy)
+│
+├── [L] Data Security in Tableau
+│   ├── Row-Level Security (RLS) — branch-level filtering
+│   ├── Column-Level Security (CLS) — PII masking
+│   └── Secure views for PAN/Aadhaar masking
+│
+├── [L] Live vs Extract Decision Matrix
+│   ├── [T] Data freshness needed
+│   ├── [T] User count
+│   ├── [T] Query complexity
+│   └── [T] WLM impact on Redshift
+│
+└── [Q] Key Interview Questions
+    ├── Why use Materialized View instead of Tableau Extract?
+    ├── How to structure geographic data for region bifurcation
+    ├── Tableau Live vs Extract — what dictates the choice
+    └── Optimizing Redshift table structures for Tableau dashboards
+
+
+================================================================================
+ MODULE 6: BEHAVIORAL & RESUME DEFENSE  (behavioral.html)
+================================================================================
+
+├── [L] Flashcard 1: Framing 4 Years as 5+ Years Experience
+│   ├── Strategy: reframe intensity and scope, don't lie
+│   ├── Supporting points: breadth of AWS services, certifications, impact
+│   └── Pivot script for pushback
+│
+├── [L] Flashcard 2: Pharma to Financial Data Translation
+│   ├── [T] Pharma → Finance parallels (drug lifecycle → loan lifecycle)
+│   ├── FDA compliance → RBI/NHB reporting
+│   ├── SCD for regulatory changes → SCD for loan status changes
+│   └── Domain ramp-up script
+│
+├── [L] Flashcard 3: 70% SQL Optimization Achievement (STAR)
+│   ├── Situation: slow PostgreSQL stored procedures, 100GB+
+│   ├── Task: optimize to meet SLA
+│   ├── Action: EXPLAIN ANALYZE → indexes → query rewrite → partitioning
+│   ├── Result: 70% faster, 20% cost savings, near-real-time reporting
+│   └── 6 technical details to share
+│
+├── [L] Flashcard 4: "Tell Me About Yourself" — 90-Second Script
+│   ├── Key elements checklist (AWS, Redshift, quantifiable, domain, certs)
+│   └── Under 90 seconds target
+│
+├── [L] Flashcard 5: "Why NBFC / Housing Finance?"
+│   ├── Three reasons: data complexity, impact, growth
+│   └── Domain awareness demonstration
+│
+└── [L] Flashcard 6: Smart Questions to Ask the Interviewer
+    ├── Current DW state
+    ├── Source system count
+    ├── ETL latency (T+1 vs near-real-time)
+    ├── CDC mechanisms
+    ├── Regulatory reports supported
+    ├── AUM size and growth
+    ├── Data quality management
+    └── Typical day for data engineer
+
+
+================================================================================
+ MODULE 7: INTERVIEW QUESTION BANK (Q&A)  (interview.html)
+================================================================================
+
+1. Redshift Architecture & Deep Internals (20 Questions)
+├── [Q] Q1: MPP architecture — Leader Node, Compute Nodes, slices
+├── [Q] Q2: Leader Node vs Compute Node responsibilities
+├── [Q] Q3: RA3 vs DC2/DS2 nodes, Managed Storage
+├── [Q] Q4: Columnar storage vs row-based for OLAP
+├── [Q] Q5: Zone Maps and data block filtering
+├── [Q] Q6: Node slices, data allocation, collocated joins
+├── [Q] Q7: Redshift Serverless vs Provisioned cluster
+├── [Q] Q8: Concurrency Scaling — transient clusters
+├── [Q] Q9: Short Query Acceleration (SQA) — ML-based routing
+├── [Q] Q10: Redshift Spectrum architecture and use cases
+├── [Q] Q11: Federated Querying — RDS/Aurora integration
+├── [Q] Q12: Commit Queue bottleneck — serialized writes
+├── [Q] Q13: Elastic Resize vs Classic Resize
+├── [Q] Q14: Cross-Cluster Data Sharing — producer/consumer
+├── [Q] Q15: Automated cluster snapshots — incremental, cross-region DR
+├── [Q] Q16: High Availability — Multi-AZ, RPO/RTO
+├── [Q] Q17: Data Compaction — merging small blocks
+├── [Q] Q18: System tables vs views (STL_, STV_, SVV_, SVL_)
+├── [Q] Q19: Result caching at Leader Node — cache invalidation
+└── [Q] Q20: AWS KMS encryption — 4-tier key hierarchy
+
+2. Query Optimization & Performance Tuning (20 Questions)
+├── [Q] Q1: Distribution Styles (EVEN, KEY, ALL, AUTO) — when to use
+├── [Q] Q2: DISTKEY choice factors — cardinality, JOIN, NULL rate
+├── [Q] Q3: Detecting data skew via system tables
+├── [Q] Q4: Compound vs Interleaved Sort Keys
+├── [Q] Q5: When Interleaved is strictly better
+├── [Q] Q6: Fixing DS_BCAST_INNER in EXPLAIN plans
+├── [Q] Q7: Nested Loop Join detection and resolution
+├── [Q] Q8: VACUUM modes (FULL, SORT ONLY, DELETE ONLY, REINDEX)
+├── [Q] Q9: VACUUM DELETE ONLY for heavy-update tables
+├── [Q] Q10: ANALYZE — statistics collection and optimizer impact
+├── [Q] Q11: Reading complex EXPLAIN plans (bottom-up)
+├── [Q] Q12: Compression encodings (AZ64, ZSTD, LZO, BYTEDICT, RUNLENGTH)
+├── [Q] Q13: ANALYZE COMPRESSION command — recommendation workflow
+├── [Q] Q14: Auto WLM vs Manual WLM
+├── [Q] Q15: WLM queue prioritization (Tableau vs data science)
+├── [Q] Q16: Performance impact of updating DISTKEY column
+├── [Q] Q17: STL_QUERY & SVL_QUERY_SUMMARY for bottleneck analysis
+├── [Q] Q18: Materialized Views — auto-refresh, query rewriting, limitations
+├── [Q] Q19: Troubleshooting "Disk Full" errors
+└── [Q] Q20: Identify and terminate hung queries (PID, CANCEL, pg_terminate)
+
+3. Data Warehousing & Dimensional Modeling (15 Questions)
+├── [Q] Q1: Medallion Architecture (Bronze/Silver/Gold) in S3 + Redshift
+├── [Q] Q2: Snowflake vs Star schema contrast
+├── [Q] Q3: Snowflake schema trade-offs in MPP
+├── [Q] Q4: SCD Types 1, 2, 3 — implementation in Redshift
+├── [Q] Q5: Factless Fact Table — loan status tracking
+├── [Q] Q6: Accumulating vs Periodic Snapshot fact tables
+├── [Q] Q7: Late-arriving dimensions — placeholder row strategy
+├── [Q] Q8: dim_date importance — fiscal calendar, holidays, MIS cutoffs
+├── [Q] Q9: Avoiding row-by-row operations in Redshift
+├── [Q] Q10: Conformed Dimensions — cross-fact analysis
+├── [Q] Q11: Deep hierarchy handling (bridge tables, materialized paths)
+├── [Q] Q12: ELT vs ETL — why ELT preferred for Redshift
+├── [Q] Q13: DIST/SORT strategy: staging vs reporting tables
+├── [Q] Q14: Data lineage tracking across PySpark/Glue/Redshift
+└── [Q] Q15: Surrogate Keys vs Natural Keys
+
+4. ETL Pipeline & AWS Ingestion (15 Questions)
+├── [Q] Q1: COPY command mechanics — MPP parallel loading
+├── [Q] Q2: File splitting for parallel COPY (multiples of slices)
+├── [Q] Q3: Manifest files — controlled loads, mandatory flag
+├── [Q] Q4: STL_LOAD_ERRORS troubleshooting (common errors)
+├── [Q] Q5: UNLOAD to S3 — Parquet, PARALLEL, PARTITION BY
+├── [Q] Q6: CDC architectural patterns (timestamp, log, trigger-based)
+├── [Q] Q7: AWS DMS incremental replication — binlog, BatchApplyEnabled
+├── [Q] Q8: Glue Data Catalog integration (Athena + Spectrum shared metastore)
+├── [Q] Q9: Orchestrating Redshift SQL via Airflow or Step Functions
+├── [Q] Q10: PySpark → Redshift via spark-redshift connector
+├── [Q] Q11: Temporary S3 bucket role in Spark-Redshift connector
+├── [Q] Q12: Lambda for event-driven ETL (S3 event → trigger pipeline)
+├── [Q] Q13: Standard 2-step upsert with staging table (BEGIN/COMMIT)
+├── [Q] Q14: Redshift MERGE command — prerequisites and syntax
+└── [Q] Q15: IAM roles for Redshift S3/Glue access — least privilege
+
+5. Advanced SQL & Database Nuances (15 Questions)
+├── [Q] Q1: Window Functions — ROW_NUMBER, RANK, DENSE_RANK behavior
+├── [Q] Q2: [S] 30-day moving average (ROWS BETWEEN 29 PRECEDING AND CURRENT)
+├── [Q] Q3: LEAD/LAG — month-over-month AUM change
+├── [Q] Q4: CTEs in Redshift — inlined (not materialized), temp table alternative
+├── [Q] Q5: Eliminating correlated subqueries (window function rewrite)
+├── [Q] Q6: UNION vs UNION ALL — performance difference
+├── [Q] Q7: NULL handling — sorting, JOINs, DISTKEY skew
+├── [Q] Q8: [T] Hash Join vs Merge Join vs Nested Loop Join
+├── [Q] Q9: Pivot/unpivot data — conditional aggregation + UNION ALL
+├── [Q] Q10: PostgreSQL vs Redshift SQL dialect differences
+├── [Q] Q11: MySQL B-Tree indexes vs Redshift Sort Keys
+├── [Q] Q12: [C] JSON parsing — JSON_EXTRACT_PATH_TEXT
+├── [Q] Q13: APPROXIMATE COUNT DISTINCT — when acceptable in finance
+├── [Q] Q14: [S] Duplicate detection without deletion (ROW_NUMBER PARTITION BY)
+└── [Q] Q15: [S] Second-highest loan per region (DENSE_RANK)
+
+6. NBFC Domain, Security & BI Integration (15 Questions)
+├── [Q] Q1: Housing loan lifecycle data models (5 fact + 5 dim tables)
+├── [Q] Q2: [S][C] Dynamic DPD calculation with asset classification
+├── [Q] Q3: Daily NPA flagging pipeline architecture (Airflow DAG)
+├── [Q] Q4: [C] Row-Level Security (RLS) — CREATE RLS POLICY
+├── [Q] Q5: Column-Level Security (CLS) — selective GRANT + secure views
+├── [Q] Q6: Sensitive financial data best practices (KMS, VPC, SSL, audit)
+├── [Q] Q7: Audit logging configuration for NBFC compliance
+├── [Q] Q8: Optimizing Redshift for Tableau (MVs, SORTKEY, DISTSTYLE ALL)
+├── [Q] Q9: [T] Tableau Live vs Extract decision matrix
+├── [Q] Q10: Geographic data structure for Tableau region drill-down
+├── [Q] Q11: Daily reconciliation framework (count, checksum, freshness)
+├── [Q] Q12: Automated DQ checks (negative balances, missing IDs)
+├── [Q] Q13: Schema evolution management (new columns from source)
+├── [Q] Q14: Documentation for cross-team collaboration (data dictionary, lineage, glossary)
+└── [Q] Q15: pgSQL optimization → Redshift application (cursor→CTE, temp tables)
+
+
+================================================================================
+ CROSS-CUTTING THEMES (appear across multiple modules)
+================================================================================
+
+├── Data Pipeline Architecture
+│   ├── Source → S3 Raw → Glue ETL → S3 Curated → COPY → Staging → DWH → Tableau
+│   ├── Event-driven: S3 Event → Lambda → Glue/Airflow
+│   └── Error handling: retries, DQ gates, SNS alerts, audit logging
+│
+├── Performance Optimization
+│   ├── DISTKEY/SORTKEY selection for query patterns
+│   ├── Compression encoding selection
+│   ├── VACUUM scheduling after ETL loads
+│   ├── Query rewriting (correlated → JOIN, SELECT * → specific)
+│   └── WLM configuration for ETL vs BI isolation
+│
+├── Data Quality & Governance
+│   ├── 6 DQ dimensions: completeness, uniqueness, referential, range, freshness, reconciliation
+│   ├── Gate-based architecture: staging → DQ pass → promote to DWH
+│   └── Audit trail for RBI/NHB compliance
+│
+├── Security
+│   ├── IAM roles (least privilege, separate per function)
+│   ├── KMS encryption at rest, SSL/TLS in transit
+│   ├── Enhanced VPC routing (no public internet)
+│   ├── RLS/CLS for multi-tenant data access
+│   └── Audit logging (connection, activity, user logs)
+│
+├── NBFC Domain Knowledge
+│   ├── Loan lifecycle: Lead → Application → Sanction → Disbursement → Repayment → Closure
+│   ├── Financial metrics: EMI, LTV, FOIR, AUM, GNPA%, NNPA%, PCR, NIM
+│   ├── DPD buckets: Current, SMA-0/1/2, NPA, D1/D2/D3, Loss
+│   ├── Regulatory: NHB quarterly returns, RBI monthly returns, SARFAESI
+│   └── Collections process: soft → tele → field → legal
+│
+└── Resume Defense & Behavioral
+    ├── 4 years → 5+ years framing (intensity, certifications, impact)
+    ├── Pharma → Finance domain translation (6 direct parallels)
+    ├── 70% optimization STAR story
+    ├── "Tell me about yourself" — 90-second script
+    └── Smart questions to ask interviewer (8 prepared)
+
+
+================================================================================
+ STATISTICS
+================================================================================
+
+Total Learning Concepts:   150+
+Total Interview Questions: 100+
+Total SQL Scenarios:       13 (with full solutions)
+Total Code Examples:       20+ (SQL, Python, PySpark)
+Total Comparison Tables:   35+
+Total Formulas:            3 (EMI, LTV, FOIR)
+Portal Pages:              8 (index + 7 modules)
+
+================================================================================
+ END OF TOPIC MAP
+================================================================================

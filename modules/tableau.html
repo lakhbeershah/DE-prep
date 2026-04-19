@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Comprehensive Interview Prep Portal for Data Engineer role at NBFC Housing Finance — Tableau & BI.">
+  <title>NBFC Data Engineer Interview Mastery | Tableau BI</title>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body>
+
+<!-- ===== NAVIGATION ===== -->
+<nav class="navbar" id="navbar">
+  <div class="nav-content">
+    <a href="../index.html" class="nav-brand">
+      <span class="brand-icon">🎯</span>
+      <span>InterviewPrep</span>
+    </a>
+
+    <ul class="nav-links" id="navLinks">
+      <li><a href="aws.html">AWS</a></li>
+      <li><a href="domain.html">NBFC</a></li>
+      <li><a href="sql.html">SQL</a></li>
+      <li><a href="airflow.html">Airflow</a></li>
+      <li><a href="tableau.html">Tableau</a></li>
+      <li><a href="behavioral.html">Behaviour</a></li>
+      <li><a href="interview.html">Q&amp;A</a></li>
+    </ul>
+
+    <div class="nav-actions">
+      <div class="progress-badge">
+        <svg class="progress-ring" viewBox="0 0 20 20">
+          <circle cx="10" cy="10" r="8" fill="none" stroke="rgba(99,102,241,0.2)" stroke-width="2.5"/>
+          <circle id="progressRing" cx="10" cy="10" r="8" fill="none" stroke="#6366f1" stroke-width="2.5"
+                  stroke-dasharray="50.26" stroke-dashoffset="50.26" stroke-linecap="round"
+                  transform="rotate(-90 10 10)" style="transition: stroke-dashoffset 0.5s ease;"/>
+        </svg>
+        <span id="progressText">0% Mastered</span>
+      </div>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">🌙</button>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">☰</button>
+    </div>
+  </div>
+</nav>
+
+<main style="padding-top:100px;">
+<!-- ============================================================ -->
+<!-- MODULE 6: TABLEAU BI & ANALYTICS                             -->
+<!-- ============================================================ -->
+<section class="section" id="module-tableau">
+  <div class="section-header animate-in">
+    <span class="section-badge check-icon">📊 Module 6</span>
+    <h2>Tableau BI & Data Security</h2>
+    <p>Design Redshift views for BI consumption, implement RLS/CLS for sensitive financial data, and build MIS dashboards.</p>
+  </div>
+
+  <div class="stats-row animate-in">
+    <div class="stat-card">
+      <div class="stat-value">3</div>
+      <div class="stat-label">Subtopics</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">8</div>
+      <div class="stat-label">Scenarios</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">40</div>
+      <div class="stat-label">Minutes Est.</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">🔒</div>
+      <div class="stat-label">Security Focus</div>
+    </div>
+  </div>
+
+  <!-- SUBTOPIC A: Tableau Dashboard Ecosystem -->
+  <div class="subsection animate-in" id="tableau-reporting">
+    <div class="subsection-header">
+      <div class="subsection-icon sql-icon">📈</div>
+      <h3>A. Tableau MIS & Portfolio Dashboards</h3>
+      <label class="progress-check">
+        <input type="checkbox" id="prog-tab-a">
+        <span class="check-custom">✓</span>
+        <span class="check-label">Mastered</span>
+      </label>
+    </div>
+
+    <div class="content-card">
+      <h4>Core NBFC Dashboards Checklist</h4>
+      <p>As a Data Engineer, you don't just build pipelines; you structure the semantic layer to power these critical Tableau dashboards for Business Intelligence (BI):</p>
+      
+      <ul>
+        <li><strong>MIS (Management Information Systems):</strong> High-level executive summaries showing daily sanction values, geographic performance (State vs Zone), and YoY growth. Requires aggregated materialized views.</li>
+        <li><strong>Portfolio Monitoring:</strong> Deep dives into Loan-to-Value (LTV) ratios, average ticket sizes, and concentration risk (e.g., "Are we over-exposed to affordable housing in Tier-3 cities?").</li>
+        <li><strong>Collections & DPD:</strong> Fast-refresh operational dashboards tracking daily bounce rates, 30/60/90 Days Past Due (DPD) buckets, and roll-forward/roll-back rates.</li>
+        <li><strong>Credit & Risk Reporting:</strong> Credit score tier distributions, vintage analysis (NPA rates by origination month), and underwriter performance metrics.</li>
+      </ul>
+      
+      <div class="key-point">
+        <span class="kp-icon">💡</span>
+        <span class="kp-text"><strong>Interview Tip:</strong> Emphasize that you don't use Tableau to join 15 raw tables. You prepare a denormalized Star Schema or specific Materialized Views in Redshift so that Tableau simply <em>consumes</em> a clean, wide table. This makes the dashboard 10x faster.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUBTOPIC B: Data Prep for BI in Redshift -->
+  <div class="subsection animate-in" id="tableau-prep">
+    <div class="subsection-header">
+      <div class="subsection-icon aws-icon">⚙️</div>
+      <h3>B. Redshift Data Preparation for BI</h3>
+      <label class="progress-check">
+        <input type="checkbox" id="prog-tab-b">
+        <span class="check-custom">✓</span>
+        <span class="check-label">Mastered</span>
+      </label>
+    </div>
+
+    <div class="content-card">
+      <h4>Views vs. Materialized Views</h4>
+      <p>Tableau connecting 'Live' to a Redshift cluster requires extreme database optimization. You must decide how to present the data:</p>
+
+      <table class="data-table">
+        <thead>
+          <tr><th>Feature</th><th>Standard View</th><th>Materialized View (MV)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>What is it?</strong></td><td>A saved SQL query. Evaluated at runtime.</td><td>Pre-computed result set physically stored on disk.</td></tr>
+          <tr><td><strong>Tableau Speed</strong></td><td>Slow (Executes joins/aggregations on the fly)</td><td>Lightning Fast (Data is pre-calculated)</td></tr>
+          <tr><td><strong>Data Freshness</strong></td><td>100% Real-time</td><td>Stale until refreshed (<code>REFRESH MATERIALIZED VIEW</code>)</td></tr>
+          <tr><td><strong>Use Case in NBFC</strong></td><td>Daily operational lookup (e.g., single customer view)</td><td>Heavy executive MIS dashboards (e.g., Portfolio NPA rates)</td></tr>
+        </tbody>
+      </table>
+
+      <h4>Extract vs. Live Connections</h4>
+      <ul>
+        <li><strong>Tableau Extract (.hyper):</strong> Tableau copies the Redshift data into its own in-memory engine. Blazing fast dashboards, but data is only as fresh as the last extract schedule. Relieves compute pressure on Redshift.</li>
+        <li><strong>Live Connection:</strong> Tableau sends a SQL query to Redshift every time a user drags a pill or filters. Required for operational dashboards (e.g., intraday collections), but requires heavy Redshift query tuning and WLM (Workload Management) prioritization so BI queries don't get stuck behind ETL loads.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SUBTOPIC C: Data Security (RLS & CLS) -->
+  <div class="subsection animate-in" id="tableau-security">
+    <div class="subsection-header">
+      <div class="subsection-icon check-icon">🔒</div>
+      <h3>C. Data Security: RLS & CLS</h3>
+      <label class="progress-check">
+        <input type="checkbox" id="prog-tab-c">
+        <span class="check-custom">✓</span>
+        <span class="check-label">Mastered</span>
+      </label>
+    </div>
+
+    <div class="content-card">
+      <h4>Protecting Sensitive Financial Data</h4>
+      <p>Housing finance data contains PII (PAN cards, Aadhar, phone numbers) and extreme financial sensitivity. You must implement security at the database layer, not just in the BI tool.</p>
+
+      <h4>Row-Level Security (RLS)</h4>
+      <p>Restricting <em>which rows</em> a user can see based on their identity/role. For example, a Branch Manager for Delhi should only see loans originated in Delhi.</p>
+      <ul>
+        <li><strong>In Redshift:</strong> Achieved using Dynamic Data Masking or RLS policies attached to IAM/Database roles.</li>
+        <li><strong>In Tableau:</strong> Achieved using the <code>USERDOMAIN()</code> or <code>USERNAME()</code> functions combined with an Entitlements mapping table (e.g., <code>WHERE branch = current_user_branch</code>).</li>
+      </ul>
+
+      <h4>Column-Level Security (CLS)</h4>
+      <p>Restricting <em>which columns</em> a user can see. For example, an analyst can see loan balances but cannot see the customer's PAN Number.</p>
+      <ul>
+        <li><strong>In Redshift:</strong> Use the <code>GRANT</code> system to permit <code>SELECT</code> on specific columns, or construct secure Views that omit or hash sensitive PII.</li>
+      </ul>
+    </div>
+
+    <div class="qa-section">
+      <div class="qa-section-title">🧠 Test Your Knowledge — BI & Security</div>
+
+      <div class="qa-item">
+        <div class="qa-question">
+          <span class="qa-q-number">1</span>
+          <span class="qa-q-text">A Tableau dashboard tracking total outstanding portfolio balance takes 2 minutes to load via a Live connection to a complex Redshift Star Schema. How do you fix this at the database level?</span>
+          <span class="qa-toggle-icon">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p><strong>Solution: Implement a Materialized View.</strong></p>
+            <p>Instead of forcing Redshift to join the massive <code>fact_loan_account</code> to <code>dim_branch</code>, <code>dim_product</code>, and <code>dim_time</code> every time a user opens the dashboard, create a Materialized View that pre-joins and pre-aggregates the grain (e.g., aggregate balances by Date, Branch, and Product). Then point Tableau to this MV instead. Set up a daily/hourly schedule to run <code>REFRESH MATERIALIZED VIEW</code> immediately after the ETL load finishes.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question">
+          <span class="qa-q-number">2</span>
+          <span class="qa-q-text">Write a SQL view that implements a simple form of Column-Level Security (Data Masking) for the Customer PAN number.</span>
+          <span class="qa-toggle-icon">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">SQL — View with Data Masking</span><button class="code-copy">Copy</button></div>
+              <pre><span class="token-keyword">CREATE OR REPLACE VIEW</span> secure.vw_dim_customer <span class="token-keyword">AS</span>
+<span class="token-keyword">SELECT</span> 
+    customer_id,
+    customer_name,
+    credit_score,
+    <span class="token-comment">-- Mask the first 5 chars and 4 digits of PAN, expose only last char</span>
+    <span class="token-string">'XXXXX'</span> || <span class="token-function">SUBSTRING</span>(pan_number, <span class="token-number">6</span>, <span class="token-number">4</span>) || <span class="token-string">'X'</span> <span class="token-keyword">AS</span> masked_pan
+<span class="token-keyword">FROM</span> dwh.dim_customer;</pre>
+            </div>
+            <p>You then <code>REVOKE</code> access to the base <code>dim_customer</code> table for BI users, and <code>GRANT SELECT</code> on <code>secure.vw_dim_customer</code>. Tableau users can never access the raw PAN.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question">
+          <span class="qa-q-number">3</span>
+          <span class="qa-q-text">Explain how you would implement Row-Level Security (RLS) for 50 different Branch Managers in Tableau.</span>
+          <span class="qa-toggle-icon">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p><strong>Step 1: Create an Entitlements Table in Redshift:</strong> Create a mapping table (e.g., <code>rls_branch_mapping</code>) containing two columns: <code>user_email</code> and <code>branch_id</code>.</p>
+            <p><strong>Step 2: Join in Tableau:</strong> In the Tableau Data Source screen, join the primary Fact table to this <code>rls_branch_mapping</code> table on <code>branch_id</code>.</p>
+            <p><strong>Step 3: User Filter using USERNAME():</strong> Create a data source filter in Tableau using the boolean logic: <code>[user_email] = USERNAME()</code>. When a Branch Manager logs in, Tableau dynamically filters the entire dataset so the context only contains rows where the branch ID matches their email in the entitlements table.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question">
+          <span class="qa-q-number">4</span>
+          <span class="qa-q-text">Why would you sometimes use a regular Redshift table (or view) for Tableau instead of a Materialized View? When is an MV the wrong choice?</span>
+          <span class="qa-toggle-icon">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p><strong>MV is wrong when:</strong></p>
+            <ul>
+              <li><strong>Real-time data is required:</strong> An MV is stale until refreshed. If the Collections team needs intraday DPD status (e.g., "has the customer paid in the last hour?"), an MV refreshed once a day will show yesterday's data. Use a regular View or Live connection to the base table instead.</li>
+              <li><strong>Underlying tables change frequently:</strong> MVs must be refreshed after every source change. If you have 50 MVs chained together and ETL runs every 15 minutes, the refresh cascade becomes a maintenance nightmare.</li>
+              <li><strong>Complex SQL not supported:</strong> Redshift MVs do NOT support CTEs, subqueries in the FROM clause, or certain window functions. If your Tableau logic needs these, you must use a standard View or a pre-built summary table.</li>
+              <li><strong>Storage cost:</strong> MVs physically store data, doubling storage for large tables. For a 500M row fact table, the MV could consume significant disk space.</li>
+            </ul>
+            <p><strong>Best practice:</strong> Use MVs for heavy aggregation dashboards (MIS, portfolio summaries). Use regular Views/tables for operational, drill-down dashboards that need fresh data.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question">
+          <span class="qa-q-number">5</span>
+          <span class="qa-q-text">Tableau Extract vs. Live Connection: Your MIS dashboard serves 200 users daily. Which do you recommend and why?</span>
+          <span class="qa-toggle-icon">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p><strong>Use a Tableau Extract (.hyper).</strong> With 200 concurrent users, each hitting "Live" would generate 200 simultaneous SQL queries to Redshift every time someone filters or scrolls. This competes with ETL loads and will crush your Redshift WLM queue.</p>
+            <p><strong>Architecture:</strong> Schedule the extract to refresh once after the nightly ETL completes (e.g., 6:00 AM). Tableau Server's in-memory Hyper engine serves all 200 users from the cached extract — Redshift is only hit once. This reduces Redshift compute cost by ~95% for BI workloads.</p>
+            <p><strong>Exception:</strong> Use Live only for operational dashboards where 1-2 power users need real-time data (e.g., intraday collections tracking).</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question">
+          <span class="qa-q-number">6</span>
+          <span class="qa-q-text">How would you handle a situation where a Tableau dashboard shows different numbers than what the Finance team calculates in Excel?</span>
+          <span class="qa-toggle-icon">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p>This is the most common real-world problem. A systematic debugging approach:</p>
+            <ol>
+              <li><strong>Check the grain:</strong> Finance often uses loan-level data while Tableau might be aggregating at account-level. If a customer has 2 loans, the dashboard might double-count.</li>
+              <li><strong>Check the filters:</strong> The Excel report might exclude cancelled/rejected loans while the Tableau view includes them. Compare WHERE clause logic.</li>
+              <li><strong>Check the date logic:</strong> Finance might use "sanction date" while the dashboard uses "disbursement date" — these can differ by weeks.</li>
+              <li><strong>Check data freshness:</strong> The extract might have refreshed at 6 AM but the source data was updated at 8 AM. Finance has the 8 AM data.</li>
+              <li><strong>Reconciliation query:</strong> Write a SQL query that exactly replicates the Finance team's Excel formula, run it on Redshift, and compare row-by-row.</li>
+            </ol>
+            <p><strong>Prevention:</strong> Build a "Data Reconciliation" tab into every dashboard showing source row count, load timestamp, and key aggregate checksums.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question">
+          <span class="qa-q-number">7</span>
+          <span class="qa-q-text">What is the difference between Tableau Server and Tableau Online? Which would you recommend for an NBFC handling sensitive customer data?</span>
+          <span class="qa-toggle-icon">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <table class="data-table">
+              <thead><tr><th>Feature</th><th>Tableau Server</th><th>Tableau Online (Cloud)</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Hosting</strong></td><td>Self-hosted (on-prem or private cloud)</td><td>Fully managed SaaS by Salesforce</td></tr>
+                <tr><td><strong>Data Residency</strong></td><td>Full control — data stays in your VPC</td><td>Data stored in Tableau's cloud (US/EU regions)</td></tr>
+                <tr><td><strong>Security</strong></td><td>Complete firewall/VPN control</td><td>SSO + Tableau's security layer</td></tr>
+                <tr><td><strong>Cost</strong></td><td>Higher (hardware + maintenance)</td><td>Lower (subscription-based)</td></tr>
+              </tbody>
+            </table>
+            <p><strong>For NBFC:</strong> Recommend <strong>Tableau Server</strong> deployed within the AWS VPC (same as Redshift). NBFCs handle PAN numbers, Aadhar data, and financial records — RBI data localization guidelines require this data to stay within India. Tableau Online stores data outside the organization's control, which is a compliance risk.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question">
+          <span class="qa-q-number">8</span>
+          <span class="qa-q-text">How do you optimize a Tableau dashboard that has 20+ sheets and takes 30 seconds to load?</span>
+          <span class="qa-toggle-icon">▼</span>
+        </div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p><strong>Performance optimization checklist:</strong></p>
+            <ol>
+              <li><strong>Reduce the data volume at source:</strong> Point Tableau to a pre-aggregated MV instead of the raw fact table. If the dashboard shows monthly trends, aggregate to month-level in Redshift.</li>
+              <li><strong>Use context filters:</strong> A context filter (e.g., Region) runs first and reduces the dataset BEFORE other filters apply. Without it, Tableau evaluates all filters independently against the full dataset.</li>
+              <li><strong>Minimize calculated fields:</strong> Move heavy calculations (CASE WHEN, LOD expressions) into the Redshift view/MV so Tableau receives pre-computed values.</li>
+              <li><strong>Reduce sheet count:</strong> Use a tabbed layout instead of cramming 20 sheets into one dashboard. Each sheet generates a separate SQL query.</li>
+              <li><strong>Use Extracts over Live:</strong> Especially if the data doesn't need to be real-time.</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="page-navigation animate-in" style="display:flex; justify-content:space-between; margin-top:40px; padding-top:20px; border-top:1px solid rgba(255,255,255,0.1);"><a href="airflow.html" class="btn btn-secondary">← Module 4: Airflow</a><a href="behavioral.html" class="btn btn-primary">Module 6: Behavioral →</a></div>
+</main>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <p>Built with 💜 for Lakhbeer Shah's Interview Preparation — Wednesday 2026</p>
+  <div class="footer-links">
+    <a href="../index.html">Dashboard</a>
+    <a href="aws.html">AWS</a>
+    <a href="domain.html">NBFC</a>
+    <a href="sql.html">SQL</a>
+    <a href="airflow.html">Airflow</a>
+    <a href="tableau.html">Tableau</a>
+    <a href="behavioral.html">Behaviour</a>
+    <a href="interview.html">Q&amp;A</a>
+  </div>
+</footer>
+
+<script src="../assets/js/script.js"></script>
+</body>
+</html>

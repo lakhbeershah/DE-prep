@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Comprehensive Interview Prep Portal for Data Engineer role at NBFC Housing Finance — AWS Redshift, ETL, SQL, and Domain Knowledge.">
+  <title>NBFC Data Engineer Interview Mastery | Prep Portal</title>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body>
+
+<!-- ===== NAVIGATION ===== -->
+<nav class="navbar" id="navbar">
+  <div class="nav-content">
+    <a href="../index.html" class="nav-brand">
+      <span class="brand-icon">🎯</span>
+      <span>InterviewPrep</span>
+    </a>
+
+    <ul class="nav-links" id="navLinks">
+      <li><a href="aws.html">AWS</a></li>
+      <li><a href="domain.html">NBFC</a></li>
+      <li><a href="sql.html">SQL</a></li>
+      <li><a href="airflow.html">Airflow</a></li>
+      <li><a href="tableau.html">Tableau</a></li>
+      <li><a href="behavioral.html">Behaviour</a></li>
+      <li><a href="interview.html">Q&amp;A</a></li>
+    </ul>
+
+    <div class="nav-actions">
+      <div class="progress-badge">
+        <svg class="progress-ring" viewBox="0 0 20 20">
+          <circle cx="10" cy="10" r="8" fill="none" stroke="rgba(99,102,241,0.2)" stroke-width="2.5"/>
+          <circle id="progressRing" cx="10" cy="10" r="8" fill="none" stroke="#6366f1" stroke-width="2.5"
+                  stroke-dasharray="50.26" stroke-dashoffset="50.26" stroke-linecap="round"
+                  transform="rotate(-90 10 10)" style="transition: stroke-dashoffset 0.5s ease;"/>
+        </svg>
+        <span id="progressText">0% Mastered</span>
+      </div>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">🌙</button>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">☰</button>
+    </div>
+  </div>
+</nav>
+
+
+<main style="padding-top:100px;">
+<!-- ============================================================ -->
+<!-- MODULE 3: SQL MASTERY & OPTIMIZATION                         -->
+<!-- ============================================================ -->
+<section class="section" id="module-sql">
+  <div class="section-header animate-in">
+    <span class="section-badge sql">📝 Module 3</span>
+    <h2>SQL Mastery & Optimization</h2>
+    <p>Practice real-world SQL scenarios from NBFC housing finance data — window functions, CTEs, and performance tuning.</p>
+  </div>
+
+  <div class="stats-row animate-in">
+    <div class="stat-card">
+      <div class="stat-value">4</div>
+      <div class="stat-label">Subtopics</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">13</div>
+      <div class="stat-label">Scenarios</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">110</div>
+      <div class="stat-label">Minutes Est.</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">🔥</div>
+      <div class="stat-label">Most Asked</div>
+    </div>
+  </div>
+
+  <!-- SUBTOPIC A: Window Functions -->
+  <div class="subsection animate-in" id="sql-window">
+    <div class="subsection-header">
+      <div class="subsection-icon sql-icon">🪟</div>
+      <h3>A. Window Functions for Financial Data</h3>
+      <label class="progress-check">
+        <input type="checkbox" id="prog-sql-a">
+        <span class="check-custom">✓</span>
+        <span class="check-label">Mastered</span>
+      </label>
+    </div>
+
+    <div class="content-card">
+      <h4>Why Window Functions?</h4>
+      <p>Window functions perform calculations across a set of rows related to the current row — without collapsing rows like GROUP BY. They are essential for financial data because you often need to compare a row with its neighbors (previous payment, running balance, rank within a group).</p>
+
+      <h4>Key Window Functions Cheat Sheet</h4>
+      <table class="data-table">
+        <thead><tr><th>Function</th><th>Purpose</th><th>NBFC Use Case</th></tr></thead>
+        <tbody>
+          <tr><td><strong>ROW_NUMBER()</strong></td><td>Unique sequential number per partition</td><td>Find the latest payment per loan</td></tr>
+          <tr><td><strong>RANK() / DENSE_RANK()</strong></td><td>Rank with gaps / without gaps</td><td>Rank branches by disbursement amount</td></tr>
+          <tr><td><strong>LAG()</strong></td><td>Access previous row value</td><td>Compare current EMI payment with previous month</td></tr>
+          <tr><td><strong>LEAD()</strong></td><td>Access next row value</td><td>Preview next EMI due date</td></tr>
+          <tr><td><strong>SUM() OVER()</strong></td><td>Running/cumulative sum</td><td>Running total of disbursements, cumulative collections</td></tr>
+          <tr><td><strong>AVG() OVER()</strong></td><td>Moving average</td><td>3-month rolling average of collections</td></tr>
+          <tr><td><strong>NTILE()</strong></td><td>Divide rows into N groups</td><td>Divide portfolio into quartiles by outstanding</td></tr>
+          <tr><td><strong>FIRST_VALUE()</strong></td><td>First value in window frame</td><td>First EMI amount for a loan</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- SQL Scenario 1 -->
+    <div class="sql-scenario animate-in">
+      <span class="scenario-label">📋 Scenario 1</span>
+      <h4>Find the Latest Payment for Each Loan</h4>
+      <p><strong>Business Context:</strong> The collections team needs a report showing the most recent payment details for every active loan. The fact_repayment table has millions of rows with multiple payments per loan.</p>
+      <p><strong>Expected Output:</strong> One row per loan showing loan_id, latest payment_date, payment_amount, and outstanding_balance after that payment.</p>
+
+      <button class="reveal-btn">👁️ Reveal Solution</button>
+      <div class="sql-solution">
+        <div class="sql-solution-inner">
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">SQL — Latest Payment per Loan</span><button class="code-copy">Copy</button></div>
+            <pre><span class="token-keyword">WITH</span> ranked_payments <span class="token-keyword">AS</span> (
+    <span class="token-keyword">SELECT</span>
+        loan_id,
+        payment_date,
+        emi_amount,
+        outstanding_balance,
+        <span class="token-function">ROW_NUMBER</span>() <span class="token-keyword">OVER</span> (
+            <span class="token-keyword">PARTITION BY</span> loan_id
+            <span class="token-keyword">ORDER BY</span> payment_date <span class="token-keyword">DESC</span>
+        ) <span class="token-keyword">AS</span> rn
+    <span class="token-keyword">FROM</span> fact_repayment
+    <span class="token-keyword">WHERE</span> payment_date <span class="token-keyword">IS NOT NULL</span>
+)
+<span class="token-keyword">SELECT</span> loan_id, payment_date, emi_amount, outstanding_balance
+<span class="token-keyword">FROM</span> ranked_payments
+<span class="token-keyword">WHERE</span> rn = <span class="token-number">1</span>;
+
+<span class="token-comment">-- Why ROW_NUMBER() instead of MAX():</span>
+<span class="token-comment">-- MAX(payment_date) would only give the date.</span>
+<span class="token-comment">-- ROW_NUMBER() lets us get ALL columns from that row.</span>
+<span class="token-comment">-- RANK() could return ties if two payments same date.</span></pre>
+          </div>
+          <div class="key-point">
+            <span class="kp-icon">💡</span>
+            <span class="kp-text"><strong>Optimization:</strong> If this query is slow on Redshift, ensure fact_repayment has <span class="inline-code">SORTKEY(payment_date)</span> and <span class="inline-code">DISTKEY(loan_id)</span> so the PARTITION BY doesn't require a data redistribution step.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SQL Scenario 2 -->
+    <div class="sql-scenario animate-in">
+      <span class="scenario-label">📋 Scenario 2</span>
+      <h4>Running Total of Disbursements by Branch</h4>
+      <p><strong>Business Context:</strong> Management wants to see cumulative disbursement amounts per branch throughout the fiscal year to track against targets.</p>
+      <p><strong>Expected Output:</strong> month, branch_name, monthly_disbursement, cumulative_disbursement, target_achievement_%.</p>
+
+      <button class="reveal-btn">👁️ Reveal Solution</button>
+      <div class="sql-solution">
+        <div class="sql-solution-inner">
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">SQL — Cumulative Disbursement</span><button class="code-copy">Copy</button></div>
+            <pre><span class="token-keyword">WITH</span> monthly_disb <span class="token-keyword">AS</span> (
+    <span class="token-keyword">SELECT</span>
+        <span class="token-function">DATE_TRUNC</span>(<span class="token-string">'month'</span>, d.disbursement_date) <span class="token-keyword">AS</span> disb_month,
+        b.branch_name,
+        <span class="token-function">SUM</span>(d.disbursed_amount) <span class="token-keyword">AS</span> monthly_amount
+    <span class="token-keyword">FROM</span> fact_disbursement d
+    <span class="token-keyword">JOIN</span> dim_branch b <span class="token-keyword">ON</span> d.branch_id = b.branch_id
+    <span class="token-keyword">WHERE</span> d.disbursement_date >= <span class="token-string">'2024-04-01'</span>  <span class="token-comment">-- FY start</span>
+    <span class="token-keyword">GROUP BY</span> <span class="token-number">1</span>, <span class="token-number">2</span>
+)
+<span class="token-keyword">SELECT</span>
+    disb_month,
+    branch_name,
+    monthly_amount,
+    <span class="token-function">SUM</span>(monthly_amount) <span class="token-keyword">OVER</span> (
+        <span class="token-keyword">PARTITION BY</span> branch_name
+        <span class="token-keyword">ORDER BY</span> disb_month
+        <span class="token-keyword">ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW</span>
+    ) <span class="token-keyword">AS</span> cumulative_amount,
+    <span class="token-function">ROUND</span>(
+        <span class="token-function">SUM</span>(monthly_amount) <span class="token-keyword">OVER</span> (
+            <span class="token-keyword">PARTITION BY</span> branch_name
+            <span class="token-keyword">ORDER BY</span> disb_month
+            <span class="token-keyword">ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW</span>
+        ) * <span class="token-number">100.0</span> / t.annual_target,
+        <span class="token-number">2</span>
+    ) <span class="token-keyword">AS</span> target_achievement_pct
+<span class="token-keyword">FROM</span> monthly_disb md
+<span class="token-keyword">JOIN</span> branch_targets t
+    <span class="token-keyword">ON</span> md.branch_name = t.branch_name
+<span class="token-keyword">ORDER BY</span> branch_name, disb_month;</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SQL Scenario 3 -->
+    <div class="sql-scenario animate-in">
+      <span class="scenario-label">📋 Scenario 3</span>
+      <h4>Month-over-Month Payment Comparison using LAG()</h4>
+      <p><strong>Business Context:</strong> The finance team wants to see each loan's current month collection compared to the previous month to identify deteriorating accounts.</p>
+      <p><strong>Expected Output:</strong> loan_id, current_month, current_payment, previous_payment, change_pct.</p>
+
+      <button class="reveal-btn">👁️ Reveal Solution</button>
+      <div class="sql-solution">
+        <div class="sql-solution-inner">
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">SQL — MoM Payment Comparison</span><button class="code-copy">Copy</button></div>
+            <pre><span class="token-keyword">WITH</span> monthly_payments <span class="token-keyword">AS</span> (
+    <span class="token-keyword">SELECT</span>
+        loan_id,
+        <span class="token-function">DATE_TRUNC</span>(<span class="token-string">'month'</span>, payment_date) <span class="token-keyword">AS</span> payment_month,
+        <span class="token-function">SUM</span>(emi_amount) <span class="token-keyword">AS</span> total_paid
+    <span class="token-keyword">FROM</span> fact_repayment
+    <span class="token-keyword">WHERE</span> payment_date <span class="token-keyword">IS NOT NULL</span>
+    <span class="token-keyword">GROUP BY</span> loan_id, <span class="token-function">DATE_TRUNC</span>(<span class="token-string">'month'</span>, payment_date)
+)
+<span class="token-keyword">SELECT</span>
+    loan_id,
+    payment_month,
+    total_paid <span class="token-keyword">AS</span> current_payment,
+    <span class="token-function">LAG</span>(total_paid) <span class="token-keyword">OVER</span> (
+        <span class="token-keyword">PARTITION BY</span> loan_id
+        <span class="token-keyword">ORDER BY</span> payment_month
+    ) <span class="token-keyword">AS</span> previous_payment,
+    <span class="token-keyword">CASE</span>
+        <span class="token-keyword">WHEN</span> <span class="token-function">LAG</span>(total_paid) <span class="token-keyword">OVER</span> (
+            <span class="token-keyword">PARTITION BY</span> loan_id <span class="token-keyword">ORDER BY</span> payment_month
+        ) > <span class="token-number">0</span>
+        <span class="token-keyword">THEN</span> <span class="token-function">ROUND</span>(
+            (total_paid - <span class="token-function">LAG</span>(total_paid) <span class="token-keyword">OVER</span> (
+                <span class="token-keyword">PARTITION BY</span> loan_id <span class="token-keyword">ORDER BY</span> payment_month
+            )) * <span class="token-number">100.0</span> /
+            <span class="token-function">LAG</span>(total_paid) <span class="token-keyword">OVER</span> (
+                <span class="token-keyword">PARTITION BY</span> loan_id <span class="token-keyword">ORDER BY</span> payment_month
+            ), <span class="token-number">2</span>
+        )
+        <span class="token-keyword">ELSE NULL</span>
+    <span class="token-keyword">END</span> <span class="token-keyword">AS</span> change_pct
+<span class="token-keyword">FROM</span> monthly_payments
+<span class="token-keyword">ORDER BY</span> loan_id, payment_month;</pre>
+          </div>
+          <p><strong>Insight:</strong> Loans where <span class="inline-code">change_pct</span> is negative or <span class="inline-code">current_payment</span> dropped to 0 are early warning signals. Feed these to the collections team for proactive intervention before the loan crosses into SMA-2 or NPA.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUBTOPIC B: CTEs -->
+  <div class="subsection animate-in" id="sql-ctes">
+    <div class="subsection-header">
+      <div class="subsection-icon sql-icon">🧩</div>
+      <h3>B. Common Table Expressions (CTEs) for Complex Logic</h3>
+      <label class="progress-check">
+        <input type="checkbox" id="prog-sql-b">
+        <span class="check-custom">✓</span>
+        <span class="check-label">Mastered</span>
+      </label>
+    </div>
+
+    <div class="content-card">
+      <h4>Why CTEs?</h4>
+      <p>CTEs (<span class="inline-code">WITH</span> clauses) break complex queries into readable, logical steps. In financial reporting, they're essential for multi-step calculations like portfolio analysis, vintage analysis, and regulatory reports where you need to join multiple aggregations.</p>
+      <ul>
+        <li><strong>Readability:</strong> Each CTE is a named logical step — easier to review and debug than nested subqueries.</li>
+        <li><strong>Reusability:</strong> A CTE can be referenced multiple times in the main query (e.g., for self-joins).</li>
+        <li><strong>Redshift Optimization:</strong> Redshift materializes CTEs by default — each CTE is executed once and stored as a temp result, avoiding redundant computation.</li>
+      </ul>
+    </div>
+
+    <!-- SQL Scenario 4 -->
+    <div class="sql-scenario animate-in">
+      <span class="scenario-label">📋 Scenario 4</span>
+      <h4>Portfolio Analysis — Product-wise and Branch-wise Summary</h4>
+      <p><strong>Business Context:</strong> Create a comprehensive portfolio summary showing total AUM, loan count, average ticket size, and NPA % broken down by product type and branch region.</p>
+
+      <button class="reveal-btn">👁️ Reveal Solution</button>
+      <div class="sql-solution">
+        <div class="sql-solution-inner">
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">SQL — Portfolio Summary with Multiple CTEs</span><button class="code-copy">Copy</button></div>
+            <pre><span class="token-keyword">WITH</span>
+<span class="token-comment">-- CTE 1: Active loan portfolio</span>
+active_loans <span class="token-keyword">AS</span> (
+    <span class="token-keyword">SELECT</span>
+        l.loan_id,
+        p.product_type,
+        b.region,
+        l.outstanding_balance,
+        l.sanctioned_amount,
+        l.dpd,
+        <span class="token-keyword">CASE WHEN</span> l.dpd > <span class="token-number">90</span> <span class="token-keyword">THEN</span> <span class="token-number">1</span> <span class="token-keyword">ELSE</span> <span class="token-number">0</span> <span class="token-keyword">END</span> <span class="token-keyword">AS</span> is_npa
+    <span class="token-keyword">FROM</span> fact_loan_account l
+    <span class="token-keyword">JOIN</span> dim_product p <span class="token-keyword">ON</span> l.product_id = p.product_id
+    <span class="token-keyword">JOIN</span> dim_branch b <span class="token-keyword">ON</span> l.branch_id = b.branch_id
+    <span class="token-keyword">WHERE</span> l.loan_status = <span class="token-string">'ACTIVE'</span>
+),
+
+<span class="token-comment">-- CTE 2: Product-wise aggregation</span>
+product_summary <span class="token-keyword">AS</span> (
+    <span class="token-keyword">SELECT</span>
+        product_type,
+        <span class="token-function">COUNT</span>(*) <span class="token-keyword">AS</span> loan_count,
+        <span class="token-function">SUM</span>(outstanding_balance) <span class="token-keyword">AS</span> aum,
+        <span class="token-function">ROUND</span>(<span class="token-function">AVG</span>(sanctioned_amount), <span class="token-number">0</span>) <span class="token-keyword">AS</span> avg_ticket_size,
+        <span class="token-function">SUM</span>(is_npa) <span class="token-keyword">AS</span> npa_count,
+        <span class="token-function">ROUND</span>(<span class="token-function">SUM</span>(<span class="token-keyword">CASE WHEN</span> is_npa = <span class="token-number">1</span> <span class="token-keyword">THEN</span> outstanding_balance <span class="token-keyword">ELSE</span> <span class="token-number">0</span> <span class="token-keyword">END</span>)
+            * <span class="token-number">100.0</span> / <span class="token-function">SUM</span>(outstanding_balance), <span class="token-number">2</span>) <span class="token-keyword">AS</span> gnpa_pct
+    <span class="token-keyword">FROM</span> active_loans
+    <span class="token-keyword">GROUP BY</span> product_type
+),
+
+<span class="token-comment">-- CTE 3: Region-wise aggregation</span>
+region_summary <span class="token-keyword">AS</span> (
+    <span class="token-keyword">SELECT</span>
+        region,
+        <span class="token-function">COUNT</span>(*) <span class="token-keyword">AS</span> loan_count,
+        <span class="token-function">SUM</span>(outstanding_balance) <span class="token-keyword">AS</span> aum,
+        <span class="token-function">ROUND</span>(<span class="token-function">SUM</span>(<span class="token-keyword">CASE WHEN</span> is_npa = <span class="token-number">1</span> <span class="token-keyword">THEN</span> outstanding_balance <span class="token-keyword">ELSE</span> <span class="token-number">0</span> <span class="token-keyword">END</span>)
+            * <span class="token-number">100.0</span> / <span class="token-function">SUM</span>(outstanding_balance), <span class="token-number">2</span>) <span class="token-keyword">AS</span> gnpa_pct
+    <span class="token-keyword">FROM</span> active_loans
+    <span class="token-keyword">GROUP BY</span> region
+)
+
+<span class="token-comment">-- Final: Display both summaries</span>
+<span class="token-keyword">SELECT</span> <span class="token-string">'BY PRODUCT'</span> <span class="token-keyword">AS</span> dimension, product_type <span class="token-keyword">AS</span> category,
+       loan_count, aum, avg_ticket_size, gnpa_pct
+<span class="token-keyword">FROM</span> product_summary
+<span class="token-keyword">UNION ALL</span>
+<span class="token-keyword">SELECT</span> <span class="token-string">'BY REGION'</span>, region, loan_count, aum, <span class="token-keyword">NULL</span>, gnpa_pct
+<span class="token-keyword">FROM</span> region_summary
+<span class="token-keyword">ORDER BY</span> dimension, aum <span class="token-keyword">DESC</span>;</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SQL Scenario 5 -->
+    <div class="sql-scenario animate-in">
+      <span class="scenario-label">📋 Scenario 5</span>
+      <h4>Vintage Analysis — Loan Performance by Origination Month</h4>
+      <p><strong>Business Context:</strong> Risk team wants to analyze if loans originated in certain months have higher NPA rates (vintage analysis). This helps identify if underwriting standards slipped during high-volume months.</p>
+
+      <button class="reveal-btn">👁️ Reveal Solution</button>
+      <div class="sql-solution">
+        <div class="sql-solution-inner">
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">SQL — Vintage Analysis</span><button class="code-copy">Copy</button></div>
+            <pre><span class="token-keyword">WITH</span> loan_vintage <span class="token-keyword">AS</span> (
+    <span class="token-keyword">SELECT</span>
+        <span class="token-function">DATE_TRUNC</span>(<span class="token-string">'month'</span>, disbursement_date) <span class="token-keyword">AS</span> vintage_month,
+        loan_id,
+        disbursed_amount,
+        outstanding_balance,
+        dpd,
+        <span class="token-function">DATEDIFF</span>(<span class="token-string">'month'</span>, disbursement_date, <span class="token-function">CURRENT_DATE</span>) <span class="token-keyword">AS</span> months_on_book
+    <span class="token-keyword">FROM</span> fact_loan_account
+    <span class="token-keyword">WHERE</span> loan_status = <span class="token-string">'ACTIVE'</span>
+)
+<span class="token-keyword">SELECT</span>
+    vintage_month,
+    <span class="token-function">COUNT</span>(*) <span class="token-keyword">AS</span> total_loans,
+    <span class="token-function">SUM</span>(disbursed_amount) <span class="token-keyword">AS</span> total_disbursed,
+    <span class="token-function">AVG</span>(months_on_book) <span class="token-keyword">AS</span> avg_age_months,
+    <span class="token-function">SUM</span>(<span class="token-keyword">CASE WHEN</span> dpd > <span class="token-number">90</span> <span class="token-keyword">THEN</span> <span class="token-number">1</span> <span class="token-keyword">ELSE</span> <span class="token-number">0</span> <span class="token-keyword">END</span>) <span class="token-keyword">AS</span> npa_count,
+    <span class="token-function">ROUND</span>(
+        <span class="token-function">SUM</span>(<span class="token-keyword">CASE WHEN</span> dpd > <span class="token-number">90</span> <span class="token-keyword">THEN</span> <span class="token-number">1</span> <span class="token-keyword">ELSE</span> <span class="token-number">0</span> <span class="token-keyword">END</span>) * <span class="token-number">100.0</span>
+        / <span class="token-function">COUNT</span>(*), <span class="token-number">2</span>
+    ) <span class="token-keyword">AS</span> npa_rate_pct,
+    <span class="token-function">ROUND</span>(
+        <span class="token-function">SUM</span>(<span class="token-keyword">CASE WHEN</span> dpd > <span class="token-number">30</span> <span class="token-keyword">THEN</span> <span class="token-number">1</span> <span class="token-keyword">ELSE</span> <span class="token-number">0</span> <span class="token-keyword">END</span>) * <span class="token-number">100.0</span>
+        / <span class="token-function">COUNT</span>(*), <span class="token-number">2</span>
+    ) <span class="token-keyword">AS</span> delinquency_rate_30plus_pct
+<span class="token-keyword">FROM</span> loan_vintage
+<span class="token-keyword">GROUP BY</span> vintage_month
+<span class="token-keyword">ORDER BY</span> vintage_month;</pre>
+          </div>
+          <p><strong>Key insight:</strong> If vintage March 2023 shows 8% NPA rate while others show ~3%, it indicates potential underwriting lapses during that origination month — possibly due to year-end target pressure causing relaxed credit standards.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SQL Scenario 6 -->
+    <div class="sql-scenario animate-in">
+      <span class="scenario-label">📋 Scenario 6</span>
+      <h4>Data Reconciliation — Source vs. Warehouse Count Check</h4>
+      <p><strong>Business Context:</strong> After the nightly ETL load, you need to verify that all records from the MySQL source were correctly loaded into Redshift. Write a reconciliation query.</p>
+
+      <button class="reveal-btn">👁️ Reveal Solution</button>
+      <div class="sql-solution">
+        <div class="sql-solution-inner">
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">SQL — Reconciliation Framework</span><button class="code-copy">Copy</button></div>
+            <pre><span class="token-comment">-- Run this in Redshift after ETL completes</span>
+<span class="token-keyword">WITH</span>
+source_counts <span class="token-keyword">AS</span> (
+    <span class="token-comment">-- From the ETL audit log (populated by Glue job)</span>
+    <span class="token-keyword">SELECT</span> table_name, record_count <span class="token-keyword">AS</span> source_count,
+           load_date, checksum <span class="token-keyword">AS</span> source_checksum
+    <span class="token-keyword">FROM</span> etl_audit.source_metrics
+    <span class="token-keyword">WHERE</span> load_date = <span class="token-function">CURRENT_DATE</span>
+),
+target_counts <span class="token-keyword">AS</span> (
+    <span class="token-keyword">SELECT</span> <span class="token-string">'loan_applications'</span> <span class="token-keyword">AS</span> table_name,
+           <span class="token-function">COUNT</span>(*) <span class="token-keyword">AS</span> target_count,
+           <span class="token-function">SUM</span>(loan_amount) <span class="token-keyword">AS</span> target_checksum
+    <span class="token-keyword">FROM</span> staging.stg_loan_applications
+    <span class="token-keyword">WHERE</span> etl_load_date = <span class="token-function">CURRENT_DATE</span>
+    <span class="token-keyword">UNION ALL</span>
+    <span class="token-keyword">SELECT</span> <span class="token-string">'repayments'</span>,
+           <span class="token-function">COUNT</span>(*), <span class="token-function">SUM</span>(emi_amount)
+    <span class="token-keyword">FROM</span> staging.stg_repayments
+    <span class="token-keyword">WHERE</span> etl_load_date = <span class="token-function">CURRENT_DATE</span>
+)
+<span class="token-keyword">SELECT</span>
+    s.table_name,
+    s.source_count,
+    t.target_count,
+    s.source_count - t.target_count <span class="token-keyword">AS</span> count_diff,
+    <span class="token-keyword">CASE</span>
+        <span class="token-keyword">WHEN</span> s.source_count = t.target_count
+            <span class="token-keyword">AND</span> s.source_checksum = t.target_checksum
+        <span class="token-keyword">THEN</span> <span class="token-string">'✅ PASS'</span>
+        <span class="token-keyword">WHEN</span> s.source_count = t.target_count
+        <span class="token-keyword">THEN</span> <span class="token-string">'⚠️ COUNT MATCH, CHECKSUM MISMATCH'</span>
+        <span class="token-keyword">ELSE</span> <span class="token-string">'❌ FAIL'</span>
+    <span class="token-keyword">END</span> <span class="token-keyword">AS</span> reconciliation_status
+<span class="token-keyword">FROM</span> source_counts s
+<span class="token-keyword">JOIN</span> target_counts t <span class="token-keyword">ON</span> s.table_name = t.table_name;</pre>
+          </div>
+          <p><strong>Best Practice:</strong> Always check both <strong>count</strong> (number of rows) and <strong>checksum</strong> (sum of a key numeric field like loan_amount). Count match but checksum mismatch indicates data corruption — values were changed during ETL.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUBTOPIC C: Performance Tuning -->
+  <div class="subsection animate-in" id="sql-perf">
+    <div class="subsection-header">
+      <div class="subsection-icon sql-icon">⚡</div>
+      <h3>C. Performance Tuning (Your 70% Achievement)</h3>
+      <label class="progress-check">
+        <input type="checkbox" id="prog-sql-c">
+        <span class="check-custom">✓</span>
+        <span class="check-label">Mastered</span>
+      </label>
+    </div>
+
+    <div class="content-card">
+      <h4>SQL Optimization Techniques</h4>
+      <p>These are the techniques you can reference when explaining your "70% query time reduction" achievement:</p>
+
+      <h4>1. Indexing Strategy (MySQL)</h4>
+      <ul>
+        <li><strong>B-Tree Index:</strong> Default index type. Best for equality (=), range (<, >, BETWEEN), ORDER BY and GROUP BY operations. Add indexes on columns used in WHERE, JOIN, and ORDER BY.</li>
+        <li><strong>Composite Index:</strong> <span class="inline-code">CREATE INDEX idx_loan_date ON payments(loan_id, payment_date)</span> — follows leftmost prefix rule, same as Redshift compound sort keys.</li>
+        <li><strong>Covering Index:</strong> An index that includes all columns needed by the query, so MySQL reads directly from the index without touching the table data (index-only scan).</li>
+        <li><strong>EXPLAIN ANALYZE:</strong> Always check the execution plan. Look for "Using filesort" (bad), "Using temporary" (bad), "Using index" (good).</li>
+      </ul>
+
+      <h4>2. Query Rewriting</h4>
+      <table class="data-table">
+        <thead><tr><th>Anti-Pattern</th><th>Optimized</th><th>Why</th></tr></thead>
+        <tbody>
+          <tr><td><span class="inline-code">SELECT *</span></td><td><span class="inline-code">SELECT col1, col2</span></td><td>Reduces I/O, especially in columnar storage (Redshift reads only needed columns)</td></tr>
+          <tr><td><span class="inline-code">WHERE YEAR(date_col) = 2024</span></td><td><span class="inline-code">WHERE date_col >= '2024-01-01' AND date_col < '2025-01-01'</span></td><td>Functions on columns prevent index usage (non-sargable)</td></tr>
+          <tr><td><span class="inline-code">WHERE col IN (SELECT ...)</span></td><td><span class="inline-code">WHERE EXISTS (SELECT 1 ...)</span></td><td>EXISTS stops at first match; IN evaluates entire subquery</td></tr>
+          <tr><td><span class="inline-code">NOT IN (nullable subquery)</span></td><td><span class="inline-code">NOT EXISTS</span></td><td>NOT IN returns wrong results if subquery has NULLs</td></tr>
+          <tr><td>Correlated subquery</td><td>JOIN or CTE</td><td>Correlated subqueries execute once per outer row</td></tr>
+        </tbody>
+      </table>
+
+      <h4>3. Redshift-Specific Tuning</h4>
+      <ul>
+        <li><strong>COPY command for bulk loading:</strong> Always use COPY (not INSERT) for loading data from S3. COPY uses parallel loading across all slices.</li>
+        <li><strong>SORTKEY alignment:</strong> Ensure WHERE clause filters align with the leading SORTKEY column to maximize zone map skipping.</li>
+        <li><strong>DISTKEY for co-located JOINs:</strong> Set DISTKEY on the most common JOIN column to eliminate inter-node data shuffling.</li>
+        <li><strong>Compression encoding:</strong> Let Redshift auto-select with <span class="inline-code">ENCODE AUTO</span> or analyze with <span class="inline-code">ANALYZE COMPRESSION</span> to find the optimal encoding per column.</li>
+        <li><strong>WLM (Workload Management):</strong> Configure query queues to separate fast dashboard queries from heavy ETL loads. Prevent ETL from starving BI queries.</li>
+      </ul>
+    </div>
+
+    <!-- SQL Scenario 7, 8, 9 -->
+    <div class="sql-scenario animate-in">
+      <span class="scenario-label">📋 Scenario 7</span>
+      <h4>Optimize a Slow NPA Report Query</h4>
+      <p><strong>Business Context:</strong> The following query takes 45 seconds. Optimize it to under 10 seconds.</p>
+      <div class="code-block">
+        <div class="code-header"><span class="code-lang">SQL — Slow Query (Before)</span><button class="code-copy">Copy</button></div>
+        <pre><span class="token-comment">-- SLOW: 45 seconds</span>
+<span class="token-keyword">SELECT</span> *
+<span class="token-keyword">FROM</span> fact_loan_account l
+<span class="token-keyword">WHERE</span> <span class="token-function">DATEDIFF</span>(<span class="token-string">'day'</span>,
+    (<span class="token-keyword">SELECT</span> <span class="token-function">MAX</span>(emi_due_date)
+     <span class="token-keyword">FROM</span> fact_repayment r
+     <span class="token-keyword">WHERE</span> r.loan_id = l.loan_id
+       <span class="token-keyword">AND</span> r.payment_date <span class="token-keyword">IS NULL</span>),
+    <span class="token-function">CURRENT_DATE</span>) > <span class="token-number">90</span>;</pre>
+      </div>
+
+      <button class="reveal-btn">👁️ Reveal Solution</button>
+      <div class="sql-solution">
+        <div class="sql-solution-inner">
+          <p><strong>Problems identified:</strong></p>
+          <ol>
+            <li><span class="inline-code">SELECT *</span> — reads all columns from columnar storage</li>
+            <li>Correlated subquery — executes once per loan (could be millions of executions)</li>
+            <li>DATEDIFF on computed result — can't be pushed to zone maps</li>
+          </ol>
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">SQL — Optimized Query (After)</span><button class="code-copy">Copy</button></div>
+            <pre><span class="token-comment">-- FAST: 5 seconds (88% reduction)</span>
+<span class="token-keyword">WITH</span> overdue_loans <span class="token-keyword">AS</span> (
+    <span class="token-keyword">SELECT</span>
+        loan_id,
+        <span class="token-function">MIN</span>(emi_due_date) <span class="token-keyword">AS</span> earliest_overdue_date
+    <span class="token-keyword">FROM</span> fact_repayment
+    <span class="token-keyword">WHERE</span> payment_date <span class="token-keyword">IS NULL</span>
+      <span class="token-keyword">AND</span> emi_due_date < <span class="token-function">CURRENT_DATE</span> - <span class="token-number">90</span>  <span class="token-comment">-- Pushes filter to scan level</span>
+    <span class="token-keyword">GROUP BY</span> loan_id
+)
+<span class="token-keyword">SELECT</span>
+    l.loan_id,
+    l.customer_id,
+    l.outstanding_balance,
+    l.sanctioned_amount,
+    l.interest_rate,
+    o.earliest_overdue_date,
+    <span class="token-function">DATEDIFF</span>(<span class="token-string">'day'</span>, o.earliest_overdue_date, <span class="token-function">CURRENT_DATE</span>) <span class="token-keyword">AS</span> dpd
+<span class="token-keyword">FROM</span> fact_loan_account l
+<span class="token-keyword">INNER JOIN</span> overdue_loans o <span class="token-keyword">ON</span> l.loan_id = o.loan_id
+<span class="token-keyword">WHERE</span> l.loan_status = <span class="token-string">'ACTIVE'</span>;</pre>
+          </div>
+          <p><strong>What changed:</strong></p>
+          <ul>
+            <li>Replaced correlated subquery with a CTE + JOIN — single scan instead of per-row execution</li>
+            <li>Specified only needed columns instead of SELECT *</li>
+            <li>Pushed the 90-day filter into the CTE's WHERE clause so Redshift can use zone maps to skip blocks</li>
+            <li>Used MIN(emi_due_date) instead of MAX — DPD is measured from the <strong>oldest</strong> unpaid EMI</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="sql-scenario animate-in">
+      <span class="scenario-label">📋 Scenario 8</span>
+      <h4>Top 5 Highest Outstanding Loans per Branch</h4>
+      <p><strong>Business Context:</strong> Management wants to identify the top 5 loans by outstanding balance in each branch for concentrated risk monitoring.</p>
+
+      <button class="reveal-btn">👁️ Reveal Solution</button>
+      <div class="sql-solution">
+        <div class="sql-solution-inner">
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">SQL — Top N per Group</span><button class="code-copy">Copy</button></div>
+            <pre><span class="token-keyword">WITH</span> ranked <span class="token-keyword">AS</span> (
+    <span class="token-keyword">SELECT</span>
+        b.branch_name,
+        l.loan_id,
+        c.customer_name,
+        l.outstanding_balance,
+        l.dpd,
+        p.product_type,
+        <span class="token-function">ROW_NUMBER</span>() <span class="token-keyword">OVER</span> (
+            <span class="token-keyword">PARTITION BY</span> b.branch_id
+            <span class="token-keyword">ORDER BY</span> l.outstanding_balance <span class="token-keyword">DESC</span>
+        ) <span class="token-keyword">AS</span> rank_in_branch
+    <span class="token-keyword">FROM</span> fact_loan_account l
+    <span class="token-keyword">JOIN</span> dim_branch b <span class="token-keyword">ON</span> l.branch_id = b.branch_id
+    <span class="token-keyword">JOIN</span> dim_customer c <span class="token-keyword">ON</span> l.customer_id = c.customer_id
+        <span class="token-keyword">AND</span> c.is_current = <span class="token-keyword">TRUE</span>
+    <span class="token-keyword">JOIN</span> dim_product p <span class="token-keyword">ON</span> l.product_id = p.product_id
+    <span class="token-keyword">WHERE</span> l.loan_status = <span class="token-string">'ACTIVE'</span>
+)
+<span class="token-keyword">SELECT</span> branch_name, loan_id, customer_name,
+       outstanding_balance, dpd, product_type
+<span class="token-keyword">FROM</span> ranked
+<span class="token-keyword">WHERE</span> rank_in_branch <= <span class="token-number">5</span>
+<span class="token-keyword">ORDER BY</span> branch_name, rank_in_branch;</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sql-scenario animate-in">
+      <span class="scenario-label">📋 Scenario 9</span>
+      <h4>YoY Disbursement Growth Comparison</h4>
+      <p><strong>Business Context:</strong> Board presentation needs Year-over-Year growth comparison of monthly disbursements for the last 2 fiscal years.</p>
+
+      <button class="reveal-btn">👁️ Reveal Solution</button>
+      <div class="sql-solution">
+        <div class="sql-solution-inner">
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">SQL — YoY Growth with Window Function</span><button class="code-copy">Copy</button></div>
+            <pre><span class="token-keyword">WITH</span> monthly_disb <span class="token-keyword">AS</span> (
+    <span class="token-keyword">SELECT</span>
+        <span class="token-function">EXTRACT</span>(<span class="token-keyword">YEAR</span> <span class="token-keyword">FROM</span> disbursement_date) <span class="token-keyword">AS</span> yr,
+        <span class="token-function">EXTRACT</span>(<span class="token-keyword">MONTH</span> <span class="token-keyword">FROM</span> disbursement_date) <span class="token-keyword">AS</span> mn,
+        <span class="token-function">SUM</span>(disbursed_amount) <span class="token-keyword">AS</span> total_disbursed,
+        <span class="token-function">COUNT</span>(*) <span class="token-keyword">AS</span> loan_count
+    <span class="token-keyword">FROM</span> fact_disbursement
+    <span class="token-keyword">WHERE</span> disbursement_date >= <span class="token-function">DATEADD</span>(<span class="token-string">'year'</span>, <span class="token-number">-2</span>, <span class="token-function">CURRENT_DATE</span>)
+    <span class="token-keyword">GROUP BY</span> <span class="token-number">1</span>, <span class="token-number">2</span>
+)
+<span class="token-keyword">SELECT</span>
+    yr,
+    mn,
+    total_disbursed,
+    loan_count,
+    <span class="token-function">LAG</span>(total_disbursed) <span class="token-keyword">OVER</span> (
+        <span class="token-keyword">PARTITION BY</span> mn
+        <span class="token-keyword">ORDER BY</span> yr
+    ) <span class="token-keyword">AS</span> prev_year_amount,
+    <span class="token-keyword">CASE</span>
+        <span class="token-keyword">WHEN</span> <span class="token-function">LAG</span>(total_disbursed) <span class="token-keyword">OVER</span> (
+            <span class="token-keyword">PARTITION BY</span> mn <span class="token-keyword">ORDER BY</span> yr
+        ) > <span class="token-number">0</span>
+        <span class="token-keyword">THEN</span> <span class="token-function">ROUND</span>(
+            (total_disbursed - <span class="token-function">LAG</span>(total_disbursed) <span class="token-keyword">OVER</span> (
+                <span class="token-keyword">PARTITION BY</span> mn <span class="token-keyword">ORDER BY</span> yr
+            )) * <span class="token-number">100.0</span> /
+            <span class="token-function">LAG</span>(total_disbursed) <span class="token-keyword">OVER</span> (
+                <span class="token-keyword">PARTITION BY</span> mn <span class="token-keyword">ORDER BY</span> yr
+            ), <span class="token-number">2</span>
+        )
+    <span class="token-keyword">END</span> <span class="token-keyword">AS</span> yoy_growth_pct
+<span class="token-keyword">FROM</span> monthly_disb
+<span class="token-keyword">ORDER BY</span> yr, mn;
+
+<span class="token-comment">-- Key: PARTITION BY month, ORDER BY year</span>
+<span class="token-comment">-- This compares Jan 2024 with Jan 2023, Feb 2024 with Feb 2023, etc.</span></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SQL Scenario 13 -->
+    <div class="sql-scenario animate-in">
+      <span class="scenario-label">📋 Scenario 13</span>
+      <h4>Advanced Joins & Execution Plans (Anti-Join)</h4>
+      <p><strong>Business Context:</strong> Find all active loans that have <strong>NOT</strong> received any payments in the last 6 months. Explain how you would verify the performance of your query using an Execution Plan.</p>
+
+      <button class="reveal-btn">👁️ Reveal Solution</button>
+      <div class="sql-solution">
+        <div class="sql-solution-inner">
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">SQL — Left Anti-Join</span><button class="code-copy">Copy</button></div>
+            <pre><span class="token-comment">-- Optimized Anti-Join Approach</span>
+<span class="token-keyword">SELECT</span> l.loan_id, l.customer_id, l.outstanding_balance
+<span class="token-keyword">FROM</span> fact_loan_account l
+<span class="token-keyword">LEFT JOIN</span> fact_repayment r 
+  <span class="token-keyword">ON</span> l.loan_id = r.loan_id
+  <span class="token-keyword">AND</span> r.payment_date >= <span class="token-function">DATEADD</span>(<span class="token-string">'month'</span>, <span class="token-number">-6</span>, <span class="token-function">CURRENT_DATE</span>)
+<span class="token-keyword">WHERE</span> l.loan_status = <span class="token-string">'ACTIVE'</span>
+  <span class="token-keyword">AND</span> r.loan_id <span class="token-keyword">IS NULL</span>;  <span class="token-comment">-- The Anti-Join filter</span></pre>
+          </div>
+          <p><strong>Reading the Execution Plan:</strong> To verify performance, prefix the query with <code>EXPLAIN</code>. You should look for a <strong>Hash Right Join</strong> or <strong>Hash Left Join</strong> in the plan. If you had used an inefficient <code>NOT IN</code> clause instead of a Left Join, the EXPLAIN plan might reveal a catastrophic <strong>Nested Loop Join</strong>, which performs extremely poorly on large transactional datasets.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- SUBTOPIC D: Advanced SQL for Data Engineering -->
+  <div class="subsection animate-in" id="sql-advanced">
+    <div class="subsection-header">
+      <div class="subsection-icon sql-icon">🧠</div>
+      <h3>D. Advanced SQL for Data Engineering (5+ YOE)</h3>
+      <label class="progress-check">
+        <input type="checkbox" id="prog-sql-d">
+        <span class="check-custom">✓</span>
+        <span class="check-label">Mastered</span>
+      </label>
+    </div>
+
+    <div class="content-card">
+      <h4>Senior-Level SQL Concepts</h4>
+      <p>As a 5+ YOE Data Engineer, interviewers expect you to handle edge cases, semi-structured data, and multi-dimensional aggregations without resorting to inefficient workarounds.</p>
+      <ul>
+        <li><strong>ROLLUP & CUBE:</strong> Used for generating subtotals and super-aggregates in a single query, eliminating the need for multiple GROUP BYs UNIONed together.</li>
+        <li><strong>Approximate Aggregation:</strong> Using <code>APPROX_COUNT_DISTINCT()</code> (HyperLogLog) instead of <code>COUNT(DISTINCT x)</code> when exploring billions of rows in Redshift to drastically improve performance while accepting a ~2% error rate.</li>
+        <li><strong>Semi-Structured Data:</strong> Parsing JSON natively in Redshift using <code>JSON_EXTRACT_PATH_TEXT()</code> or SUPER data types instead of flattening data inefficiently in ETL.</li>
+      </ul>
+    </div>
+
+    <!-- SQL Scenario 10 -->
+    <div class="sql-scenario animate-in">
+      <span class="scenario-label">📋 Scenario 10</span>
+      <h4>Multi-Dimensional Subtotals using ROLLUP</h4>
+      <p><strong>Business Context:</strong> The finance team needs a monthly disbursements report broken down by region and branch, with automatic subtotals for each region and a grand total at the bottom.</p>
+
+      <button class="reveal-btn">👁️ Reveal Solution</button>
+      <div class="sql-solution">
+        <div class="sql-solution-inner">
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">SQL — GROUP BY ROLLUP</span><button class="code-copy">Copy</button></div>
+            <pre><span class="token-keyword">SELECT</span> 
+    <span class="token-function">COALESCE</span>(region, <span class="token-string">'GRAND TOTAL'</span>) <span class="token-keyword">AS</span> region,
+    <span class="token-function">COALESCE</span>(branch_name, <span class="token-keyword">CASE WHEN</span> region <span class="token-keyword">IS NOT NULL THEN</span> <span class="token-string">'REGION TOTAL'</span> <span class="token-keyword">ELSE</span> <span class="token-string">''</span> <span class="token-keyword">END</span>) <span class="token-keyword">AS</span> branch_name,
+    <span class="token-function">SUM</span>(disbursed_amount) <span class="token-keyword">AS</span> total_disbursed
+<span class="token-keyword">FROM</span> fact_disbursement d
+<span class="token-keyword">JOIN</span> dim_branch b <span class="token-keyword">ON</span> d.branch_id = b.branch_id
+<span class="token-keyword">WHERE</span> d.disbursement_date >= <span class="token-string">'2024-01-01'</span>
+<span class="token-keyword">GROUP BY ROLLUP</span> (region, branch_name)
+<span class="token-keyword">ORDER BY</span> 
+    b.region <span class="token-keyword">NULLS LAST</span>, 
+    b.branch_name <span class="token-keyword">NULLS LAST</span>;</pre>
+          </div>
+          <p><strong>Why this is senior-level:</strong> Juniors will write 3 separate queries (Grand Total, Region Total, Branch Level) and <code>UNION ALL</code> them together, which forces Redshift to scan the massive fact table 3 times. ROLLUP does it in a single scan.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SQL Scenario 11 -->
+    <div class="sql-scenario animate-in">
+      <span class="scenario-label">📋 Scenario 11</span>
+      <h4>Parsing JSON Logs in Redshift</h4>
+      <p><strong>Business Context:</strong> The Loan Origination System (LOS) sends application metadata as a raw JSON string in a single column <code>application_payload</code>. Extract the applicant's credit score from the JSON.</p>
+
+      <button class="reveal-btn">👁️ Reveal Solution</button>
+      <div class="sql-solution">
+        <div class="sql-solution-inner">
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">SQL — Redshift JSON Parsing</span><button class="code-copy">Copy</button></div>
+            <pre><span class="token-comment">-- Assuming JSON structure: {"applicant": {"details": {"credit_score": 750, "income": 50000}}}</span>
+<span class="token-keyword">SELECT</span> 
+    application_id,
+    <span class="token-function">CAST</span>(<span class="token-function">JSON_EXTRACT_PATH_TEXT</span>(application_payload, <span class="token-string">'applicant'</span>, <span class="token-string">'details'</span>, <span class="token-string">'credit_score'</span>) <span class="token-keyword">AS INT</span>) <span class="token-keyword">AS</span> credit_score
+<span class="token-keyword">FROM</span> raw_los_applications
+<span class="token-keyword">WHERE</span> <span class="token-function">JSON_EXTRACT_PATH_TEXT</span>(application_payload, <span class="token-string">'applicant'</span>, <span class="token-string">'details'</span>, <span class="token-string">'credit_score'</span>) <> <span class="token-string">''</span>;</pre>
+          </div>
+          <p><strong>Optimization Note:</strong> JSON parsing on-the-fly is CPU-intensive. Mention in interviews that while this works for exploration, for a production pipeline, you would extract this during the ETL/ELT phase and store it as a native INT column.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SQL Scenario 12 -->
+    <div class="sql-scenario animate-in">
+      <span class="scenario-label">📋 Scenario 12</span>
+      <h4>Recursive CTE for Hierarchy (Employee/Manager)</h4>
+      <p><strong>Business Context:</strong> The sales team wants to see the total number of loans originated under the Regional Manager "Rajesh", including all loans done by the Area Managers and Branch Managers reporting under him.</p>
+
+      <button class="reveal-btn">👁️ Reveal Solution</button>
+      <div class="sql-solution">
+        <div class="sql-solution-inner">
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">SQL — Recursive CTE</span><button class="code-copy">Copy</button></div>
+            <pre><span class="token-keyword">WITH RECURSIVE</span> employee_hierarchy <span class="token-keyword">AS</span> (
+    <span class="token-comment">-- Base Case: Get Rajesh</span>
+    <span class="token-keyword">SELECT</span> emp_id, emp_name, manager_id
+    <span class="token-keyword">FROM</span> dim_employee
+    <span class="token-keyword">WHERE</span> emp_name = <span class="token-string">'Rajesh'</span>
+    
+    <span class="token-keyword">UNION ALL</span>
+    
+    <span class="token-comment">-- Recursive Case: Find everyone who reports to the people above</span>
+    <span class="token-keyword">SELECT</span> e.emp_id, e.emp_name, e.manager_id
+    <span class="token-keyword">FROM</span> dim_employee e
+    <span class="token-keyword">INNER JOIN</span> employee_hierarchy h <span class="token-keyword">ON</span> e.manager_id = h.emp_id
+)
+<span class="token-keyword">SELECT</span> 
+    <span class="token-function">COUNT</span>(d.loan_id) <span class="token-keyword">AS</span> total_originated_loans,
+    <span class="token-function">SUM</span>(d.disbursed_amount) <span class="token-keyword">AS</span> total_amount
+<span class="token-keyword">FROM</span> fact_disbursement d
+<span class="token-keyword">WHERE</span> d.sales_agent_id <span class="token-keyword">IN</span> (<span class="token-keyword">SELECT</span> emp_id <span class="token-keyword">FROM</span> employee_hierarchy);</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<div class="page-navigation animate-in" style="display:flex; justify-content:space-between; margin-top:40px; padding-top:20px; border-top:1px solid rgba(255,255,255,0.1);"><a href="domain.html" class="btn btn-secondary">← Module 2: Domain</a><a href="behavioral.html" class="btn btn-primary">Module 4: Behavioral →</a></div>
+</main>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <p>Built with 💜 for Lakhbeer Shah's Interview Preparation — Wednesday 2026</p>
+  <div class="footer-links">
+    <a href="#hero">Back to Top</a>
+    <a href="#module-aws">AWS</a>
+    <a href="#module-domain">NBFC</a>
+    <a href="#module-sql">SQL</a>
+    <a href="#module-behavioral">Behaviour</a>
+    <a href="interview.html">Q&amp;A</a>
+  </div>
+</footer>
+
+<script src="../assets/js/script.js"></script>
+</body>
+</html>
