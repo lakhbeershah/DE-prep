@@ -607,6 +607,96 @@ D. Advanced SQL for Data Engineering (5+ YOE)
 
 
 ================================================================================
+ MODULE 8: PYSPARK CORE & OPTIMIZATION  (pyspark.html)
+================================================================================
+
+A. Spark Architecture & Fundamentals
+├── [L] Spark Ecosystem (100x faster than MapReduce)
+├── [L] Core Components
+│   ├── Driver Process (DAG generation, coordinates executors)
+│   ├── Cluster Manager (YARN, Kubernetes)
+│   └── Executors (Task execution, in-memory storage)
+├── [L] Execution Hierarchy
+│   ├── Application → Jobs (triggered by Actions)
+│   └── Stages (Shuffle boundaries) → Tasks (on partitions)
+├── [T] RDDs vs DataFrames vs Datasets
+│   └── Catalyst Optimizer advantage
+└── [L] Lazy Evaluation
+    ├── Transformations (Narrow vs Wide)
+    └── Actions (Triggers DAG)
+
+B. Memory Optimization & Tuning
+├── [L] Partitioning
+│   ├── repartition(n) (full shuffle to resolve skew)
+│   └── coalesce(n) (local merge to reduce output files)
+├── [L] Join Strategies
+│   ├── Sort Merge Join (Default)
+│   └── Broadcast Hash Join (Fastest for large-to-small tables)
+├── [L] Caching
+│   └── cache() vs persist() (StorageLevels)
+├── [L] Handling Data Skew (Salting)
+│   └── Appending random numbers to keys for uniform distribution
+└── [L] Adaptive Query Execution (AQE)
+    ├── Dynamic coalescing of shuffle partitions
+    ├── Dynamic join strategy switching
+    └── Dynamic skew optimization
+
+C. PySpark Coding Scenarios
+├── [L] UDFs (User Defined Functions)
+│   ├── Standard Python UDFs (Slow, breaks Tungsten)
+│   └── [C] Pandas Vectorized UDFs (Fast, Apache Arrow)
+├── [C] Window Functions (Cumulative Sums, Ranks)
+├── [S] Second highest loan amount (DENSE_RANK)
+├── [S] dropDuplicates() vs distinct()
+└── [C] Pivoting DataFrames (Performance tip: provide explicit list)
+
+D. Structured Streaming
+├── [L] Concepts (Unbounded tables)
+├── [L] Checkpoints & Fault Tolerance (Exactly-once semantics)
+├── [L] Triggers (ProcessingTime, AvailableNow)
+├── [C] Kafka to S3 Pipeline
+└── [T] Output Modes (Append, Update, Complete)
+
+================================================================================
+ MODULE 9: DATABRICKS & DELTA LAKE  (databricks.html)
+================================================================================
+
+A. Architecture & Unity Catalog
+├── [L] Control Plane (Cloud, Jobs) vs Data Plane (Customer VPC, Compute)
+├── [T] Unity Catalog vs Legacy Hive Metastore
+│   ├── Global scope vs workspace silos
+│   └── Automated lineage & centralized governance
+└── [L] DBFS & Volumes (Secure storage abstractions)
+
+B. Delta Lake Internals
+├── [L] What is Delta Lake? (ACID, scalable metadata)
+├── [L] Architecture: Parquet files + _delta_log/ JSON
+├── [L] OPTIMIZE & Z-Ordering
+│   ├── Compacts tiny files to target 1GB
+│   └── Z-ORDER BY for extreme data-skipping
+├── [L] VACUUM & Time Travel
+│   ├── VERSION AS OF / TIMESTAMP AS OF
+│   └── VACUUM retention threshold (7 days default)
+├── [Q] DELETE transaction mechanics (soft deletion + new files)
+└── [Q] Dirty Read prevention (Optimistic Concurrency Control)
+
+C. Data Ingestion & Auto Loader
+├── [L] Auto Loader (cloudFiles)
+│   ├── Directory Listing vs File Notification mode
+│   └── Schema Evolution (_rescued_data column)
+├── [C] Auto Loader full streaming pipeline script
+└── [L] COPY INTO vs Auto Loader (Simplicity vs robustness)
+
+D. Workflows & Performance Tuning
+├── [L] Databricks Workflows (Jobs DAGs)
+├── [T] Compute Sizing
+│   ├── All-Purpose Compute (Expensive, interactive)
+│   ├── Job Compute (Cheap, production pipelines)
+│   └── Serverless Compute (Instant boot)
+├── [L] Spot Instances (Worker nodes only, Driver must be On-Demand)
+└── [L] Photon Engine (Native C++ vectorized execution engine)
+
+================================================================================
  CROSS-CUTTING THEMES (appear across multiple modules)
 ================================================================================
 

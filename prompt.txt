@@ -45,12 +45,14 @@ A. STUDY MODULES (one HTML page per major skill cluster):
    - Each subtopic has: a "Mastered" checkbox for progress tracking
 
    Example module breakdown for a Data Engineer JD:
-   - Module 1: Cloud Platform & Data Warehouse (e.g., AWS Redshift)
-   - Module 2: Domain Knowledge (e.g., NBFC Housing Finance)
+   - Module 1: Cloud Platform & Data Warehouse (AWS Redshift)
+   - Module 2: Domain Knowledge (NBFC Housing Finance)
    - Module 3: SQL & Database Optimization
-   - Module 4: Orchestration (e.g., Apache Airflow)
-   - Module 5: BI & Visualization (e.g., Tableau)
+   - Module 4: Orchestration (Apache Airflow)
+   - Module 5: BI & Visualization (Tableau)
    - Module 6: Behavioral / Resume Defense
+   - Module 8: PySpark Core & Optimization
+   - Module 9: Databricks & Delta Lake
 
 B. INTERVIEW QUESTION BANK (one HTML page):
    - Organized by topic categories

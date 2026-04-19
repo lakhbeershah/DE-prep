@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="PySpark Interview Preparation Module for Senior Data Engineer role.">
+  <title>PySpark | NBFC Data Engineer Interview Prep</title>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body>
+
+<!-- ===== NAVIGATION ===== -->
+<nav class="navbar" id="navbar">
+  <div class="nav-content">
+    <a href="../index.html" class="nav-brand">
+      <span class="brand-icon">🎯</span>
+      <span>InterviewPrep</span>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="aws.html">AWS</a></li>
+      <li><a href="domain.html">NBFC</a></li>
+      <li><a href="sql.html">SQL</a></li>
+      <li><a href="pyspark.html" class="active">PySpark</a></li>
+      <li><a href="databricks.html">Databricks</a></li>
+      <li><a href="airflow.html">Airflow</a></li>
+      <li><a href="tableau.html">Tableau</a></li>
+      <li><a href="behavioral.html">Behaviour</a></li>
+      <li><a href="interview.html">Q&amp;A</a></li>
+    </ul>
+    <div class="nav-actions">
+      <div class="progress-badge">
+        <svg class="progress-ring" viewBox="0 0 20 20">
+          <circle cx="10" cy="10" r="8" fill="none" stroke="rgba(99,102,241,0.2)" stroke-width="2.5" />
+          <circle id="progressRing" cx="10" cy="10" r="8" fill="none" stroke="#6366f1" stroke-width="2.5" stroke-dasharray="50.26" stroke-dashoffset="50.26" stroke-linecap="round" transform="rotate(-90 10 10)" style="transition: stroke-dashoffset 0.5s ease;" />
+        </svg>
+        <span id="progressText">0% Mastered</span>
+      </div>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">🌙</button>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">☰</button>
+    </div>
+  </div>
+</nav>
+
+<main style="padding-top:100px;">
+<!-- ============================================================ -->
+<!-- MODULE: PYSPARK CORE & OPTIMIZATION                         -->
+<!-- ============================================================ -->
+<section class="section" id="module-pyspark">
+  <div class="section-header animate-in">
+    <span class="section-badge code">⚡ Module 8</span>
+    <h2>PySpark Core & Optimization</h2>
+    <p>Mastering distributed computing, lazy evaluation, memory management, and performance tuning for big data at scale.</p>
+  </div>
+
+  <div class="stats-row animate-in">
+    <div class="stat-card">
+      <div class="stat-value">4</div>
+      <div class="stat-label">Subtopics</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">16</div>
+      <div class="stat-label">Q&A Pairs</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">55</div>
+      <div class="stat-label">Minutes Est.</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">🔥</div>
+      <div class="stat-label">High Priority</div>
+    </div>
+  </div>
+
+  <!-- SUBTOPIC A: Spark Architecture -->
+  <div class="subsection animate-in" id="pyspark-arch">
+    <div class="subsection-header">
+      <div class="subsection-icon code-icon" style="background:rgba(234,88,12,0.1);color:#ea580c;">🏗️</div>
+      <h3>A. Spark Architecture & Fundamentals</h3>
+      <label class="progress-check">
+        <input type="checkbox" id="prog-pyspark-a">
+        <span class="check-custom">✓</span>
+        <span class="check-label">Mastered</span>
+      </label>
+    </div>
+
+    <div class="content-card">
+      <h4>The Spark Ecosystem</h4>
+      <p>Apache Spark is a unified engine for large-scale data processing that runs 100x faster than Hadoop MapReduce in memory.</p>
+      
+      <h4>Core Architecture Components</h4>
+      <ul>
+        <li><strong>Driver Process:</strong> Runs the <code>main()</code> function. Maintains info about the Spark Application. Parses code, plans the DAG (Directed Acyclic Graph), and coordinates executors.</li>
+        <li><strong>Cluster Manager:</strong> Standalone, YARN, Mesos, or Kubernetes. Acquires resources on the cluster.</li>
+        <li><strong>Executors:</strong> Worker nodes that run individual tasks and keep data in memory or on disk.</li>
+      </ul>
+
+      <h4>Execution Hierarchy</h4>
+      <div class="flow-diagram">
+        <div class="flow-step">Application</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-step">Jobs</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-step">Stages</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-step">Tasks</div>
+      </div>
+      <ul>
+        <li><strong>Job:</strong> Created every time an <em>Action</em> is called.</li>
+        <li><strong>Stage:</strong> Jobs are broken down into stages based on wide transformations (shuffles). Every shuffle boundary creates a new stage.</li>
+        <li><strong>Task:</strong> The smallest unit of work. One task runs on one data partition.</li>
+      </ul>
+
+      <h4>RDDs vs DataFrames vs Datasets</h4>
+      <table class="data-table">
+        <thead>
+          <tr><th>Feature</th><th>RDD (Resilient Distributed Dataset)</th><th>DataFrame</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Optimization</strong></td>
+            <td>Manual optimization required. No Catalyst Optimizer.</td>
+            <td>Catalyst Optimizer generates efficient physical plans.</td>
+          </tr>
+          <tr>
+            <td><strong>Type Safety</strong></td>
+            <td>Compile-time type safe.</td>
+            <td>No compile-time type safety (Row objects).</td>
+          </tr>
+          <tr>
+            <td><strong>Structure</strong></td>
+            <td>Unstructured or semi-structured data.</td>
+            <td>Structured data with a known schema.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h4>Lazy Evaluation (Transformations vs Actions)</h4>
+      <p>Spark does not execute a plan immediately. It builds a DAG of transformations and only executes when an action is called.</p>
+      <ul>
+        <li><strong>Transformations (Lazy):</strong> <code>select()</code>, <code>filter()</code>, <code>groupBy()</code>, <code>join()</code></li>
+        <li><strong>Narrow Transformations:</strong> No data shuffle required (e.g., <code>filter</code>). Pipelined in memory.</li>
+        <li><strong>Wide Transformations:</strong> Require shuffle across network (e.g., <code>groupBy</code>, <code>orderBy</code>). High cost.</li>
+        <li><strong>Actions (Eager):</strong> <code>show()</code>, <code>count()</code>, <code>collect()</code>, <code>write()</code>. Triggers DAG execution.</li>
+      </ul>
+    </div>
+
+    <div class="qa-section">
+      <div class="qa-section-title">🧠 Test Your Knowledge — Architecture</div>
+
+      <div class="qa-item">
+        <div class="qa-question"><span class="qa-q-number">1</span><span class="qa-q-text">What happens exactly when you call a transformation vs an action in PySpark?</span><span class="qa-toggle-icon">▼</span></div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p><strong>Transformation:</strong> When you call a transformation like <code>df.filter()</code>, Spark does absolutely no data processing. It merely adds a step to the logical query plan (the DAG). The operation is mathematically recorded but not executed.</p>
+            <p><strong>Action:</strong> When you call an action like <code>df.count()</code>, the Catalyst Optimizer evaluates the entire DAG, applies rule-based and cost-based optimizations, generates a physical execution plan, divides it into stages/tasks, ships the tasks to the executors, computes the result, and brings the final count back to the Driver memory.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question"><span class="qa-q-number">2</span><span class="qa-q-text">You have a job that reads S3, filters, groups by region, and writes to Redshift. How many stages will this job have?</span><span class="qa-toggle-icon">▼</span></div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p>It will have <strong>2 Stages</strong>.</p>
+            <ul>
+              <li><strong>Stage 1:</strong> Reading from S3 and applying the <code>filter()</code>. Both are narrow transformations and can be pipelined together within the same task/executor without moving data across the network.</li>
+              <li><em>-- SHUFFLE BOUNDARY -- (Due to groupBy)</em></li>
+              <li><strong>Stage 2:</strong> Performing the aggregation (group by) and writing out to Redshift. The <code>groupBy()</code> is a wide transformation that requires data to be shuffled across executors so that all records for the same region end up on the same partition.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question"><span class="qa-q-number">3</span><span class="qa-q-text">Explain the role of the Catalyst Optimizer.</span><span class="qa-toggle-icon">▼</span></div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p>The Catalyst Optimizer is the core engine inside Spark SQL/DataFrames that optimizes queries. Its phases are:</p>
+            <ol>
+              <li><strong>Analysis:</strong> Resolves column names, table names, and types against the Catalog.</li>
+              <li><strong>Logical Optimization:</strong> Applies rule-based optimizations (e.g., Predicate Pushdown (filtering before joining), Constant Folding).</li>
+              <li><strong>Physical Planning:</strong> Generates multiple physical strategies (e.g., SortMergeJoin vs BroadcastHashJoin) and uses a Cost-Based Optimizer to choose the cheapest.</li>
+              <li><strong>Code Generation:</strong> Project Tungsten converts the query directly into optimized Java bytecode for execution on the JVM.</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUBTOPIC B: Memory Management & Optimization -->
+  <div class="subsection animate-in" id="pyspark-opt">
+    <div class="subsection-header">
+      <div class="subsection-icon code-icon" style="background:rgba(234,88,12,0.1);color:#ea580c;">🚀</div>
+      <h3>B. Memory Optimization & Tuning</h3>
+      <label class="progress-check">
+        <input type="checkbox" id="prog-pyspark-b">
+        <span class="check-custom">✓</span>
+        <span class="check-label">Mastered</span>
+      </label>
+    </div>
+
+    <div class="content-card">
+      <h4>Partitioning (repartition vs coalesce)</h4>
+      <p>A partition is a logical chunk of data on an executor. If you have 100 cores but only 50 partitions, 50 cores sit idle.</p>
+      <ul>
+        <li><code>repartition(n)</code>: Does a full network shuffle to distribute data evenly across <em>n</em> partitions. Increases or decreases partitions. Use before heavy transformations to fix skewed data.</li>
+        <li><code>coalesce(n)</code>: Decreases partitions by merging them locally without a full shuffle. Very fast, but can result in uneven partition sizes. Use right before writing data to disk to reduce output file count.</li>
+      </ul>
+
+      <h4>Join Strategies</h4>
+      <ul>
+        <li><strong>Sort Merge Join (Default):</strong> Shuffles data from both tables by join key, sorts them, then merges. Very stable for large sets.</li>
+        <li><strong>Broadcast Hash Join:</strong> Takes a small table (&lt;10MB default, tunable via <code>spark.sql.autoBroadcastJoinThreshold</code>), broadcasts the entire table to every executor's memory, and avoids a shuffle entirely. <strong style="color:var(--accent-success)">Fastest join for large-to-small tables.</strong></li>
+      </ul>
+
+      <h4>Caching: cache() vs persist()</h4>
+      <ul>
+        <li><code>cache()</code>: A shorthand for <code>persist(StorageLevel.MEMORY_AND_DISK)</code> in DataFrames.</li>
+        <li><code>persist()</code>: Allows explicitly setting the storage level (e.g., <code>MEMORY_ONLY</code>, <code>DISK_ONLY</code>, <code>MEMORY_AND_DISK_SER</code>).</li>
+        <li><strong>When to use:</strong> When a DataFrame is re-used multiple times in the same application. Without caching, Spark will re-evaluate the DAG from the source for every action.</li>
+      </ul>
+
+      <h4>Handling Data Skew (Salting)</h4>
+      <p>Data Skew happens when one partition gets 90% of the data (e.g., grouping by <code>status='Active'</code>). That task takes hours while others take seconds (straggler task).</p>
+      <p><strong>The Fix (Salting):</strong> Append a random number (0 to 10) to the skewed key. Group by this new "salted" key to distribute the data evenly across reducers. Then do a secondary group by without the salt to get final results.</p>
+      
+      <h4>AQE (Adaptive Query Execution)</h4>
+      <p>Introduced in Spark 3.0, it optimizes the plan <em>during</em> execution based on actual runtime statistics.</p>
+      <ul>
+        <li><strong>Dynamically coalesces shuffle partitions:</strong> Reduces the default 200 shuffle partitions to an optimal number.</li>
+        <li><strong>Dynamically switches join strategies:</strong> Converts Sort-Merge to Broadcast if a table turns out to be much smaller after a filter.</li>
+        <li><strong>Dynamically optimizes skew joins:</strong> Detects skewed partitions at runtime and splits them automatically.</li>
+      </ul>
+    </div>
+
+    <div class="qa-section">
+      <div class="qa-section-title">🧠 Test Your Knowledge — Optimization</div>
+
+      <div class="qa-item">
+        <div class="qa-question"><span class="qa-q-number">1</span><span class="qa-q-text">You are joining a 500GB transaction table with a 5MB dimension table. The job is very slow. How do you fix it?</span><span class="qa-toggle-icon">▼</span></div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p>Use a <strong>Broadcast Hash Join</strong>. By default, Spark might do a Sort-Merge Join, requiring shuffling 500GB of data. You can force a broadcast using a hint:</p>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">Python</span><button class="code-copy">Copy</button></div>
+              <pre><span class="token-keyword">from</span> pyspark.sql.functions <span class="token-keyword">import</span> broadcast
+df_joined = large_df.join(broadcast(small_df), <span class="token-string">"dim_id"</span>)</pre>
+            </div>
+            <p>This sends the 5MB table to every executor, completely eliminating the shuffle for the 500GB table. It’s an order of magnitude faster.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question"><span class="qa-q-number">2</span><span class="qa-q-text">Your Spark job fails with an OutOfMemoryError (OOM) on a specific executor, while other executors finish fine. What's the issue?</span><span class="qa-toggle-icon">▼</span></div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p>This is a classic symptom of <strong>Data Skew</strong>.</p>
+            <p>A transformation involving a shuffle (like <code>groupBy</code>, <code>join</code>, or <code>window</code> over a highly non-uniform column) causes the majority of keys to be sent to a single partition/executor. That executor runs out of memory while others sit idle.</p>
+            <p><strong>Solutions:</strong></p>
+            <ol>
+              <li>Enable Adaptive Query Execution (AQE): <code>spark.conf.set("spark.sql.adaptive.skewJoin.enabled", True)</code></li>
+              <li>Manually add a "salt" (random integer) to the join key to force even distribution across partitions, then group again.</li>
+              <li>Filter out NULL keys before joining if NULL is the skewed value.</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question"><span class="qa-q-number">3</span><span class="qa-q-text">Explain Predicate Pushdown and how it works with Parquet files.</span><span class="qa-toggle-icon">▼</span></div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p>Predicate Pushdown is an optimization where filter conditions are applied as early as possible — pushing them down to the data source level.</p>
+            <p>Instead of reading 1TB of data into Spark memory and then running <code>filter("region = 'US'")</code>, Spark tells the storage layer (like S3/Parquet) to only return rows where region is US.</p>
+            <p><strong>With Parquet:</strong> Parquet holds column metadata (min/max values) for row groups. If your filter specifies a value outside the min/max range of a row group, Spark completely skips reading that chunk of disk. This drastically reduces network I/O and memory usage.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question"><span class="qa-q-number">4</span><span class="qa-q-text">You are writing output to S3 and notice it created 200 tiny files of 1KB each. Why did this happen and how do you fix it?</span><span class="qa-toggle-icon">▼</span></div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p><strong>Why:</strong> The default number of shuffle partitions in Spark is <code>spark.sql.shuffle.partitions = 200</code>. Any wide transformation before writing (like a group by) will result in 200 output partitions, hence 200 files.</p>
+            <p><strong>Fix:</strong> Use <code>coalesce()</code> before writing to combine these partitions without a full shuffle.</p>
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">Python</span><button class="code-copy">Copy</button></div>
+              <pre>df.coalesce(1).write.parquet(<span class="token-string">"s3://output_path"</span>)</pre>
+            </div>
+            <p>Alternatively, tune the shuffle partitions configuration or enable AQE to automatically handle coalesce.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUBTOPIC C: Coding & Transformations -->
+  <div class="subsection animate-in" id="pyspark-code">
+    <div class="subsection-header">
+      <div class="subsection-icon code-icon" style="background:rgba(234,88,12,0.1);color:#ea580c;">💻</div>
+      <h3>C. PySpark Coding Scenarios</h3>
+      <label class="progress-check">
+        <input type="checkbox" id="prog-pyspark-c">
+        <span class="check-custom">✓</span>
+        <span class="check-label">Mastered</span>
+      </label>
+    </div>
+
+    <div class="content-card">
+      <h4>UDFs (User Defined Functions)</h4>
+      <p>Sometimes you need logic too complex for built-in SQL functions. PySpark allows UDFs, but they have major performance penalties.</p>
+      <ul>
+        <li><strong>Standard Python UDFs:</strong> Extremely slow. Data has to be serialized, moved from the JVM to a Python process, evaluated, and sent back. Breaks Tungsten optimizations.</li>
+        <li><strong>Pandas UDFs (Vectorized UDFs):</strong> Uses Apache Arrow to transfer data in batches rather than row-by-row. Highly recommended over standard UDFs.</li>
+      </ul>
+
+      <div class="code-block">
+        <div class="code-header"><span class="code-lang">Python — Pandas Vectorized UDF</span><button class="code-copy">Copy</button></div>
+        <pre><span class="token-keyword">from</span> pyspark.sql.functions <span class="token-keyword">import</span> pandas_udf
+<span class="token-keyword">import</span> pandas <span class="token-keyword">as</span> pd
+
+<span class="token-comment"># Define a vectorized UDF that runs fast via Apache Arrow</span>
+@pandas_udf(<span class="token-string">"double"</span>)
+<span class="token-keyword">def</span> calculate_emi_vectorized(principal: pd.Series, rate: pd.Series, months: pd.Series) -> pd.Series:
+    r = rate / 12 / 100
+    <span class="token-keyword">return</span> principal * r * ((1 + r) ** months) / (((1 + r) ** months) - 1)
+
+df = df.withColumn(<span class="token-string">"computed_emi"</span>, calculate_emi_vectorized(df.loan_amt, df.interest, df.tenure))</pre>
+      </div>
+
+      <h4>Window Functions in PySpark</h4>
+      <p>Window functions are heavily tested in PySpark just like they are in SQL.</p>
+      <div class="code-block">
+        <div class="code-header"><span class="code-lang">Python — Cumulative Sum</span><button class="code-copy">Copy</button></div>
+        <pre><span class="token-keyword">from</span> pyspark.sql.window <span class="token-keyword">import</span> Window
+<span class="token-keyword">from</span> pyspark.sql.functions <span class="token-keyword">import</span> sum
+
+windowSpec = Window.partitionBy(<span class="token-string">"branch_id"</span>).orderBy(<span class="token-string">"disbursement_date"</span>)
+df = df.withColumn(<span class="token-string">"cumulative_amt"</span>, sum(<span class="token-string">"amount"</span>).over(windowSpec))</pre>
+      </div>
+    </div>
+
+    <div class="qa-section">
+      <div class="qa-section-title">🧠 Test Your Knowledge — Coding</div>
+
+      <div class="qa-item">
+        <div class="qa-question"><span class="qa-q-number">1</span><span class="qa-q-text">Write PySpark code to find the second highest loan amount in each branch.</span><span class="qa-toggle-icon">▼</span></div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">Python</span><button class="code-copy">Copy</button></div>
+              <pre><span class="token-keyword">from</span> pyspark.sql.window <span class="token-keyword">import</span> Window
+<span class="token-keyword">from</span> pyspark.sql.functions <span class="token-keyword">import</span> dense_rank, col
+
+windowSpec = Window.partitionBy(<span class="token-string">"branch_id"</span>).orderBy(col(<span class="token-string">"loan_amount"</span>).desc())
+
+df_ranked = df.withColumn(<span class="token-string">"rank"</span>, dense_rank().over(windowSpec))
+result = df_ranked.filter(col(<span class="token-string">"rank"</span>) == 2).drop(<span class="token-string">"rank"</span>)</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question"><span class="qa-q-number">2</span><span class="qa-q-text">What is the difference between `dropDuplicates()` and `distinct()`?</span><span class="qa-toggle-icon">▼</span></div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p><code>distinct()</code> operates on the entire row — it returns rows where every single column is exactly identical to another row.</p>
+            <p><code>dropDuplicates(["col1", "col2"])</code> allows you to specify a subset of columns to check for uniqueness. It keeps the first row it encounters that matches those subset column values and drops the rest.</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="qa-item">
+        <div class="qa-question"><span class="qa-q-number">3</span><span class="qa-q-text">How do you pivot the following DataFrame to show loan types as columns?</span><span class="qa-toggle-icon">▼</span></div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <div class="code-block">
+              <div class="code-header"><span class="code-lang">Python</span><button class="code-copy">Copy</button></div>
+              <pre>pivot_df = df.groupBy(<span class="token-string">"branch_id"</span>) \
+             .pivot(<span class="token-string">"loan_type"</span>, [<span class="token-string">"HL"</span>, <span class="token-string">"LAP"</span>]) \
+             .sum(<span class="token-string">"amount"</span>)</pre>
+            </div>
+            <p><strong>Optimization tip:</strong> Always pass a list of expected distinct values as the second argument to <code>pivot()</code>. If you don't, Spark has to do a full distributed scan of the data just to figure out what the unique values are before it can build the query plan!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUBTOPIC D: Streaming -->
+  <div class="subsection animate-in" id="pyspark-stream">
+    <div class="subsection-header">
+      <div class="subsection-icon code-icon" style="background:rgba(234,88,12,0.1);color:#ea580c;">🌊</div>
+      <h3>D. Structured Streaming</h3>
+      <label class="progress-check">
+        <input type="checkbox" id="prog-pyspark-d">
+        <span class="check-custom">✓</span>
+        <span class="check-label">Mastered</span>
+      </label>
+    </div>
+
+    <div class="content-card">
+      <h4>Concepts</h4>
+      <p>Structured Streaming treats a live data stream as an continuously appended, unbounded table. You write your queries basically exactly as you would for static batch data.</p>
+      
+      <h4>Checkpoints & Fault Tolerance</h4>
+      <ul>
+        <li><strong>Checkpointing:</strong> Spark saves state and offsets to a reliable location (like S3/HDFS). If the node dies, the restarted app reads the checkpoint and resumes exactly where it left off, achieving exactly-once semantics.</li>
+        <li><strong>Triggers:</strong> Defines the timing of data processing (e.g., <code>ProcessingTime='1 minute'</code>, or <code>AvailableNow=True</code> to process as a one-time micro-batch to save cluster costs).</li>
+      </ul>
+
+      <div class="code-block">
+        <div class="code-header"><span class="code-lang">Python — Basic Streaming Kafka to S3</span><button class="code-copy">Copy</button></div>
+        <pre>df = spark.readStream \
+    .format(<span class="token-string">"kafka"</span>) \
+    .option(<span class="token-string">"kafka.bootstrap.servers"</span>, <span class="token-string">"host1:port1"</span>) \
+    .option(<span class="token-string">"subscribe"</span>, <span class="token-string">"loan_events"</span>) \
+    .load()
+
+query = df.writeStream \
+    .format(<span class="token-string">"parquet"</span>) \
+    .option(<span class="token-string">"path"</span>, <span class="token-string">"s3://landing_zone/events/"</span>) \
+    .option(<span class="token-string">"checkpointLocation"</span>, <span class="token-string">"s3://checkpoints/events/"</span>) \
+    .trigger(processingTime=<span class="token-string">"5 minutes"</span>) \
+    .start()</pre>
+      </div>
+      
+      <div class="key-point">
+        <span class="kp-icon">💡</span>
+        <span class="kp-text"><strong>Output Modes:</strong> <br>1. Append Mode (default) - Only adds new rows.<br>2. Update Mode - Only outputs rows that were updated since last trigger.<br>3. Complete Mode - Outputs the entire updated result table (used for aggregations like counts).</span>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<div class="page-navigation animate-in" style="display:flex; justify-content:space-between; margin-top:40px; padding-top:20px; border-top:1px solid rgba(255,255,255,0.1);">
+  <a href="sql.html" class="btn btn-secondary">← Module 3: SQL</a>
+  <a href="databricks.html" class="btn btn-primary">Module 9: Databricks →</a>
+</div>
+</main>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <p>Built with 💜 for Lakhbeer Shah's Interview Preparation — Wednesday 2026</p>
+  <div class="footer-links">
+    <a href="../index.html">Dashboard</a>
+    <a href="aws.html">AWS</a>
+    <a href="domain.html">NBFC</a>
+    <a href="sql.html">SQL</a>
+    <a href="pyspark.html">PySpark</a>
+    <a href="databricks.html">Databricks</a>
+    <a href="airflow.html">Airflow</a>
+    <a href="tableau.html">Tableau</a>
+    <a href="behavioral.html">Behaviour</a>
+    <a href="interview.html">Q&amp;A</a>
+  </div>
+</footer>
+
+<script src="../assets/js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Databricks & Delta Lake Interview Preparation Module for Senior Data Engineer role.">
+  <title>Databricks & Delta Lake | NBFC Data Engineer Interview Prep</title>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body>
+
+<!-- ===== NAVIGATION ===== -->
+<nav class="navbar" id="navbar">
+  <div class="nav-content">
+    <a href="../index.html" class="nav-brand">
+      <span class="brand-icon">🎯</span>
+      <span>InterviewPrep</span>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="aws.html">AWS</a></li>
+      <li><a href="domain.html">NBFC</a></li>
+      <li><a href="sql.html">SQL</a></li>
+      <li><a href="pyspark.html">PySpark</a></li>
+      <li><a href="databricks.html" class="active">Databricks</a></li>
+      <li><a href="airflow.html">Airflow</a></li>
+      <li><a href="tableau.html">Tableau</a></li>
+      <li><a href="behavioral.html">Behaviour</a></li>
+      <li><a href="interview.html">Q&amp;A</a></li>
+    </ul>
+    <div class="nav-actions">
+      <div class="progress-badge">
+        <svg class="progress-ring" viewBox="0 0 20 20">
+          <circle cx="10" cy="10" r="8" fill="none" stroke="rgba(99,102,241,0.2)" stroke-width="2.5" />
+          <circle id="progressRing" cx="10" cy="10" r="8" fill="none" stroke="#6366f1" stroke-width="2.5" stroke-dasharray="50.26" stroke-dashoffset="50.26" stroke-linecap="round" transform="rotate(-90 10 10)" style="transition: stroke-dashoffset 0.5s ease;" />
+        </svg>
+        <span id="progressText">0% Mastered</span>
+      </div>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">🌙</button>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">☰</button>
+    </div>
+  </div>
+</nav>
+
+<main style="padding-top:100px;">
+<!-- ============================================================ -->
+<!-- MODULE: DATABRICKS & DELTA LAKE                            -->
+<!-- ============================================================ -->
+<section class="section" id="module-databricks">
+  <div class="section-header animate-in">
+    <span class="section-badge code">🧱 Module 9</span>
+    <h2>Databricks & Delta Lake</h2>
+    <p>Mastering Lakehouse architecture, Unity Catalog, ACID transactions on data lakes, and scalable workflows.</p>
+  </div>
+
+  <div class="stats-row animate-in">
+    <div class="stat-card">
+      <div class="stat-value">4</div>
+      <div class="stat-label">Subtopics</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">18</div>
+      <div class="stat-label">Q&A Pairs</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">60</div>
+      <div class="stat-label">Minutes Est.</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">🚀</div>
+      <div class="stat-label">Lakehouse Core</div>
+    </div>
+  </div>
+
+  <!-- SUBTOPIC A: Databricks Architecture & Unity Catalog -->
+  <div class="subsection animate-in" id="dbx-arch">
+    <div class="subsection-header">
+      <div class="subsection-icon code-icon" style="background:rgba(239,68,68,0.1);color:#ef4444;">🏗️</div>
+      <h3>A. Architecture & Unity Catalog</h3>
+      <label class="progress-check">
+        <input type="checkbox" id="prog-dbx-a">
+        <span class="check-custom">✓</span>
+        <span class="check-label">Mastered</span>
+      </label>
+    </div>
+
+    <div class="content-card">
+      <h4>Control Plane vs. Data Plane</h4>
+      <p>Databricks runs in a split architecture for security and isolation:</p>
+      <ul>
+        <li><strong>Control Plane (Databricks Cloud):</strong> Manages the workspace, notebooks, job scheduling, cluster configurations, and queries. No customer data resides here.</li>
+        <li><strong>Data Plane (Customer Cloud/VPC):</strong> The compute resources (e.g., EC2 instances) that actually process the data. Data never leaves your cloud account VPC unless explicitly transferred.</li>
+      </ul>
+
+      <h4>Unity Catalog vs. Hive Metastore</h4>
+      <table class="data-table">
+        <thead>
+          <tr><th>Feature</th><th>Legacy Hive Metastore</th><th>Unity Catalog</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Scope</strong></td>
+            <td>Workspace-local (per-workspace silos).</td>
+            <td>Global (across all workspaces in an account).</td>
+          </tr>
+          <tr>
+            <td><strong>Governance</strong></td>
+            <td>Table-level ACLs, hard to audit.</td>
+            <td>Centralized ACLs, Row-level & Column-level security.</td>
+          </tr>
+          <tr>
+            <td><strong>Lineage</strong></td>
+            <td>No automated data lineage.</td>
+            <td>Automated column/table/dashboard-level lineage tracking.</td>
+          </tr>
+          <tr>
+            <td><strong>Hierarchy</strong></td>
+            <td>Database -> Table</td>
+            <td>Catalog -> Schema -> Table/Volume</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h4>DBFS & Volumes</h4>
+      <p><strong>DBFS (Databricks File System)</strong> is an abstraction layer over cloud storage (S3/ADLS/GCS). You can use standard POSIX paths (<code>/dbfs/mnt/...</code>) instead of cloud-specific APIs.</p>
+      <p><em>Modern alternative:</em> <strong>Unity Catalog Volumes</strong> are replacing DBFS root for secure, governed access to non-tabular data (images, CSVs, PDFs).</p>
+    </div>
+  </div>
+
+  <!-- SUBTOPIC B: Delta Lake Internals -->
+  <div class="subsection animate-in" id="dbx-delta">
+    <div class="subsection-header">
+      <div class="subsection-icon code-icon" style="background:rgba(239,68,68,0.1);color:#ef4444;">📐</div>
+      <h3>B. Delta Lake Internals</h3>
+      <label class="progress-check">
+        <input type="checkbox" id="prog-dbx-b">
+        <span class="check-custom">✓</span>
+        <span class="check-label">Mastered</span>
+      </label>
+    </div>
+
+    <div class="content-card">
+      <h4>What is Delta Lake?</h4>
+      <p>Delta Lake is an open-source storage layer that brings reliability to data lakes by providing ACID transactions, scalable metadata handling, and unifying streaming and batch data processing on top of existing cloud storage (S3/ADLS).</p>
+
+      <h4>Under the Hood: Parquet + Transaction Log</h4>
+      <ul>
+        <li><strong>Parquet files:</strong> The actual data is stored in standard, highly compressed Parquet format.</li>
+        <li><strong>_delta_log/:</strong> A directory containing JSON files (and occasionally Parquet checkpoints) logging every transaction (INSERT/UPDATE/DELETE/MERGE). When a read occurs, Spark reads the log to know exactly which Parquet files define the <em>current</em> state of the table.</li>
+      </ul>
+
+      <h4>OPTIMIZE & Z-Ordering</h4>
+      <p>Small file problem: In streaming or frequent ingestion, you get thousands of tiny 1KB files, killing I/O performance.</p>
+      <ul>
+        <li><strong>OPTIMIZE:</strong> Compacts tiny Parquet files into larger, optimally-sized files (target 1GB) to improve read speed (similar to VACUUM in Redshift but doesn't delete old data directly).</li>
+        <li><strong>Z-ORDER BY:</strong> A technique to co-locate related information in the same set of files based on 1 or more columns. It vastly improves data-skipping efficiency.
+          <br><em>Example:</em> <code>OPTIMIZE loan_table ZORDER BY (branch_id, product_type)</code></li>
+      </ul>
+
+      <h4>VACUUM & Time Travel</h4>
+      <p>Because Delta Lake never overwrites Parquet files (it just writes new ones and logs them as the active state), you can query older versions of the table — this is <strong>Time Travel</strong>.</p>
+      <div class="code-block">
+        <div class="code-header"><span class="code-lang">SQL — Time Travel</span><button class="code-copy">Copy</button></div>
+        <pre>SELECT * FROM my_table TIMESTAMP AS OF '2026-03-01'
+SELECT * FROM my_table VERSION AS OF 12</pre>
+      </div>
+      <p>However, keeping all historical files forever costs money. <strong>VACUUM</strong> permanently deletes data files that are no longer referenced by a Delta table and are older than the retention threshold (default 7 days). Once vacuumed, you can no longer Time Travel past that retention period!</p>
+    </div>
+
+    <div class="qa-section">
+      <div class="qa-section-title">🧠 Test Your Knowledge — Delta Lake</div>
+
+      <div class="qa-item">
+        <div class="qa-question"><span class="qa-q-number">1</span><span class="qa-q-text">Explain how a DELETE transaction physically works in Delta Lake. Are the rows actually deleted?</span><span class="qa-toggle-icon">▼</span></div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p><strong>No, the rows are not physically deleted immediately.</strong></p>
+            <p>Because Parquet files are immutable, Delta Lake handles a DELETE by:</p>
+            <ol>
+              <li>Finding the specific Parquet file(s) that contain the rows to be deleted.</li>
+              <li>Reading the remaining valid rows from those files into memory.</li>
+              <li>Writing a brand new Parquet file containing only the valid rows.</li>
+              <li>Writing a new entry in the <code>_delta_log</code> dictating that the old Parquet file is no longer part of the table's active state, and the new Parquet file is now active.</li>
+            </ol>
+            <p>The old Parquet file remains on S3 so that Time Travel works, until you run a <code>VACUUM</code> command to physically delete it.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question"><span class="qa-q-number">2</span><span class="qa-q-text">You run `VACUUM my_table RETAIN 0 HOURS`. What happens? (Trick question)</span><span class="qa-toggle-icon">▼</span></div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p><strong>It will fail by default.</strong></p>
+            <p>Databricks prevents you from vacuuming files newer than 7 days (168 hours) to prevent data corruption from concurrent queries that might still be reading older versions of the data.</p>
+            <p>To bypass this (usually only for dev/testing), you must first run: <code>set spark.databricks.delta.retentionDurationCheck.enabled = false</code>.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-question"><span class="qa-q-number">3</span><span class="qa-q-text">How does Delta Lake solve the "Dirty Read" problem associated with classic data lakes?</span><span class="qa-toggle-icon">▼</span></div>
+        <div class="qa-answer">
+          <div class="qa-answer-inner">
+            <p>It solves it through <strong>Optimistic Concurrency Control</strong> and the <strong>_delta_log</strong>.</p>
+            <p>If Job A is currently writing 5 new Parquet files, Job B reading the table simultaneously will not see those 5 files yet. Job B only reads the files listed in the most recently committed <code>_delta_log</code> JSON file.</p>
+            <p>Only when Job A successfully finishes writing the Parquet files does it attempt to commit a new JSON log file (e.g., <code>00003.json</code>). If it succeeds, the transaction is atomic — the files become instantly visible to all future readers.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUBTOPIC C: Ingestion & Auto Loader -->
+  <div class="subsection animate-in" id="dbx-ingestion">
+    <div class="subsection-header">
+      <div class="subsection-icon code-icon" style="background:rgba(239,68,68,0.1);color:#ef4444;">📡</div>
+      <h3>C. Data Ingestion & Auto Loader</h3>
+      <label class="progress-check">
+        <input type="checkbox" id="prog-dbx-c">
+        <span class="check-custom">✓</span>
+        <span class="check-label">Mastered</span>
+      </label>
+    </div>
+
+    <div class="content-card">
+      <h4>Auto Loader (cloudFiles)</h4>
+      <p>Auto Loader incrementally and efficiently processes new data files as they arrive in cloud storage. It is built on Structured Streaming.</p>
+      <ul>
+        <li><strong>Directory Listing Mode:</strong> Periodically lists the directory. Good for smaller setups.</li>
+        <li><strong>File Notification Mode:</strong> Automatically sets up cloud notifications (AWS SNS/SQS or Azure Event Grid) to trigger ingestion. Highly scalable for millions of files.</li>
+        <li><strong>Schema Evolution:</strong> Auto Loader tracks schema changes. If a source CSV adds a column, Auto Loader detects it, can optionally rescue the data into a <code>_rescued_data</code> column, and updates the target Delta table automatically.</li>
+      </ul>
+
+      <div class="code-block">
+        <div class="code-header"><span class="code-lang">Python — Auto Loader Example</span><button class="code-copy">Copy</button></div>
+        <pre>df = spark.readStream.format(<span class="token-string">"cloudFiles"</span>) \
+    .option(<span class="token-string">"cloudFiles.format"</span>, <span class="token-string">"csv"</span>) \
+    .option(<span class="token-string">"cloudFiles.schemaLocation"</span>, <span class="token-string">"s3://metadata/schema/"</span>) \
+    .load(<span class="token-string">"s3://raw-data/loans/"</span>)
+
+df.writeStream.format(<span class="token-string">"delta"</span>) \
+    .option(<span class="token-string">"checkpointLocation"</span>, <span class="token-string">"s3://metadata/checkpoint/"</span>) \
+    .start(<span class="token-string">"s3://silver-zone/loans_delta"</span>)</pre>
+      </div>
+
+      <h4>COPY INTO</h4>
+      <p>A simpler, SQL-based alternative to Auto Loader for batch ingestion from S3 into a Delta table. It keeps track of which files it has loaded and won't reload them. It is less robust than Auto Loader but vastly simpler for one-off scripts.</p>
+    </div>
+  </div>
+
+  <!-- SUBTOPIC D: Workflows & Architecture -->
+  <div class="subsection animate-in" id="dbx-workflows">
+    <div class="subsection-header">
+      <div class="subsection-icon code-icon" style="background:rgba(239,68,68,0.1);color:#ef4444;">⚙️</div>
+      <h3>D. Workflows & Performance Tuning</h3>
+      <label class="progress-check">
+        <input type="checkbox" id="prog-dbx-d">
+        <span class="check-custom">✓</span>
+        <span class="check-label">Mastered</span>
+      </label>
+    </div>
+
+    <div class="content-card">
+      <h4>Databricks Workflows (Jobs)</h4>
+      <p>The native orchestrator in Databricks (alternative to Airflow). You can chain notebooks, DLT (Delta Live Tables) pipelines, Python scripts, and SQL tasks into a DAG with dependencies.</p>
+      
+      <h4>Compute Sizing & Clusters</h4>
+      <table class="data-table">
+        <thead>
+          <tr><th>Cluster Type</th><th>Description</th><th>Pricing</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>All-Purpose Compute</strong></td>
+            <td>Created manually for ad-hoc analysis, EDA, and notebook development. Can be shared.</td>
+            <td>Expensive ($0.40+/DBU). Do NOT use for production jobs.</td>
+          </tr>
+          <tr>
+            <td><strong>Job Compute</strong></td>
+            <td>Spun up completely automatically when a job triggers, and terminates immediately after.</td>
+            <td>Cheap ($0.15/DBU). <strong>Always use this for production pipelines.</strong></td>
+          </tr>
+          <tr>
+            <td><strong>Serverless Compute</strong></td>
+            <td>Databricks manages the infrastructure instantly. No bootup time.</td>
+            <td>Pay for exact seconds used.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h4>Spot Instances for Worker Nodes</h4>
+      <p>In Databricks, the <strong>Driver node must always be On-Demand</strong>. If the driver dies, the whole job fails. However, <strong>Worker nodes can be Spot instances</strong>. If a spot instance dies, Spark's fault-tolerance mechanism simply retries those lost tasks on remaining nodes.</p>
+
+      <h4>Photon Engine</h4>
+      <p>A native vectorized query engine written in C++ (instead of JVM/Scala) developed by Databricks for unparalleled SQL query speeds on Delta Lake data. Needs to be explicitly enabled on the cluster.</p>
+    </div>
+  </div>
+
+</section>
+
+<div class="page-navigation animate-in" style="display:flex; justify-content:space-between; margin-top:40px; padding-top:20px; border-top:1px solid rgba(255,255,255,0.1);">
+  <a href="pyspark.html" class="btn btn-secondary">← Module 8: PySpark</a>
+  <a href="airflow.html" class="btn btn-primary">Module 4: Airflow →</a>
+</div>
+</main>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <p>Built with 💜 for Lakhbeer Shah's Interview Preparation — Wednesday 2026</p>
+  <div class="footer-links">
+    <a href="../index.html">Dashboard</a>
+    <a href="aws.html">AWS</a>
+    <a href="domain.html">NBFC</a>
+    <a href="sql.html">SQL</a>
+    <a href="pyspark.html">PySpark</a>
+    <a href="databricks.html">Databricks</a>
+    <a href="airflow.html">Airflow</a>
+    <a href="tableau.html">Tableau</a>
+    <a href="behavioral.html">Behaviour</a>
+    <a href="interview.html">Q&amp;A</a>
+  </div>
+</footer>
+
+<script src="../assets/js/script.js"></script>
+</body>
+</html>
