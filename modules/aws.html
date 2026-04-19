@@ -92,6 +92,30 @@
     <div class="content-card">
       <h4>Redshift Core Architecture</h4>
       <p>Amazon Redshift is a <strong>columnar, Massively Parallel Processing (MPP)</strong> data warehouse. Understanding its architecture is critical for optimization.</p>
+
+      <!-- AWS PIPELINE DIAGRAM -->
+      <div class="flow-diagram-container" style="background:rgba(255,153,0,0.05); border-color:rgba(255,153,0,0.2);">
+        <div class="flow-node" style="border-color:#ff9900; box-shadow: 0 4px 15px rgba(255,153,0,0.1);">
+          <span class="flow-node-title">Amazon S3</span>
+          <span class="flow-node-desc">Landing Zone (Raw)</span>
+        </div>
+        <div class="flow-arrow" style="color:#ff9900">➔</div>
+        <div class="flow-node" style="border-color:#ff9900; box-shadow: 0 4px 15px rgba(255,153,0,0.1);">
+          <span class="flow-node-title">AWS Glue</span>
+          <span class="flow-node-desc">Serverless Spark ETL</span>
+        </div>
+        <div class="flow-arrow" style="color:#ff9900">➔</div>
+        <div class="flow-node" style="border-color:#ff9900; box-shadow: 0 4px 15px rgba(255,153,0,0.1);">
+          <span class="flow-node-title">Redshift MPP</span>
+          <span class="flow-node-desc">Enterprise Data Warehouse</span>
+        </div>
+        <div class="flow-arrow" style="color:#ff9900">➔</div>
+        <div class="flow-node" style="border-color:#ff9900; box-shadow: 0 4px 15px rgba(255,153,0,0.1);">
+          <span class="flow-node-title">Tableau</span>
+          <span class="flow-node-desc">BI & MIS Reporting</span>
+        </div>
+      </div>
+
       <ul>
         <li><strong>Leader Node:</strong> Receives queries from clients, parses SQL, creates an optimized execution plan, and coordinates parallel execution across compute nodes. It does not store user data.</li>
         <li><strong>Compute Nodes:</strong> Store data in columnar format and execute the query plan in parallel. Each compute node is divided into <strong>node slices</strong> (virtual CPUs with dedicated memory and disk).</li>

@@ -95,14 +95,26 @@
       </ul>
 
       <h4>Execution Hierarchy</h4>
-      <div class="flow-diagram">
-        <div class="flow-step">Application</div>
-        <span class="flow-arrow">→</span>
-        <div class="flow-step">Jobs</div>
-        <span class="flow-arrow">→</span>
-        <div class="flow-step">Stages</div>
-        <span class="flow-arrow">→</span>
-        <div class="flow-step">Tasks</div>
+      <div class="flow-diagram-container" style="background:rgba(234,88,12,0.05); border-color:rgba(234,88,12,0.2);">
+        <div class="flow-node" style="border-color:#ea580c">
+          <span class="flow-node-title">Application</span>
+          <span class="flow-node-desc">SparkSession</span>
+        </div>
+        <div class="flow-arrow">➔</div>
+        <div class="flow-node" style="border-color:#f97316">
+          <span class="flow-node-title">Jobs</span>
+          <span class="flow-node-desc">Triggered by Actions</span>
+        </div>
+        <div class="flow-arrow">➔</div>
+        <div class="flow-node" style="border-color:#fb923c">
+          <span class="flow-node-title">Stages</span>
+          <span class="flow-node-desc">Shuffle Boundaries</span>
+        </div>
+        <div class="flow-arrow">➔</div>
+        <div class="flow-node" style="border-color:#fdba74">
+          <span class="flow-node-title">Tasks</span>
+          <span class="flow-node-desc">Executed on Partitions</span>
+        </div>
       </div>
       <ul>
         <li><strong>Job:</strong> Created every time an <em>Action</em> is called.</li>

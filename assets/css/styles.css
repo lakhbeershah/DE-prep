@@ -1323,6 +1323,106 @@ main {
   }
 }
 
+/* ==========================================================================
+   FLOW DIAGRAMS (Native Implementation)
+   ========================================================================== */
+.flow-diagram-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  padding: 30px;
+  background: rgba(17, 24, 39, 0.4);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  margin: 30px 0;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+[data-theme="light"] .flow-diagram-container {
+  background: rgba(248, 250, 252, 0.8);
+  border-color: rgba(0, 0, 0, 0.05);
+}
+
+.flow-node {
+  background: var(--bg-card);
+  border: 1px solid var(--accent-primary);
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.1);
+  min-width: 140px;
+  flex-shrink: 0;
+  transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+}
+
+.flow-node:hover {
+  transform: translateY(-5px);
+  border-color: var(--accent-secondary);
+  box-shadow: 0 8px 25px rgba(139, 92, 246, 0.2);
+}
+
+.flow-node-title {
+  font-weight: 700;
+  display: block;
+  margin-bottom: 8px;
+  color: var(--text-main);
+  font-size: 1.1rem;
+}
+
+.flow-node-desc {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.flow-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: var(--accent-primary);
+  font-weight: bold;
+  flex-shrink: 0;
+  min-width: 30px;
+}
+
+/* Modifiers for different node types */
+.flow-node.bronze { border-color: #cd7f32; box-shadow: 0 4px 15px rgba(205, 127, 50, 0.1); }
+.flow-node.silver { border-color: #c0c0c0; box-shadow: 0 4px 15px rgba(192, 192, 192, 0.1); }
+.flow-node.gold { border-color: #ffd700; box-shadow: 0 4px 15px rgba(255, 215, 0, 0.1); }
+.flow-node.bronze:hover { border-color: #e69138; box-shadow: 0 8px 25px rgba(205, 127, 50, 0.3); }
+.flow-node.silver:hover { border-color: #e0e0e0; box-shadow: 0 8px 25px rgba(192, 192, 192, 0.3); }
+.flow-node.gold:hover { border-color: #ffea00; box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3); }
+
+/* Responsive Flowchart (Stack vertically on very tight screens) */
+@media (max-width: 768px) {
+  .flow-diagram-container {
+    flex-wrap: wrap; /* On tablet, allow wrapping if needed, but mostly x-scroll */
+  }
+}
+
+@media (max-width: 480px) {
+  .flow-diagram-container {
+    flex-direction: column;
+    padding: 20px;
+    align-items: stretch;
+  }
+  
+  .flow-arrow {
+    transform: rotate(90deg); /* Arrow points down */
+    margin: 10px 0;
+  }
+  
+  .flow-node {
+    width: 100%;
+    min-width: auto;
+  }
+}
+
 /* Syntax Highlighting (custom tokens) */
 .token-keyword { color: #c792ea; }
 .token-string { color: #c3e88d; }

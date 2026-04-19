@@ -99,6 +99,29 @@
         <li><strong>Metadata Database:</strong> (usually PostgreSQL or MySQL) stores state, history, user information, and variables.</li>
       </ul>
 
+      <!-- AIRFLOW TASK LIFECYCLE DIAGRAM -->
+      <div class="flow-diagram-container" style="background:rgba(236,72,153,0.05); border-color:rgba(236,72,153,0.2);">
+        <div class="flow-node" style="border-color:#ec4899; box-shadow: 0 4px 15px rgba(236,72,153,0.1);">
+          <span class="flow-node-title">None</span>
+          <span class="flow-node-desc">Waiting for Schedule</span>
+        </div>
+        <div class="flow-arrow" style="color:#ec4899">➔</div>
+        <div class="flow-node" style="border-color:#ec4899; box-shadow: 0 4px 15px rgba(236,72,153,0.1);">
+          <span class="flow-node-title">Queued</span>
+          <span class="flow-node-desc">Waiting for Executor Slot</span>
+        </div>
+        <div class="flow-arrow" style="color:#ec4899">➔</div>
+        <div class="flow-node" style="border-color:#ec4899; box-shadow: 0 4px 15px rgba(236,72,153,0.1);">
+          <span class="flow-node-title">Running</span>
+          <span class="flow-node-desc">Executing Python/Bash</span>
+        </div>
+        <div class="flow-arrow" style="color:#ec4899">➔</div>
+        <div class="flow-node" style="border-color:#ec4899; box-shadow: 0 4px 15px rgba(236,72,153,0.1);">
+          <span class="flow-node-title">Success / Retry</span>
+          <span class="flow-node-desc">Final State</span>
+        </div>
+      </div>
+
       <h4>Key Concepts</h4>
       <table class="data-table">
         <thead>

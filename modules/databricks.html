@@ -142,6 +142,24 @@
       <h4>What is Delta Lake?</h4>
       <p>Delta Lake is an open-source storage layer that brings reliability to data lakes by providing ACID transactions, scalable metadata handling, and unifying streaming and batch data processing on top of existing cloud storage (S3/ADLS).</p>
 
+      <!-- MEDALLION ARCHITECTURE DIAGRAM -->
+      <div class="flow-diagram-container">
+        <div class="flow-node bronze">
+          <span class="flow-node-title">🥉 Bronze</span>
+          <span class="flow-node-desc">Raw Ingestion<br>(Append-only / Dirty)</span>
+        </div>
+        <div class="flow-arrow">➔</div>
+        <div class="flow-node silver">
+          <span class="flow-node-title">🥈 Silver</span>
+          <span class="flow-node-desc">Cleaned & Filtered<br>(Delta Parquet)</span>
+        </div>
+        <div class="flow-arrow">➔</div>
+        <div class="flow-node gold">
+          <span class="flow-node-title">🥇 Gold</span>
+          <span class="flow-node-desc">Business Aggregates<br>(Optimized for BI)</span>
+        </div>
+      </div>
+
       <h4>Under the Hood: Parquet + Transaction Log</h4>
       <ul>
         <li><strong>Parquet files:</strong> The actual data is stored in standard, highly compressed Parquet format.</li>
