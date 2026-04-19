@@ -239,8 +239,27 @@ function initSmoothScroll() {
   document.querySelectorAll('a[href^="#"]').forEach(a => {
     a.addEventListener('click', e => {
       e.preventDefault();
-      const target = document.querySelector(a.getAttribute('href'));
-      if (target) target.scrollIntoView({ behavior: 'smooth' });
+      const href = a.getAttribute('href');
+      
+      // Special case for 'Back to Top' because navbar is fixed (scrollIntoView fails)
+      if (href === '#navbar' || href === '#hero') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+      
+      const target = document.querySelector(href);
+      if (target) {
+        // Account for fixed navbar height (approx 80px)
+        const offset = 80;
+        const bodyRect = document.body.getBoundingClientRect().top;
+        const elementRect = target.getBoundingClientRect().top;
+        const elementPosition = elementRect - bodyRect;
+        
+        window.scrollTo({
+          top: elementPosition - offset,
+          behavior: 'smooth'
+        });
+      }
     });
   });
 }
